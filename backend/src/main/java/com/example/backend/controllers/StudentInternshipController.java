@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/student/internship")
+@RequestMapping("/internship")
 public class StudentInternshipController {
     private final InternshipService internshipService;
 
@@ -20,7 +22,7 @@ public class StudentInternshipController {
         this.internshipService = internshipService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")  // Only Admin can access all internships
     public ResponseEntity<List<Internship>> getAllInternships() {
         return ResponseEntity.ok(internshipService.retrieveInternships());
@@ -45,12 +47,15 @@ public class StudentInternshipController {
     @PostMapping("/enterprise")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Internship> addInternship(@RequestBody Internship internship) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("User Roles: " + auth.getAuthorities());
+
         Internship createdInternship = internshipService.addInternship(internship);
         return ResponseEntity.ok(createdInternship);
     }
 
     // Update an internship
-    @PutMapping("/{id}")
+    @PutMapping("/enterprise/{id}")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Internship> updateInternship(@PathVariable Long id, @RequestBody Internship internship) {
         internship.setId(id);
@@ -58,7 +63,7 @@ public class StudentInternshipController {
     }
 
     // Remove an internship (Only enterprise can delete)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/enterprise/{id}")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Void> removeInternship(@PathVariable Long id) {
         internshipService.removeInternship(id);

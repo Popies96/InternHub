@@ -12,6 +12,7 @@ public interface InternshipService {
     void removeInternship(long idInternship);
 
     List<Internship> getInternshipsByStudent(Long studentId);
+    List<Internship> getInternshipsByEnterprise(Long enterpriseId);
 
     Internship applyForInternship(Long internshipId, Long studentId);
 }

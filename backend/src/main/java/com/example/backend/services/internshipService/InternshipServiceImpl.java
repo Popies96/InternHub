@@ -59,6 +59,11 @@ public class InternshipServiceImpl implements InternshipService{
     }
 
     @Override
+    public List<Internship> getInternshipsByEnterprise(Long enterpriseId) {
+        return internshipRepository.findByEnterpriseId(enterpriseId);
+    }
+
+    @Override
     public Internship applyForInternship(Long internshipId, Long studentId) {
         Optional<Internship> internshipOpt = internshipRepository.findById(internshipId);
         Optional<Student> studentOpt = studentRepository.findById(studentId);
