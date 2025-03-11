@@ -29,11 +29,13 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         security
+                .cors()  // Enable CORS
+                .and()
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login","/signup").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/internship/**").hasRole("ENTERPRISE")
+                        .requestMatchers("/internship/**").hasAnyRole("ENTERPRISE", "STUDENT")
                         .requestMatchers("/student/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )

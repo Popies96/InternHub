@@ -59,7 +59,9 @@ public class AuthServiceMethode implements AuthService{
         }
 
         BeanUtils.copyProperties(signupRequest, user);
-
+        user.setPhone(signupRequest.getPhone());
+        user.setNom(signupRequest.getNom());
+        user.setPrenom(signupRequest.getPrenom());
         if (signupRequest.getRole() != null) {
             user.setRole(UserRole.valueOf(signupRequest.getRole().toUpperCase()));
         }
@@ -67,6 +69,7 @@ public class AuthServiceMethode implements AuthService{
         //Hash the password before saving
         String hashPassword = passwordEncoder.encode(signupRequest.getPassword());
         user.setPassword(hashPassword);
+        System.out.println(user.getEmail());
         userRepository.save(user);
 
         if (user instanceof Student) {

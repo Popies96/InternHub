@@ -23,6 +23,7 @@ public class User {
     private String prenom;
     private  String password;
     private  String email;
+    private int phone;
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -34,28 +35,29 @@ public class User {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<Internship> appliedInternships;
 
-    public Long getIdEtudiant() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setIdEtudiant(Long idEtudiant) {
-        this.id = idEtudiant;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getNomEt() {
+    public String getNom() {
         return nom;
     }
 
-    public void setNomEt(String nomEt) {
-        this.nom = nomEt;
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
-    public String getPrenomEt() {
+    public String getPrenom() {
         return prenom;
     }
 
-    public void setPrenomEt(String prenomEt) {
-        this.prenom = prenomEt;
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 
     public String getPassword() {
@@ -74,7 +76,13 @@ public class User {
         this.email = email;
     }
 
+    public int getPhone() {
+        return phone;
+    }
 
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
 
     public UserRole getRole() {
         return role;
@@ -82,5 +90,21 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<Internship> getCreatedInternships() {
+        return createdInternships;
+    }
+
+    public void setCreatedInternships(List<Internship> createdInternships) {
+        this.createdInternships = createdInternships;
+    }
+
+    public Set<Internship> getAppliedInternships() {
+        return appliedInternships;
+    }
+
+    public void setAppliedInternships(Set<Internship> appliedInternships) {
+        this.appliedInternships = appliedInternships;
     }
 }

@@ -11,11 +11,61 @@ public class SignupRequest {
     private String prenom;
     private  String password;
     private  String email;
+    private int phone;
     private String role;
     private String school;  // Only needed for Student
     private Long cin;  // Only needed for Student
     private String companyName;  // Only needed for Enterprise
     private String companyAddress;
+
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getSchool() {
         return school;
@@ -48,48 +98,4 @@ public class SignupRequest {
     public void setCompanyAddress(String companyAddress) {
         this.companyAddress = companyAddress;
     }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getNomEt() {
-        return nom;
-    }
-
-    public void setNomEt(String nomEt) {
-        this.nom = nomEt;
-    }
-
-    public String getPrenomEt() {
-        return prenom;
-    }
-
-    public void setPrenomEt(String prenomEt) {
-        this.prenom = prenomEt;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-
-
 }
