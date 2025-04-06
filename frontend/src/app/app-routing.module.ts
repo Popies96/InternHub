@@ -8,16 +8,20 @@ import { IndexComponent } from './Student/index/index.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { ApplicationComponent } from './Student/application/application.component';
 import { DashboardComponent } from './Student/dashboard/dashboard.component';
+import { IdeComponent } from './components/ide/ide.component';
+import { SettingsComponent } from './Student/settings/settings.component';
 
 const routes: Routes = [
   {
     path: "student",
     component: DashboardComponent,
     children: [
-      { path: 'profile', component: ProfileComponent },
-      { path: '', component: IndexComponent },
-      { path: 'chat', component: ConversationComponent },
-      {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }}
+      {path: 'profile', component: ProfileComponent  , data: { breadcrumb: 'Profile' }},
+      {path: '', component: IndexComponent },
+      {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }},
+      {path :'ide' , component:IdeComponent}, 
+      {path :'settings' , component:SettingsComponent}, 
     ],
   },
 
