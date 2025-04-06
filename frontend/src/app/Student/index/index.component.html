@@ -1,0 +1,198 @@
+<!-- InternHub Dashboard - Main Content -->
+<div class="p-4 space-y-6  min-h-screen">
+    <video #dashboardVideo autoplay muted loop class="w-full h-[25vh] object-cover rounded-xl pb4-">
+        <source src="../../../assets/motion.mp4" type="video/mp4">
+    </video>
+
+
+    <!-- 1. Internship Status Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Applications Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 border-blue-500">
+        <h3 class="text-gray-500 text-sm font-medium">Applications Sent</h3>
+        <p class="text-2xl font-bold mt-2">12 <span class="text-green-500 text-sm">(+3 this week)</span></p>
+        <div class="h-2 bg-gray-200 mt-2 rounded-full">
+          <div class="h-2 bg-blue-500 rounded-full" style="width: 75%"></div>
+        </div>
+      </div>
+  
+      <!-- Interviews Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm    border border-slate-200 border-purple-500">
+        <h3 class="text-gray-500 text-sm font-medium">Interviews Scheduled</h3>
+        <p class="text-2xl font-bold mt-2">3</p>
+        <div class="mt-2 space-y-1">
+          <p class="text-sm text-gray-600">Google - Tomorrow</p>
+          <p class="text-sm text-gray-600">Amazon - May 15</p>
+        </div>
+      </div>
+  
+      <!-- Offers Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm  border border-slate-200 border-green-500">
+        <h3 class="text-gray-500 text-sm font-medium">Offers Received</h3>
+        <p class="text-2xl font-bold mt-2 text-green-600">1</p>
+        <p class="text-sm mt-2 text-gray-600">Spotify - UX Design Intern</p>
+      </div>
+  
+      <!-- Walkthroughs Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm  border border-slate-200 border-orange-500">
+        <h3 class="text-gray-500 text-sm font-medium">Active Walkthroughs</h3>
+        <p class="text-lg font-bold mt-2">Netflix</p>
+        <p class="text-sm text-gray-600">Week 3/8</p>
+        <button class="mt-2 text-sm text-orange-600 hover:underline">Continue →</button>
+      </div>
+    </div>
+  
+    <!-- 2. Recommended Internships -->
+    <div class="bg-white rounded-lg shadow-sm p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Recommended For You</h2>
+        <a href="#" class="text-sm text-blue-600 hover:underline">View all</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Internship Card 1 -->
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center space-x-3">
+            <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="w-10 h-10 rounded-full">
+            <div>
+              <h3 class="font-medium">UX Design Intern</h3>
+              <p class="text-sm text-gray-500">Spotify</p>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Remote</span>
+            <button routerLink="/student/apply" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Quick Apply</button>
+          </div>
+        </div>
+  
+        <!-- Internship Card 2 -->
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center space-x-3">
+            <img src="https://logo.clearbit.com/tesla.com" alt="Tesla" class="w-10 h-10 rounded-full">
+            <div>
+              <h3 class="font-medium">Data Science Intern</h3>
+              <p class="text-sm text-gray-500">Tesla</p>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">On-site</span>
+            <button class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Quick Apply</button>
+          </div>
+        </div>
+  
+        <!-- Internship Card 3 -->
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center space-x-3">
+            <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" class="w-10 h-10 rounded-full">
+            <div>
+              <h3 class="font-medium">Software Engineer</h3>
+              <p class="text-sm text-gray-500">Microsoft</p>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">Hybrid</span>
+            <button class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Quick Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 3. Active Internship Walkthrough (Conditional) -->
+    <div class="bg-white rounded-lg shadow-sm p-4">
+      <h2 class="text-lg font-semibold mb-4">Your Netflix Internship</h2>
+      <div class="space-y-4">
+        <!-- Progress Bar -->
+        <div>
+          <div class="flex justify-between text-sm mb-1">
+            <span>Week 3/8</span>
+            <span>37% completed</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+            <div class="bg-blue-600 p-0.5 h-3 rounded-full" style="width: 37%"></div>
+          </div>
+        </div>
+  
+        <!-- Mentor Feedback -->
+        <div class="bg-blue-50 p-3 rounded-lg">
+          <div class="flex items-start space-x-2">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full">
+            <div>
+              <p class="font-medium">Mentor Feedback</p>
+              <p class="text-sm text-gray-600">"Great work on the wireframes! Let's discuss the user flows next."</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Tasks -->
+        <div>
+          <h3 class="text-sm font-medium mb-2">This Week's Tasks</h3>
+          <ul class="space-y-2">
+            <li class="flex items-center space-x-2">
+              <p>✅</p>
+              <span class="text-sm line-through text-gray-400"> Complete onboarding</span>
+            </li>
+            <li class="flex items-center  space-x-2">
+                <p>✅</p>
+              <span class="text-sm"> Submit weekly report <span class="text-red-500">(due tomorrow)</span></span>
+            </li>
+            <li class="flex items-center space-x-2">
+                <p>✅</p>
+              <span class="text-sm"> Schedule 1:1 with manager</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 4. Upcoming Deadlines & Networking -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Deadlines -->
+      <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
+        <h2 class="text-lg font-semibold mb-4">Upcoming Deadlines</h2>
+        <div class="space-y-3">
+          <div class="flex items-center p-2 hover:bg-gray-50 rounded">
+            <div class="bg-red-100 p-2 rounded-full mr-3">
+              <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="font-medium">Interview: Google</p>
+              <p class="text-sm text-gray-500">Tomorrow at 2:00 PM</p>
+            </div>
+          </div>
+          <div class="flex items-center p-2 hover:bg-gray-50 rounded">
+            <div class="bg-blue-100 p-2 rounded-full mr-3">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="font-medium">Project Deadline</p>
+              <p class="text-sm text-gray-500">May 15</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Network Activity -->
+      <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
+        <h2 class="text-lg font-semibold mb-4">Network Activity</h2>
+        <div class="space-y-4">
+          <div class="flex items-start">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-3">
+            <div>
+              <p class="text-sm"><span class="font-medium">Alex</span> shared tips for IBM's technical interview</p>
+              <button class="text-xs text-blue-600 mt-1 hover:underline">View notes</button>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full mr-3">
+            <div>
+              <p class="text-sm"><span class="font-medium">Maria</span> received an offer from Microsoft!</p>
+              <button class="text-xs text-blue-600 mt-1 hover:underline">Send congrats</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,7 +1,8 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.SignupRequest;
-import com.example.backend.services.AuthService;
+
+import com.example.backend.services.authSerivce.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.LoginRequest;
-import com.example.backend.services.UserServiceImpl;
+import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

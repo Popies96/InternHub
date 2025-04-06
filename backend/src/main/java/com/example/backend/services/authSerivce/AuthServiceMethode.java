@@ -1,4 +1,4 @@
-package com.example.backend.services;
+package com.example.backend.services.authSerivce;
 
 import com.example.backend.dto.SignupRequest;
 import com.example.backend.entity.Enterprise;
@@ -8,13 +8,14 @@ import com.example.backend.entity.UserRole;
 import com.example.backend.repository.EnterpriseRepository;
 import com.example.backend.repository.StudentRepository;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.services.authSerivce.AuthService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthServiceMethode implements AuthService{
+public class AuthServiceMethode implements AuthService {
     private final StudentRepository studentRepository;
     private final EnterpriseRepository enterpriseRepository;
     private final UserRepository userRepository;
