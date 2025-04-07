@@ -10,6 +10,7 @@ import { ApplicationComponent } from './Student/application/application.componen
 import { DashboardComponent } from './Student/dashboard/dashboard.component';
 import { IdeComponent } from './components/ide/ide.component';
 import { SettingsComponent } from './Student/settings/settings.component';
+import { InternshipsComponent } from './Student/internships/internships.component';
 
 const routes: Routes = [
   {
@@ -19,9 +20,11 @@ const routes: Routes = [
       {path: 'profile', component: ProfileComponent  , data: { breadcrumb: 'Profile' }},
       {path: '', component: IndexComponent },
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path :'intern' , component:InternshipsComponent, data: { breadcrumb: 'Internships' }} , 
       {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }},
-      {path :'ide' , component:IdeComponent}, 
+      {path :'ide' , component:IdeComponent , data: { breadcrumb: 'IDE' } }, 
       {path :'settings' , component:SettingsComponent}, 
+     
     ],
   },
 

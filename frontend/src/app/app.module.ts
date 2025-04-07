@@ -21,6 +21,7 @@ import { DashboardComponent } from './Student/dashboard/dashboard.component';
 
 import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { SettingsComponent } from './Student/settings/settings.component';
+import { InternshipsComponent } from './Student/internships/internships.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { SettingsComponent } from './Student/settings/settings.component';
     ApplicationComponent,
     DashboardComponent,
     SettingsComponent,
+    InternshipsComponent,
   
   ],
   imports: [
