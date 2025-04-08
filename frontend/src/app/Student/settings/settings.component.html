@@ -1,10 +1,11 @@
-<h1 class="text-3xl font-bold text-gray-800 mb-8 ">Settings</h1>
+
 <div class="mx-auto  bg-white rounded-lg shadow-sm rounded-lg bg-gray-50 p-4">
     <!-- Header -->
    
   
     <!-- Account Section -->
     <section class="mb-10 ">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Account</h2>
         <form action="" class="">
             <div class="flex gap-x-6 mb-6">
             <div class="w-full relative">
@@ -55,69 +56,157 @@
             <button class="w-52 h-12 shadow-sm rounded-md bg-indigo-600 hover:bg-indigo-800 transition-all duration-700 text-white text-base font-semibold leading-7">Update</button>
             </form>
     </section>
+
+
+    <section class="mb-10 ">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Linked Accounts</h2>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="flex  items-start items-center border border-gray-300 border-slate-200 px-4  rounded-lg">
+          <div class="w-20 h-20 mr-4 flex-shrink-0">
+              <img src="../../../assets/google.png"
+                   alt="Apple iMac"
+                   class="w-full h-full object-contain rounded">
+            </div>
+          <div class=" py-9">
+            <h3 class="font-medium  ">Google Account</h3>
+           
+          </div>
+          <div class="p-4 text-right">
+              <button   class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                  Link                            
+          </button>
+          </div>
+        </div>
+<!-- ------------------------------------------ -->
+    
+        <div class="flex  items-start items-center border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+          <div class="w-20 h-20 mr-4 flex-shrink-0">
+              <img src="../../../assets/google.png"
+                   alt="Apple iMac"
+                   class="w-full h-full object-contain rounded">
+            </div>
+          <div class=" py-9">
+            <h3 class="font-medium  ">Behance Account</h3>
+           
+          </div>
+          <div class="p-4 text-right">
+              <button   class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                  Link                            
+          </button>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------ -->
+    
+        <div class="flex  items-start items-center border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+          <div class="w-20 h-20 mr-4 flex-shrink-0">
+              <img src="../../../assets/google.png"
+                   alt="Apple iMac"
+                   class="w-full h-full object-contain rounded">
+            </div>
+          <div class=" py-9">
+            <h3 class="font-medium  ">Linkedin Account</h3>
+           
+          </div>
+          <div class="p-4 text-right">
+              <button   class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                  Link                            
+          </button>
+          </div>
+        </div>
+        
+      </div>
+
+
+
+      
+
+      
+    </section>
   
     
   
     <!-- Notifications Section -->
     <section class="">
       <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Notifications</h2>
+      <div class="mt-10 space-y-10">
+        <fieldset>
+          <legend class="text-sm/6 font-semibold text-gray-900">By email</legend>
+          <div class="mt-6 space-y-6">
+            <div class="flex gap-3">
+              <div class="flex h-6 shrink-0 items-center">
+                <div class="group grid size-4 grid-cols-1">
+                  <input id="comments" aria-describedby="comments-description" name="comments" type="checkbox" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                  <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                    <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="text-sm/6">
+                <label for="comments" class="font-medium text-gray-900">Comments</label>
+                <p id="comments-description" class="text-gray-500">Get notified when someones posts a comment on a posting.</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="flex h-6 shrink-0 items-center">
+                <div class="group grid size-4 grid-cols-1">
+                  <input id="candidates" aria-describedby="candidates-description" name="candidates" type="checkbox" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                  <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                    <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="text-sm/6">
+                <label for="candidates" class="font-medium text-gray-900">Candidates</label>
+                <p id="candidates-description" class="text-gray-500">Get notified when a candidate applies for a job.</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="flex h-6 shrink-0 items-center">
+                <div class="group grid size-4 grid-cols-1">
+                  <input id="offers" aria-describedby="offers-description" name="offers" type="checkbox" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                  <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                    <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="text-sm/6">
+                <label for="offers" class="font-medium text-gray-900">Offers</label>
+                <p id="offers-description" class="text-gray-500">Get notified when a candidate accepts or rejects an offer.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="text-sm/6 font-semibold text-gray-900">Push notifications</legend>
+          <p class="mt-1 text-sm/6 text-gray-600">These are delivered via SMS to your mobile phone.</p>
+          <div class="mt-6 space-y-6">
+            <div class="flex items-center gap-x-3">
+              <input id="push-everything" name="push-notifications" type="radio" checked class="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden">
+              <label for="push-everything" class="block text-sm/6 font-medium text-gray-900">Everything</label>
+            </div>
+            <div class="flex items-center gap-x-3">
+              <input id="push-email" name="push-notifications" type="radio" class="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden">
+              <label for="push-email" class="block text-sm/6 font-medium text-gray-900">Same as email</label>
+            </div>
+            <div class="flex items-center gap-x-3">
+              <input id="push-nothing" name="push-notifications" type="radio" class="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden">
+              <label for="push-nothing" class="block text-sm/6 font-medium text-gray-900">No push notifications</label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+  
       
-      <div class="mb-8">
-        <h3 class="text-xl font-medium text-gray-800 mb-4">About & Notifications</h3>
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-medium text-gray-700">Details: Customer updates</h4>
-            <p class="text-gray-600">Our results come, questionnaires, and product options</p>
-          </div>
-          <div>
-            <h4 class="font-medium text-gray-700">Annual activity</h4>
-            <p class="text-gray-600">Our project collection does not use a charity group instead</p>
-          </div>
-          <div>
-            <h4 class="font-medium text-gray-700">Media post notifications</h4>
-            <p class="text-gray-600">Working with relevant customer and company inquiries and attention</p>
-          </div>
-          <div>
-            <h4 class="font-medium text-gray-700">Email notification</h4>
-            <p class="text-gray-600">Contact mail notification whenever you company inquiries and attention</p>
-          </div>
-          <div>
-            <h4 class="font-medium text-gray-700">Media post notifications</h4>
-            <p class="text-gray-600">We're going about a number Monday a period which is my section</p>
-          </div>
-        </div>
-      </div>
-  
-      <div class="mb-8">
-        <h3 class="text-xl font-medium text-gray-800 mb-4">Email newsletter</h3>
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-medium text-gray-700">Contact contact</h4>
-            <p class="text-gray-600">Contact email to us via a notification server at the website</p>
-          </div>
-          <p class="text-gray-600">I receive notification to welcome extra assistance.</p>
-          <p class="font-medium text-gray-700">Agent follow-up</p>
-          <p class="text-gray-600">Location: another by website</p>
-        </div>
-      </div>
-  
-      <div>
-        <h3 class="text-xl font-medium text-gray-800 mb-4">Subscribe me to:</h3>
-        <div class="space-y-4">
-          <p class="text-gray-600">Submit email email for Facebook and Twitter calls</p>
-          <div>
-            <h4 class="font-medium text-gray-700">Question:</h4>
-            <p class="text-gray-600">A website can be a provider has been updated or launched</p>
-          </div>
-          <p class="font-medium text-gray-700">Together community</p>
-          <div>
-            <h4 class="font-medium text-gray-700">Phone/fax:</h4>
-            <p class="text-gray-600">Please check some and welcome proper appointments</p>
-          </div>
-          <p class="font-medium text-gray-700">Page taken:</p>
-        </div>
-      </div>
+      
     </section>
   
-   
+    <div class="mt-6 flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4">
+      <button type="button" class="text-sm/6 font-semibold text-gray-900">Suspend Account</button>
+      <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Delete Account</button>
+    </div>
   </div>

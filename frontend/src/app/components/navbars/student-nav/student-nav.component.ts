@@ -31,9 +31,20 @@ export class StudentNavComponent {
         url += `/${routeURL}`;
       }
 
-      const label = child.snapshot.data['breadcrumb'] || this.formatLabel(routeURL);
-      if (label) {
-        breadcrumbs.push({ label, url });
+      const label = child.snapshot.data['breadcrumb'];
+      
+      // Special handling for 'apply' route to show 'Internships' as parent
+      if (routeURL === 'apply') {
+        breadcrumbs.push(
+          { label: 'Internships', url: '/student/intern' },
+          { label: this.formatLabel(label), url }
+        );
+        return breadcrumbs;
+      }
+      
+      // Skip if no label or if the route is 'student'
+      if (label && routeURL !== 'student') {
+        breadcrumbs.push({ label: this.formatLabel(label), url });
       }
 
       return this.createBreadcrumbs(child, url, breadcrumbs);
@@ -48,6 +59,11 @@ export class StudentNavComponent {
 
   toggleDropdown() {
     const dropdown = document.getElementById('dropdownDivider');
+    dropdown?.classList.toggle('hidden');
+  }
+
+  toggleNotificationDropdown() {
+    const dropdown = document.getElementById('notificationDropdown');
     dropdown?.classList.toggle('hidden');
   }
 }

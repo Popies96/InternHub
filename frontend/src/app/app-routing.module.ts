@@ -11,6 +11,7 @@ import { DashboardComponent } from './Student/dashboard/dashboard.component';
 import { IdeComponent } from './components/ide/ide.component';
 import { SettingsComponent } from './Student/settings/settings.component';
 import { InternshipsComponent } from './Student/internships/internships.component';
+import { TasksComponent } from './Student/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,9 @@ const routes: Routes = [
       {path :'intern' , component:InternshipsComponent, data: { breadcrumb: 'Internships' }} , 
       {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }},
       {path :'ide' , component:IdeComponent , data: { breadcrumb: 'IDE' } }, 
-      {path :'settings' , component:SettingsComponent}, 
+      {path :'settings' , component:SettingsComponent , data: { breadcrumb: 'Settings' }}, 
+      {path :'tasks' , component:TasksComponent , data: { breadcrumb: 'Tasks' }},
+
      
     ],
   },
