@@ -1,3 +1,4 @@
 package com.example.backend.dto;
-public class InternshipResponse {
+
+public class EnterpriseDto {
 }
