@@ -1,6 +1,6 @@
 package com.example.backend.services.internshipService;
 
-import com.example.backend.dto.EnterpriseDTO;
+import com.example.backend.dto.EnterpriseDto;
 import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
@@ -75,7 +75,7 @@ public class InternshipServiceImpl implements InternshipService{
                     InternshipResponse response = new InternshipResponse();
                     response.setStatus(internship.getStatus().toString());
                     BeanUtils.copyProperties(internship, response);
-                    EnterpriseDTO enterpriseDTO = new EnterpriseDTO();
+                    EnterpriseDto enterpriseDTO = new EnterpriseDto();
                     BeanUtils.copyProperties(internship.getEnterprise(), enterpriseDTO);
                     response.setEnterprise(enterpriseDTO); // Assuming you map enterprise to DTO
                     return response;

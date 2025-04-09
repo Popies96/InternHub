@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.dto.EnterpriseDTO;
+import com.example.backend.dto.EnterpriseDto;
 import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
@@ -67,7 +67,7 @@ public class StudentInternshipController {
         }
 
         if (internship.getEnterprise() != null) {
-            EnterpriseDTO enterpriseDTO = new EnterpriseDTO();
+            EnterpriseDto enterpriseDTO = new EnterpriseDto();
             BeanUtils.copyProperties(internship.getEnterprise(), enterpriseDTO);
             dto.setEnterprise(enterpriseDTO);
         }

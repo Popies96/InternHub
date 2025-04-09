@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+
 import java.time.LocalDate;
 
 public class InternshipResponse {
@@ -76,13 +77,14 @@ public class InternshipResponse {
         this.status = status;
     }
 
-    public EnterpriseDTO getEnterprise() {
+    public EnterpriseDto getEnterprise() {
         return enterprise;
     }
 
-    public void setEnterprise(EnterpriseDTO enterprise) {
+    public void setEnterprise(EnterpriseDto enterprise) {
         this.enterprise = enterprise;
     }
 
-    private EnterpriseDTO enterprise;
+    private EnterpriseDto enterprise;
+
 }
