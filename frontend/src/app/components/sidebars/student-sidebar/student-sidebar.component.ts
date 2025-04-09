@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-student-sidebar',
@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./student-sidebar.component.css']
 })
 export class StudentSidebarComponent {
+  isCompact = false;
+@Output() sidebarToggled = new EventEmitter<boolean>();
 
+toggleSidebar() {
+  this.isCompact = !this.isCompact;
+  this.sidebarToggled.emit(this.isCompact);
+}
 }

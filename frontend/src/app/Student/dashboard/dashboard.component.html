@@ -1,9 +1,11 @@
 <div>
-    <app-student-nav></app-student-nav>
-    <div class="grid grid-cols-[22%,78%] min-h-screen ">
-      <app-student-sidebar></app-student-sidebar>
-      <div class="overflow-auto pt-8 p-4"> 
-        <router-outlet></router-outlet>
-      </div>
+  <app-student-nav></app-student-nav>
+  <div class="grid min-h-screen transition-all duration-300" 
+       [class.grid-cols-[5%,95%]]="isSidebarCompact"
+       [class.grid-cols-[22%,78%]]="!isSidebarCompact">
+    <app-student-sidebar [class.compact]="isSidebarCompact" (sidebarToggled)="onSidebarToggled($event)"></app-student-sidebar>
+    <div class="overflow-auto pt-8 p-4"> 
+      <router-outlet></router-outlet>
     </div>
+  </div>
 </div>

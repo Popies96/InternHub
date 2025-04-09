@@ -6,8 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+  isSidebarCompact = false;
+
   toggleProfile() {
     const profile = document.getElementById('profile');
     profile?.classList.toggle('hidden');
+  }
+
+  onSidebarToggled(isCompact: boolean) {
+    this.isSidebarCompact = isCompact; 
   }
 }

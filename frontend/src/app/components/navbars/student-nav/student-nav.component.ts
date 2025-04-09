@@ -57,13 +57,98 @@ export class StudentNavComponent {
     return label.charAt(0).toUpperCase() + label.slice(1);
   }
 
-  toggleDropdown() {
-    const dropdown = document.getElementById('dropdownDivider');
-    dropdown?.classList.toggle('hidden');
-  }
+ // In your component class
+isDropdownOpen = false;
 
-  toggleNotificationDropdown() {
-    const dropdown = document.getElementById('notificationDropdown');
-    dropdown?.classList.toggle('hidden');
+toggleDropdown() {
+  this.isDropdownOpen = !this.isDropdownOpen;
+  
+  if (this.isDropdownOpen) {
+    // Add click listener when opening dropdown
+    setTimeout(() => {
+      document.addEventListener('click', this.closeDropdownOutside);
+    });
   }
+}
+
+private closeDropdownOutside = (event: MouseEvent) => {
+  const dropdown = document.getElementById('dropdownDivider');
+  const trigger = document.querySelector('[data-dropdown-trigger]');
+  
+  const clickedInside = dropdown?.contains(event.target as Node) || 
+                       trigger?.contains(event.target as Node);
+
+  if (!clickedInside) {
+    this.isDropdownOpen = false;
+    dropdown?.classList.add('hidden');
+    document.removeEventListener('click', this.closeDropdownOutside);
+  }
+};
+
+  // Add this state variable
+isNotificationDropdownOpen = false;
+
+// Modified notification toggle function
+toggleNotificationDropdown() {
+  this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+  
+  if (this.isNotificationDropdownOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', this.closeNotificationOutside);
+    });
+  }
+}
+
+// Private handler for outside clicks
+private closeNotificationOutside = (event: MouseEvent) => {
+  const dropdown = document.getElementById('notificationDropdown');
+  const trigger = document.querySelector('[data-notification-trigger]');
+  
+  const clickedInside = dropdown?.contains(event.target as Node) || 
+                       trigger?.contains(event.target as Node);
+
+  if (!clickedInside) {
+    this.isNotificationDropdownOpen = false;
+    dropdown?.classList.add('hidden');
+    document.removeEventListener('click', this.closeNotificationOutside);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+// Add to your component class
+isMessagesDropdownOpen = false;
+
+toggleMessagesDropdown() {
+  this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
+  
+  if (this.isMessagesDropdownOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', this.closeMessagesOutside);
+    });
+  }
+}
+
+private closeMessagesOutside = (event: MouseEvent) => {
+  const dropdown = document.getElementById('messagesDropdown');
+  const trigger = document.querySelector('[data-messages-trigger]');
+  
+  const clickedInside = dropdown?.contains(event.target as Node) || 
+                       trigger?.contains(event.target as Node);
+
+  if (!clickedInside) {
+    this.isMessagesDropdownOpen = false;
+    dropdown?.classList.add('hidden');
+    document.removeEventListener('click', this.closeMessagesOutside);
+  }
+};
 }

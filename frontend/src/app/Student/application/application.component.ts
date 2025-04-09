@@ -18,8 +18,6 @@ export class ApplicationComponent {
     }
   }
 
-  // Optional: Programmatically trigger file dialog
-  openFileDialog() {
-    this.fileInput.nativeElement.click();
-  }
+  
+  
 }
