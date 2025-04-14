@@ -1,25 +1,33 @@
 package com.example.backend.services.internshipService;
 
+import com.example.backend.dto.EnterpriseDTO;
+import com.example.backend.dto.InternshipResponse;
+import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
 import com.example.backend.entity.Student;
+import com.example.backend.repository.EnterpriseRepository;
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.StudentRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InternshipServiceImpl implements InternshipService{
 
     private final InternshipRepository internshipRepository;
     private final StudentRepository studentRepository;
+    private final EnterpriseRepository enterpriseRepository;
 
     @Autowired
-    public InternshipServiceImpl(InternshipRepository internshipRepository, StudentRepository studentRepository) {
+    public InternshipServiceImpl(InternshipRepository internshipRepository, StudentRepository studentRepository, EnterpriseRepository enterpriseRepository) {
         this.internshipRepository = internshipRepository;
         this.studentRepository = studentRepository;
+        this.enterpriseRepository = enterpriseRepository;
     }
 
     @Override
@@ -59,8 +67,21 @@ public class InternshipServiceImpl implements InternshipService{
     }
 
     @Override
-    public List<Internship> getInternshipsByEnterprise(Long enterpriseId) {
-        return internshipRepository.findByEnterpriseId(enterpriseId);
+    public List<InternshipResponse> getInternshipsByEnterprise(Long enterpriseId) {
+        Optional<Enterprise> enterprise = enterpriseRepository.findById(enterpriseId);
+        List<Internship> internships = enterprise.get().getCreatedInternships();
+       return internships.stream()
+                .map(internship -> {
+                    InternshipResponse response = new InternshipResponse();
+                    response.setStatus(internship.getStatus().toString());
+                    BeanUtils.copyProperties(internship, response);
+                    EnterpriseDTO enterpriseDTO = new EnterpriseDTO();
+                    BeanUtils.copyProperties(internship.getEnterprise(), enterpriseDTO);
+                    response.setEnterprise(enterpriseDTO); // Assuming you map enterprise to DTO
+                    return response;
+                })
+                .collect(Collectors.toList());
+
     }
 
     @Override

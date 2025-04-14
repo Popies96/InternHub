@@ -11,7 +11,7 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public Task updateBloc(Task task) {
+    public Task updateTask(Task task) {
         return null;
     }
 

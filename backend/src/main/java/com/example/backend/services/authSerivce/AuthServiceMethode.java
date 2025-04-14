@@ -1,4 +1,4 @@
-package com.example.backend.services;
+package com.example.backend.services.authSerivce;
 
 import com.example.backend.dto.SignupRequest;
 import com.example.backend.entity.Enterprise;
@@ -10,7 +10,11 @@ import com.example.backend.repository.StudentRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,10 +34,10 @@ public class AuthServiceMethode implements AuthService{
     }
 
     @Override
-    public boolean createEtudiant(SignupRequest signupRequest) {
+    public User createEtudiant(SignupRequest signupRequest) {
         //Check if etudiant already exist
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            return false;
+            return null;
         }
 
         if (signupRequest.getRole() == null || signupRequest.getRole().isEmpty()) {
@@ -77,6 +81,55 @@ public class AuthServiceMethode implements AuthService{
         } else if (user instanceof Enterprise) {
             enterpriseRepository.save((Enterprise) user);
         }
-        return true;
+        return user;
     }
+    public User updateUser(SignupRequest signupRequest, OAuth2AuthenticationToken auth2AuthenticationToken) {
+        // Find the user by email
+        OAuth2User oAuth2User = auth2AuthenticationToken.getPrincipal();
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        User existingUser = userRepository.findByEmail(email).orElse(null);
+        System.out.println(existingUser);
+        if (existingUser == null) {
+            return null;
+        }
+
+        existingUser.setPhone(signupRequest.getPhone());
+        existingUser.setNom(name);
+
+        if (signupRequest.getRole() != null && !signupRequest.getRole().isEmpty()) {
+            existingUser.setRole(UserRole.valueOf(signupRequest.getRole().toUpperCase()));
+
+            switch (signupRequest.getRole().toUpperCase()) {
+                case "STUDENT":
+                        Student student = new Student();
+                        BeanUtils.copyProperties(existingUser, student);
+                        student.setSchool(signupRequest.getSchool());
+                        student.setCin(signupRequest.getCin());
+                        existingUser = student;
+                    break;
+
+                case "ENTERPRISE":
+                        Enterprise enterprise = new Enterprise();
+                        enterprise.setCompanyName(signupRequest.getCompanyName());
+                        enterprise.setCompanyAddress(signupRequest.getCompanyAddress());
+                        existingUser = enterprise;
+
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Invalid role");
+            }
+        }
+        userRepository.save(existingUser);
+        if (existingUser instanceof Student) {
+            studentRepository.save((Student) existingUser);
+        } else if (existingUser instanceof Enterprise) {
+            enterpriseRepository.save((Enterprise) existingUser);
+        }
+        // Save the updated user
+
+        return existingUser;
+    }
+
 }

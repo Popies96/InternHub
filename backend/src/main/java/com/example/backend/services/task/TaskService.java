@@ -7,7 +7,7 @@ import java.util.List;
 public interface TaskService {
 
         List<Task> retrieveTask();
-        Task updateBloc(Task task);
+        Task updateTask(Task task);
         Task addTask(Task task);
         Task retrieveTask(long idTask);
         void removeTask(long idTask);
