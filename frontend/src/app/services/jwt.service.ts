@@ -6,13 +6,14 @@ const baseUrl = 'http://localhost:8088/internhub/';
 @Injectable({
   providedIn: 'root'
 })
-
 export class JwtService {
-
-  
   constructor(private http: HttpClient) { }
-  register(data:any):Observable<any>{
-    return this.http.post(baseUrl+'signup',data);
+  
+  register(data: any): Observable<any> {
+    return this.http.post(baseUrl + 'signup', data);
+  }
 
+  login(data: any): Observable<any> {
+    return this.http.post(baseUrl + 'login', data);
   }
 }

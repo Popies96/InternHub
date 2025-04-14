@@ -23,6 +23,10 @@ import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { SettingsComponent } from './Student/settings/settings.component';
 import { InternshipsComponent } from './Student/internships/internships.component';
 import { TasksComponent } from './Student/tasks/tasks.component';
+import { CertificateComponent } from './Student/certificate/certificate.component';
+import { InterviewComponent } from './Student/interview/interview.component';
+import { CertificatesComponent } from './Student/certificates/certificates.component';
+import { CompanydashboardComponent } from './company/companydashboard/companydashboard.component';
 
 
 @NgModule({
@@ -45,6 +49,10 @@ import { TasksComponent } from './Student/tasks/tasks.component';
     SettingsComponent,
     InternshipsComponent,
     TasksComponent,
+    CertificateComponent,
+    InterviewComponent,
+    CertificatesComponent,
+    CompanydashboardComponent,
   
   ],
   imports: [

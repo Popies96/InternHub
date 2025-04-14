@@ -65,4 +65,5 @@ export class SignupComponent implements OnInit {
       console.log('Form is invalid');
     }
   }
+  
 }

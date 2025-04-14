@@ -12,6 +12,11 @@ import { IdeComponent } from './components/ide/ide.component';
 import { SettingsComponent } from './Student/settings/settings.component';
 import { InternshipsComponent } from './Student/internships/internships.component';
 import { TasksComponent } from './Student/tasks/tasks.component';
+import { CertificateComponent } from './Student/certificate/certificate.component';
+import { InterviewComponent } from './Student/interview/interview.component';
+import { CertificatesComponent } from './Student/certificates/certificates.component';
+import { RenduComponent } from './Student/rendu/rendu.component';
+import { CompanydashboardComponent } from './company/companydashboard/companydashboard.component';
 
 const routes: Routes = [
   {
@@ -26,8 +31,23 @@ const routes: Routes = [
       {path :'ide' , component:IdeComponent , data: { breadcrumb: 'IDE' } }, 
       {path :'settings' , component:SettingsComponent , data: { breadcrumb: 'Settings' }}, 
       {path :'tasks' , component:TasksComponent , data: { breadcrumb: 'Tasks' }},
+      {path : 'rendu' , component:RenduComponent , data: { breadcrumb: 'Report' }},
+      {path : 'certif' , 
+        children: [
+          {path: '', component: CertificatesComponent, data: { breadcrumb: 'Certificates' }},
+          {path: 'certif_detail', component: CertificateComponent, data: { breadcrumb: 'Certificate' }}
+        ]
+      },
+      {path : 'interview' , component:InterviewComponent , data: { breadcrumb: 'Interviews' } }
+    ],
+  },
 
-     
+
+  {
+    path: "company",
+    component: CompanydashboardComponent,
+    children: [
+      {path: '', component: CompanydashboardComponent },
     ],
   },
 
