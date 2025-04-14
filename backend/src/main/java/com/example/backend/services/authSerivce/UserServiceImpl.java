@@ -1,4 +1,4 @@
-package com.example.backend.services.authSerivce;
+package com.example.backend.services;
 
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
@@ -10,8 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -40,21 +38,5 @@ public class UserServiceImpl implements UserDetailsService {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    public  User loginRegisterByGoogleOAuth2(OAuth2AuthenticationToken auth2AuthenticationToken){
-
-        OAuth2User oAuth2User = auth2AuthenticationToken.getPrincipal();
-        String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
-
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            user = new User();
-            user.setNom(name);
-            user.setEmail(email);
-            return userRepository.save(user);
-        }
-        return user;
     }
 }

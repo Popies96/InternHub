@@ -1,17 +1,13 @@
 package com.example.backend.controllers;
 
-import com.example.backend.dto.EnterpriseDTO;
-import com.example.backend.dto.InternshipResponse;
-import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
-import com.example.backend.entity.User;
-import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.services.internshipService.InternshipService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +16,10 @@ import java.util.List;
 @RequestMapping("/internship")
 public class StudentInternshipController {
     private final InternshipService internshipService;
-    private final UserServiceImpl userService;
+
     @Autowired
-    public StudentInternshipController(InternshipService internshipService, UserServiceImpl userService) {
+    public StudentInternshipController(InternshipService internshipService) {
         this.internshipService = internshipService;
-        this.userService = userService;
     }
 
     @GetMapping("/admin")
@@ -51,40 +46,12 @@ public class StudentInternshipController {
     // Add a new internship (Only enterprise can create internships)
     @PostMapping("/enterprise")
     @PreAuthorize("hasRole('ENTERPRISE')")
-    public ResponseEntity<InternshipResponse> createInternship(@RequestBody Internship internship) {
-        User authenticatedEnterprise = userService.getAuthenticatedUser();
+    public ResponseEntity<Internship> addInternship(@RequestBody Internship internship) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("User Roles: " + auth.getAuthorities());
 
-        if (!(authenticatedEnterprise instanceof Enterprise)) {
-            throw new RuntimeException("Only enterprises can create internships.");
-        }
-
-        internship.setEnterprise((Enterprise) authenticatedEnterprise);
-        internshipService.addInternship(internship);
-        InternshipResponse dto = new InternshipResponse();
-        BeanUtils.copyProperties(internship, dto);
-        if (internship.getStatus() != null) {
-            dto.setStatus(internship.getStatus().toString());
-        }
-
-        if (internship.getEnterprise() != null) {
-            EnterpriseDTO enterpriseDTO = new EnterpriseDTO();
-            BeanUtils.copyProperties(internship.getEnterprise(), enterpriseDTO);
-            dto.setEnterprise(enterpriseDTO);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-    }
-
-    @GetMapping("/enterprise")
-    @PreAuthorize("hasRole('ENTERPRISE')")  // get internships for enterprise
-    public ResponseEntity<List<InternshipResponse>> getInternshipsByEnterprise() {
-        User authenticatedEnterprise = userService.getAuthenticatedUser();
-
-        if (!(authenticatedEnterprise instanceof Enterprise)) {
-            throw new RuntimeException("user is not an enterprise");
-        }
-
-
-        return ResponseEntity.ok(internshipService.getInternshipsByEnterprise(authenticatedEnterprise.getId()) );
+        Internship createdInternship = internshipService.addInternship(internship);
+        return ResponseEntity.ok(createdInternship);
     }
 
     // Update an internship

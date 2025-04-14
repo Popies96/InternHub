@@ -5,8 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -63,25 +61,6 @@ public class JwtUtil {
 
         claims.put("roles", roles);  // Add roles to token
         return createToken(claims, userDetails.getUsername());
-    }
-    public String generateTokenWithoutRole(OAuth2AuthenticationToken authenticationToken) {
-        // Get the OAuth2 user from the token
-        OAuth2User oAuth2User = authenticationToken.getPrincipal();
-
-        // Extract user information (like email) from the OAuth2 user
-        String username = oAuth2User.getAttribute("email"); // Assuming the attribute is "email"
-
-        // Prepare the claims for the token
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", List.of()); // No roles yet, or can be omitted
-        claims.put("hasRole", false); // Flag indicating the user needs to choose a role
-        claims.put("email", username); // Add email (or username)
-
-        // Optionally: Add a temporary role like "OAUTH2_USER"
-        // claims.put("roles", List.of("OAUTH2_USER"));
-
-        // Generate and return the token
-        return createToken(claims, username);
     }
 
 

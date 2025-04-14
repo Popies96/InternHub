@@ -1,12 +1,8 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.LoginRequest;
-import com.example.backend.entity.User;
-import com.example.backend.services.authSerivce.AuthService;
-import com.example.backend.services.authSerivce.OAuth2Authentication;
-import com.example.backend.services.authSerivce.UserServiceImpl;
+import com.example.backend.services.UserServiceImpl;
 import com.example.backend.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +11,30 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/login")
 public class LoginController {
     private final AuthenticationManager authenticationManager;
+
     private final UserServiceImpl etudiantService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public LoginController(AuthenticationManager authenticationManager, AuthService authService, OAuth2Authentication authentication, UserServiceImpl etudiantService, JwtUtil jwtUtil) {
+    public LoginController(AuthenticationManager authenticationManager, UserServiceImpl etudiantService, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
-
         this.etudiantService = etudiantService;
         this.jwtUtil = jwtUtil;
     }
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(
@@ -62,11 +59,5 @@ public class LoginController {
         return ResponseEntity.ok(Map.of("token", jwt, "roles", roles));
 
     }
-    @GetMapping("/google")
-    public ResponseEntity<String > loginGoogleAuth(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/oauth2/authorization/google");
-        return ResponseEntity.ok("Redirecting ..");
-    }
-
 
 }

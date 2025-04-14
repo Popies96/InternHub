@@ -31,11 +31,11 @@ public class Internship {
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id", nullable = false)
-    private Enterprise enterprise; // The enterprise that created the internship
+    private User enterprise; // The enterprise that created the internship
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private Student student; // The student who takes the internship
+    private User student; // The student who takes the internship
 
     @OneToMany(mappedBy = "internship", cascade = CascadeType.ALL)
     private List<Task> tasks; // Tasks assigned to this internship
@@ -108,7 +108,7 @@ public class Internship {
         return enterprise;
     }
 
-    public void setEnterprise(Enterprise enterprise) {
+    public void setEnterprise(User enterprise) {
         this.enterprise = enterprise;
     }
 
@@ -116,7 +116,7 @@ public class Internship {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(User student) {
         this.student = student;
     }
 

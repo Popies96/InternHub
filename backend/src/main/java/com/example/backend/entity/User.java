@@ -29,6 +29,13 @@ public class User {
 
 
 
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
+    private List<Internship> createdInternships;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private Set<Internship> appliedInternships;
+
+
     public Long getId() {
         return id;
     }
@@ -85,5 +92,19 @@ public class User {
         this.role = role;
     }
 
+    public List<Internship> getCreatedInternships() {
+        return createdInternships;
+    }
 
+    public void setCreatedInternships(List<Internship> createdInternships) {
+        this.createdInternships = createdInternships;
+    }
+
+    public Set<Internship> getAppliedInternships() {
+        return appliedInternships;
+    }
+
+    public void setAppliedInternships(Set<Internship> appliedInternships) {
+        this.appliedInternships = appliedInternships;
+    }
 }
