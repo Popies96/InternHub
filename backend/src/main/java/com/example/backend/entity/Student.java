@@ -42,6 +42,9 @@ public class Student extends User {
     private Long cin; // Unique identifier for students
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Internship> internships; // Internships assigned to student
+    private List<Internship> internships;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL )
+    private List<InternshipAi> internshipAiList;
 }
 

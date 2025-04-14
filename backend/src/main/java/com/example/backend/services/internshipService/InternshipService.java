@@ -1,5 +1,6 @@
 package com.example.backend.services.internshipService;
 
+import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Internship;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface InternshipService {
     void removeInternship(long idInternship);
 
     List<Internship> getInternshipsByStudent(Long studentId);
-    List<Internship> getInternshipsByEnterprise(Long enterpriseId);
+    List<InternshipResponse> getInternshipsByEnterprise(Long enterpriseId);
 
     Internship applyForInternship(Long internshipId, Long studentId);
 }
