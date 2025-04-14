@@ -1,0 +1,67 @@
+<div class="container mt-4">
+    <h2>{{ isEditMode ? 'Edit' : 'Add' }} Certificate</h2>
+    
+    <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" formControlName="title">
+          <div *ngIf="certificateForm.get('title')?.invalid && certificateForm.get('title')?.touched" 
+               class="text-danger">
+            Title is required
+          </div>
+        </div>
+  
+        <div class="col-md-6 mb-3">
+          <label for="issueDate" class="form-label">Issue Date</label>
+          <input type="date" class="form-control" id="issueDate" formControlName="issueDate">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="verificationID" class="form-label">Verification ID</label>
+          <input type="text" class="form-control" id="verificationID" formControlName="verificationID">
+        </div>
+  
+        <div class="col-md-6 mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" formControlName="status">
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="certificateContent" class="form-label">Certificate Content</label>
+        <textarea class="form-control" id="certificateContent" rows="5" 
+                  formControlName="certificateContent"></textarea>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="studentId" class="form-label">Student ID</label>
+          <input type="number" class="form-control" id="studentId" formControlName="studentId">
+        </div>
+  
+        <div class="col-md-4 mb-3">
+          <label for="internshipId" class="form-label">Internship ID</label>
+          <input type="number" class="form-control" id="internshipId" formControlName="internshipId">
+        </div>
+  
+        <div class="col-md-4 mb-3">
+          <label for="issuerId" class="form-label">Issuer ID (Optional)</label>
+          <input type="number" class="form-control" id="issuerId" formControlName="issuerId">
+        </div>
+      </div>
+  
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="router.navigate(['/certificates'])">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="certificateForm.invalid">
+          {{ isEditMode ? 'Update' : 'Create' }} Certificate
+        </button>
+      </div>
+    </form>
+  </div>

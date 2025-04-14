@@ -7,6 +7,7 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HeroSectionComponent } from './components/hero-section/hero-section.component';
@@ -19,12 +20,19 @@ import { OnboardComponent } from './components/onboard/onboard.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { InternshipAiComponent } from './pages/internship-ai/internship-ai.component';
 
+import { CertificatesComponent } from './certificate/certificates/certificates.component';
+import { EditCertificatesComponent } from './certificate/edit-certificates/edit-certificates.component';
+import { AddCertificatesComponent } from './certificate/add-certificates/add-certificates.component';
+import { DetailsCertificatesComponent } from './certificate/details-certificates/details-certificates.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
     HomeComponent,
     LoginComponent,
+
     NavbarComponent,
     HeroSectionComponent,
     AboutComponent,
@@ -35,6 +43,12 @@ import { InternshipAiComponent } from './pages/internship-ai/internship-ai.compo
     OnboardComponent,
     ForgotPasswordComponent,
     InternshipAiComponent,
+
+    CertificatesComponent,
+    EditCertificatesComponent,
+    AddCertificatesComponent,
+    DetailsCertificatesComponent
+
   ],
   imports: [
     BrowserModule,
@@ -42,6 +56,9 @@ import { InternshipAiComponent } from './pages/internship-ai/internship-ai.compo
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    ReactiveFormsModule,
+    FormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent],

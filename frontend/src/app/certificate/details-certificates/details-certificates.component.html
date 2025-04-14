@@ -1,0 +1,58 @@
+<div class="certificate-details-container" *ngIf="!isLoading && certificate">
+    <div class="certificate-header">
+      <button class="btn btn-outline-secondary" (click)="navigateToList()">
+        <i class="bi bi-arrow-left"></i> Back to List
+      </button>
+      <button class="btn btn-primary ms-2" (click)="printCertificate()">
+        <i class="bi bi-printer"></i> Print Certificate
+      </button>
+    </div>
+  
+    <div class="certificate-wrapper">
+      <div class="certificate-border">
+        <div class="certificate-content">
+          <div class="certificate-header">
+            <h1>Certificate of Completion</h1>
+          </div>
+  
+          <div class="certificate-body">
+            <p class="issue-date">{{ certificate!.issueDate | date:'longDate' }}</p>
+            
+            <p class="presented-to">This certificate is presented to</p>
+            <h2 class="recipient-name">{{ certificate!.studentFirstName }} {{ certificate!.studentLastName }}</h2>
+            
+            <p class="completion-text">for successfully completing the program</p>
+            <h3 class="program-name">{{ certificate!.internshipTitle }}</h3>
+            
+            <div class="certificate-description">
+              <p>{{ certificate!.certificateContent }}</p>
+            </div>
+            
+            <div class="verification-section">
+              <p>Verification ID: <strong>{{ certificate!.verificationID }}</strong></p>
+              <p>Certificate ID: <strong>{{ certificate!.id }}</strong></p>
+            </div>
+          </div>
+  
+          <div class="certificate-footer">
+            <div class="signature-section">
+              <div class="signature-line"></div>
+              <p class="issuer-name">{{ certificate!.issuerFirstName }} {{ certificate!.issuerLastName }}</p>
+              <p class="issuer-title">Authorized Signature</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading certificate details...</p>
+  </div>
+  
+  <div *ngIf="!isLoading && !certificate" class="alert alert-danger text-center">
+    Certificate not found
+  </div>

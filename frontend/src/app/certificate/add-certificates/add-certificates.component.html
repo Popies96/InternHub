@@ -1,0 +1,173 @@
+<div class="certificate-form-container">
+  <h2 class="form-header">Add New Certificate</h2>
+
+  <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Section Détails du certificat -->
+    <div class="form-section">
+      <div class="card form-card">
+        <div class="card-header">Certificate Details</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="title" class="form-label">Title*</label>
+                <input type="text" class="form-control" id="title" formControlName="title"
+                  placeholder="Enter certificate title"
+                  [ngClass]="{ 'is-invalid': f['title'].touched && f['title'].errors }">
+                <div *ngIf="f['title'].errors" class="invalid-feedback">
+                  <div *ngIf="f['title'].errors['required']">Title is required</div>
+                  <div *ngIf="f['title'].errors['minlength']">
+                    Title must be at least 3 characters
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="issueDate" class="form-label">Issue Date*</label>
+                <input type="date" class="form-control" id="issueDate" formControlName="issueDate"
+                  [ngClass]="{ 'is-invalid': f['issueDate'].touched && f['issueDate'].errors }">
+                <div *ngIf="f['issueDate'].errors" class="invalid-feedback">
+                  Issue date is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="verificationID" class="form-label">Verification ID*</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="verificationID" formControlName="verificationID"
+                    placeholder="Verification ID"
+                    [ngClass]="{ 'is-invalid': f['verificationID'].touched && f['verificationID'].errors }">
+                  <button type="button" class="btn btn-outline-secondary input-group-text"
+                    (click)="generateVerificationId()">
+                    <i class="bi bi-arrow-repeat"></i> Generate
+                  </button>
+                </div>
+                <div *ngIf="f['verificationID'].errors" class="invalid-feedback">
+                  Verification ID is required
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="status" class="form-label">Status*</label>
+                <select class="form-select" id="status" formControlName="status"
+                  [ngClass]="{ 'is-invalid': f['status'].touched && f['status'].errors }">
+                  <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="certificateContent" class="form-label">Content*</label>
+            <textarea class="form-control" id="certificateContent" rows="5" formControlName="certificateContent"
+              placeholder="Enter certificate content here..."
+              [ngClass]="{ 'is-invalid': f['certificateContent'].touched && f['certificateContent'].errors }"></textarea>
+            <div *ngIf="f['certificateContent'].errors" class="invalid-feedback">
+              <div *ngIf="f['certificateContent'].errors['required']">Content is required</div>
+              <div *ngIf="f['certificateContent'].errors['minlength']">
+                Content must be at least 10 characters
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Beneficiary & Program -->
+    <div class="form-section">
+      <div class="card form-card">
+        <div class="card-header">Beneficiary & Program Details</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="studentId" class="form-label">Student*</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="studentId" formControlName="studentId"
+                    placeholder="Enter student ID"
+                    [ngClass]="{ 'is-invalid': f['studentId'].touched && f['studentId'].errors }">
+                  <button type="button" class="btn btn-outline-secondary" (click)="loadStudentDetails()">
+                    <i class="bi bi-search"></i> Find
+                  </button>
+                </div>
+                <div *ngIf="studentDetails" class="student-info mt-2 p-2 bg-light rounded">
+                  <p><strong>Name:</strong> {{studentDetails.firstName}} {{studentDetails.lastName}}</p>
+                  <p><strong>Email:</strong> {{studentDetails.email}}</p>
+                </div>
+                <div *ngIf="f['studentId'].errors" class="invalid-feedback">
+                  <div *ngIf="f['studentId'].errors['required']">Student ID is required</div>
+                  <div *ngIf="f['studentId'].errors['pattern']">Must be a valid number</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="internshipId" class="form-label">Program*</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="internshipId" formControlName="internshipId"
+                    placeholder="Enter program ID"
+                    [ngClass]="{ 'is-invalid': f['internshipId'].touched && f['internshipId'].errors }">
+                  <button type="button" class="btn btn-outline-secondary" (click)="loadInternshipDetails()">
+                    <i class="bi bi-search"></i> Find
+                  </button>
+                </div>
+                <div *ngIf="internshipDetails" class="internship-info mt-2 p-2 bg-light rounded">
+                  <p><strong>Program:</strong> {{internshipDetails.title}}</p>
+                  <p><strong>Duration:</strong> {{internshipDetails.duration}} weeks</p>
+                </div>
+                <div *ngIf="f['internshipId'].errors" class="invalid-feedback">
+                  <div *ngIf="f['internshipId'].errors['required']">Program ID is required</div>
+                  <div *ngIf="f['internshipId'].errors['pattern']">Must be a valid number</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="issuerId" class="form-label">Issuer (Optional)</label>
+                <input type="number" class="form-control" id="issuerId" formControlName="issuerId"
+                  placeholder="Enter issuer ID">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="issuerId" class="form-label">Issuer ID</label>
+        <input type="number" class="form-control" id="issuerId" formControlName="issuerId"
+          placeholder="Enter issuer ID (optional)">
+      </div>
+    </div>
+
+
+    <!-- Boutons d'action -->
+    <div class="btn-actions">
+      <button type="button" class="btn btn-secondary" (click)="navigateToCertificateList()">
+        <i class="bi bi-x-circle"></i> Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading || certificateForm.invalid">
+        <span *ngIf="!isLoading">
+          <i class="bi bi-save"></i> Save Certificate
+        </span>
+        <span *ngIf="isLoading">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Saving...
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

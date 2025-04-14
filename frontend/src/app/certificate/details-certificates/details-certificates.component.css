@@ -1,0 +1,121 @@
+.certificate-details-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .certificate-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .certificate-wrapper {
+    background-color: #fff;
+    padding: 2rem;
+  }
+  
+  .certificate-border {
+    border: 15px solid #3498db;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .certificate-content {
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+  }
+  
+  .certificate-header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+  }
+  
+  .issue-date {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
+  .presented-to {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .recipient-name {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    text-decoration: underline;
+  }
+  
+  .completion-text {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .program-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 2rem;
+  }
+  
+  .certificate-description {
+    margin: 2rem 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: left;
+    padding: 0 10%;
+  }
+  
+  .verification-section {
+    margin: 2rem 0;
+    text-align: left;
+    padding: 0 10%;
+    font-size: 0.9rem;
+  }
+  
+  .certificate-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ddd;
+  }
+  
+  .signature-section {
+    float: right;
+    text-align: center;
+    margin-right: 10%;
+  }
+  
+  .signature-line {
+    width: 200px;
+    height: 1px;
+    background-color: #000;
+    margin: 0 auto 0.5rem;
+  }
+  
+  .issuer-name {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+  
+  .issuer-title {
+    font-style: italic;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  
+  @media print {
+    .certificate-header {
+      display: none;
+    }
+    
+    .certificate-border {
+      border: none;
+      padding: 0;
+    }
+  }
