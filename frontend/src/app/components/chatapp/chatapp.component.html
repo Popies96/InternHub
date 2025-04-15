@@ -1,0 +1,14 @@
+<div class="container mt-4">
+    <h3>WebSocket Messages</h3>
+  
+    <button (click)="sendTest()" class="btn btn-primary mb-2">
+      Send Test Message
+    </button>
+  
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let msg of messages">
+        {{ msg.content }} <small class="text-muted">from {{ msg.senderId }}</small>
+      </li>
+    </ul>
+  </div>
+  

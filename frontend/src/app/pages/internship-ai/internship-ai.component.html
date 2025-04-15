@@ -1,0 +1,43 @@
+<div class="p-6 max-w-3xl mx-auto bg-white rounded shadow">
+  <h2 class="text-xl font-semibold mb-4">Generate AI Internship</h2>
+
+  <form [formGroup]="internshipForm" (ngSubmit)="generate()" class="space-y-4">
+
+    <div>
+      <label class="block mb-1 font-medium">Duration</label>
+      <input formControlName="duration" type="text" placeholder="e.g. 3 months" class="w-full border rounded px-3 py-2" />
+    </div>
+
+    <div>
+      <label class="block mb-1 font-medium">Skills</label>
+      <div class="grid grid-cols-2 gap-2">
+        <label *ngFor="let skill of skills" class="flex items-center space-x-2">
+          <input type="checkbox" [value]="skill" (change)="onSkillChange($event)" />
+          <span>{{ skill }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1 font-medium">Category</label>
+      <select formControlName="category" class="w-full border rounded px-3 py-2">
+        <option value="" disabled selected>Select a category</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block mb-1 font-medium">Additional Description</label>
+      <textarea formControlName="description" rows="4" class="w-full border rounded px-3 py-2"></textarea>
+    </div>
+
+    <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+      Generate Internship
+    </button>
+  </form>
+
+  <div *ngIf="generatedInternship" class="mt-6 p-4 bg-gray-100 rounded">
+    <h3 class="font-semibold mb-2">Generated Internship:</h3>
+    
+  </div>
+</div>
