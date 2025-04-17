@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
           if (data.token != null) {
             const jwtToken = data.token;
             localStorage.setItem('token', jwtToken);
+            localStorage.setItem('email',this.loginForm.value.email);
           }
         },
         (error) => {

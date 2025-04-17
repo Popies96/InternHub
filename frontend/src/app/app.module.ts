@@ -19,6 +19,7 @@ import { OnboardComponent } from './components/onboard/onboard.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { InternshipAiComponent } from './pages/internship-ai/internship-ai.component';
 import { ChatappComponent } from './components/chatapp/chatapp.component';
+import { UserComponent } from './components/user/user.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ChatappComponent } from './components/chatapp/chatapp.component';
     ForgotPasswordComponent,
     InternshipAiComponent,
     ChatappComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
