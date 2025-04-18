@@ -31,7 +31,7 @@ export class ChatappComponent implements OnInit {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
         this.currentUser = user[0].id; // Assuming the user object has an 'id' property
-        this.UserName = user[0].username; // Assuming you need the username as well
+        this.UserName = user[0].nom; // Assuming you need the username as well
         console.log('UserName:', this.UserName);
 
         // ✅ Connect WebSocket only after user is loaded
@@ -41,6 +41,7 @@ export class ChatappComponent implements OnInit {
         console.error('Error fetching user from localStorage:', err);
       }
     });
+    this.listenForMessages();
 
     // Fetch the list of users to display in the UI
     this.userService.getUsers().subscribe({
@@ -56,29 +57,37 @@ export class ChatappComponent implements OnInit {
 
   // Listen for incoming messages via WebSocket (the service is responsible for keeping the connection alive)
   listenForMessages(): void {
+    console.log('Setting up message listener...');
     this.wsService.onMessage().subscribe((msg) => {
       console.log('Received message:', msg);
-      // Only add the message if it is for the selected user
-      if (
-        msg.senderId === this.selectedUser?.id ||
-        msg.recipientId === this.selectedUser?.id
-      ) {
+  
+      const sender = String(msg.senderId);
+      const recipient = String(msg.recipientId);
+      const selected = String(this.selectedUser?.id);
+      const current = String(this.currentUser);
+  
+      const isCurrentChat =
+        (sender === selected && recipient === current) ||
+        (sender === current && recipient === selected);
+  
+      if (isCurrentChat) {
         this.messages.push(msg);
+      } else {
+        console.log('Message is not for current chat. Ignoring.');
       }
     });
   }
-
-  // Select a user for messaging
+  
   selectUser(user: any): void {
     this.selectedUser = user;
     this.recipientId = user.id;
-    console.log('Recipient ID:', this.recipientId);
-    this.wsService.connect(this.recipientId); 
-
+    console.log(`Selecting user ${user.id}, current user is ${this.currentUser}`);
+  
+    this.wsService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
+  
     this.loadMessages(this.currentUser, this.recipientId);
-    this.listenForMessages();
-
   }
+  
 
   // Send a message to the selected user
   sendMessage(): void {
