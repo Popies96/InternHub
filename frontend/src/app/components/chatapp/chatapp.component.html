@@ -1,0 +1,24 @@
+<div class="user-list">
+  <h3>Users</h3>
+  <ul>
+    <li *ngFor="let user of users" (click)="selectUser(user)">
+      {{ user.prenom }} {{ user.nom }}
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="selectedUser" class="chat-box">
+  <h3>Chat with {{ selectedUser.prenom }} {{ selectedUser.nom }}</h3>
+
+  <div class="messages">
+    <div *ngFor="let message of messages">
+      <strong>{{ message.senderId === currentUser ? 'You' : selectedUser.prenom }}:</strong>
+      {{ message.content }}
+      <br />
+      <small>{{ message.timestamp | date:'short' }}</small>
+    </div>
+  </div>
+
+  <input [(ngModel)]="newMessage" placeholder="Type a message..." />
+  <button (click)="sendMessage()">Send</button>
+</div>
