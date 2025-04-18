@@ -20,6 +20,7 @@
     "@angular/router": "^16.1.0",
     "@materia-ui/ngx-monaco-editor": "^6.0.0",
     "autoprefixer": "^10.4.20",
+    "@google/generative-ai": "^0.24.0",
     "jwt-decode": "^4.0.0",
     "monaco-editor": "^0.52.2",
     "postcss": "^8.5.3",

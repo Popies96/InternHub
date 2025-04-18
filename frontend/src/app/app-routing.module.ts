@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SignupComponent } from './signup/signup.component';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
+import { SignupComponent } from '../app/pages/signup/signup.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { IndexComponent } from './Student/index/index.component';
-import { ConversationComponent } from './conversation/conversation.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 import { ApplicationComponent } from './Student/application/application.component';
 import { DashboardComponent } from './Student/dashboard/dashboard.component';
 import { IdeComponent } from './components/ide/ide.component';
@@ -17,10 +17,20 @@ import { InterviewComponent } from './Student/interview/interview.component';
 import { CertificatesComponent } from './Student/certificates/certificates.component';
 import { RenduComponent } from './Student/rendu/rendu.component';
 import { CompanydashboardComponent } from './company/companydashboard/companydashboard.component';
+import { CompanyInternshipsComponent } from './company/company-internships/company-internships.component';
+import { CompanyIndexComponent } from './company/company-index/company-index.component';
+import { AddInternshipComponent } from './company/add-internship/add-internship.component';
+import { InternsComponent } from './company/interns/interns.component';
+import { CompanyTasksComponent } from './company/company-tasks/company-tasks.component';
+import { ApplicationsComponent } from './company/applications/applications.component';
+import { AuthGuard } from './services/auth-guard.service';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 const routes: Routes = [
   {
     path: "student",
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_STUDENT'] },
     component: DashboardComponent,
     children: [
       {path: 'profile', component: ProfileComponent  , data: { breadcrumb: 'Profile' }},
@@ -42,22 +52,26 @@ const routes: Routes = [
     ],
   },
 
-
   {
     path: "company",
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ENTERPRISE'] },
     component: CompanydashboardComponent,
     children: [
-      {path: '', component: CompanydashboardComponent },
+      {path: '', component: CompanyIndexComponent },
+      {path: 'tasks', component: CompanyTasksComponent  , data: { breadcrumb: 'Tasks Management' }},
+      {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path: 'intern', component: CompanyInternshipsComponent , data: { breadcrumb: 'Internships' }},
+      {path: 'add_intern', component: AddInternshipComponent , data: { breadcrumb: 'Add Internship' }},
+      {path: 'p', component: InternsComponent , data: { breadcrumb: 'Add Internship' }},
+      {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }}
     ],
   },
 
-
-
-
-  { path: 'signup', component: SignupComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '', component: HomeComponent },
-  
+  { path: 'signup', component: SignupComponent , data: { roles: [] }},
+  { path: 'login', component: LoginComponent  , data: { roles: [] }},
+  { path: '', component: HomeComponent, data: { roles: [] }},
+  { path: 'unauthorized', component: UnauthorizedComponent },
 
 ];
 

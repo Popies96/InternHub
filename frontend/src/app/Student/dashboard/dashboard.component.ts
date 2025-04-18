@@ -14,6 +14,6 @@ export class DashboardComponent {
   }
 
   onSidebarToggled(isCompact: boolean) {
-    this.isSidebarCompact = isCompact; 
+    this.isSidebarCompact = isCompact;
   }
 }

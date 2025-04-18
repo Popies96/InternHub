@@ -43,5 +43,8 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Internship> internships; // Internships assigned to student
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Task> tasks;
 }
 

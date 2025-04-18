@@ -17,15 +17,12 @@ public class Internship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
     private String location;
     private int durationInMonths;
-
     private LocalDate startDate;
     private LocalDate endDate;
-
     @Enumerated(EnumType.STRING)
     private InternshipStatus status; // e.g., OPEN, FILLED, CLOSED
 

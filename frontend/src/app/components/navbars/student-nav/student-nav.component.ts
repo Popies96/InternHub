@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { JwtService } from 'src/app/services/jwt.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -10,7 +11,7 @@ import { filter } from 'rxjs/operators';
 export class StudentNavComponent {
   breadcrumbs: Array<{label: string, url: string}> = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute , private jwtService: JwtService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -120,7 +121,10 @@ private closeNotificationOutside = (event: MouseEvent) => {
 
 
 
-
+toggleLogout() {
+   this.jwtService.logout();
+   this.router.navigate(['/login']);
+}
 
 
 

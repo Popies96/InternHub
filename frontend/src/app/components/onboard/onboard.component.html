@@ -1,0 +1,70 @@
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-lg">
+      <h2 class="text-2xl font-bold text-center text-white mb-4">Complete Your Profile</h2>
+      <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()">
+        <!-- Role Selection -->
+        <div class="mb-4">
+            <div class="mt-3 flex justify-center items-center md:-mx-2">
+                          <button (click)="selectRole('enterprise')" 
+                              [class.bg-blue-500]="role === 'enterprise'" 
+                              [class.text-white]="role === 'enterprise'"
+                          class="flex justify-center w-full px-6 py-3 text-white bg-blue-500 dark:text-white rounded-lg md:w-auto md:mx-2 focus:outline-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </svg>
+  
+                              <span class="mx-2">
+                                  enterprise
+                              </span>
+                          </button>
+  
+                          <button (click)="selectRole('student')" 
+                              [class.bg-blue-500]="role === 'student'" 
+                              [class.text-white]="role === 'student'"
+                          class="flex justify-center w-full px-6 py-3 dark:text-white text-white bg-blue-500 rounded-lg md:w-auto md:mx-2 focus:outline-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+  
+                              <span class="mx-2">
+                                  student
+                              </span>
+                          </button>
+                      </div>
+        </div>
+   <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-300">Phone Number</label>
+          <input formControlName="phone" type="number" class="mt-1 p-2 w-full border rounded" />
+        </div>
+        <!-- Conditional Fields -->
+        <div *ngIf="role === 'student'">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300">School</label>
+            <input formControlName="school" type="text" class="mt-1 p-2 w-full border rounded" />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300">CIN</label>
+            <input formControlName="cin" type="text" class="mt-1 p-2 w-full border rounded" />
+          </div>
+        </div>
+  
+        <div *ngIf="role === 'enterprise'">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300">Company Name</label>
+            <input formControlName="companyName" type="text" class="mt-1 p-2 w-full border rounded" />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300">Company Address</label>
+            <input formControlName="companyAddress" type="text" class="mt-1 p-2 w-full border rounded" />
+          </div>
+        </div>
+  
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          Submit
+        </button>
+  
+      </form>
+    </div>
+  </div>
+  

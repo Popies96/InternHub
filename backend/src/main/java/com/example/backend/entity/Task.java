@@ -2,12 +2,14 @@ package com.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "tasks")
 public class Task {
 
@@ -15,15 +17,43 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String title;
     private String description;
+    private LocalDate deadline;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus status; // PENDING, IN_PROGRESS, COMPLETED
+    private TaskStatus status = TaskStatus.PENDING; // Default value
 
     @ManyToOne
-    @JoinColumn(name = "internship_id", nullable = false)
+    @JoinColumn(name = "internship_id")
     private Internship internship;
+    private LocalDate createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    private LocalDate updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDate.now();
+        this.updatedAt = LocalDate.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDate.now();
+    }
+
+    public enum TaskStatus {
+        PENDING,
+        IN_PROGRESS,
+        COMPLETED,
+        OVERDUE
+    }
+
 
     public Long getId() {
         return id;
@@ -33,28 +63,28 @@ public class Task {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public String getDescription() {
-        return description;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public TaskStatus getStatus() {
-        return status;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
 
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Internship getInternship() {
@@ -65,6 +95,40 @@ public class Task {
         this.internship = internship;
     }
 
-    // The internship this task belongs to
-}
+    public TaskStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    // Helper method to check if task is overdue
+    public boolean isOverdue() {
+        return LocalDate.now().isAfter(deadline) && status != TaskStatus.COMPLETED;
+    }
+}

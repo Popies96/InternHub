@@ -34,7 +34,8 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksByStudent(studentId));
     }*/
 
-    @PostMapping("/enterprise")
+    @PostMapping("/enterprise/addTask")
+
     //  @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Task> addTask(@RequestBody Task task) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -43,14 +44,14 @@ public class TaskController {
         return ResponseEntity.ok(createdTask);
     }
 
-    @PutMapping("/enterprise/{id}")
+    @PutMapping("/enterprise/updateTask/{id}")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         task.setId(id);
         return ResponseEntity.ok(taskService.updateTask(task));
     }
 
-    @DeleteMapping("/enterprise/{id}")
+    @DeleteMapping("/enterprise/deleteTask/{id}")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<Void> removeTask(@PathVariable Long id) {
         taskService.removeTask(id);

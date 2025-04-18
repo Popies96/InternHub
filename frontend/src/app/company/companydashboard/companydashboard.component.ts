@@ -7,15 +7,15 @@ import { Component } from '@angular/core';
 })
 export class CompanydashboardComponent {
 
-  isSidebarCompact = false;
+  isCompanySidebarCompact = false;
 
   toggleProfile() {
     const profile = document.getElementById('profile');
     profile?.classList.toggle('hidden');
   }
 
-  onSidebarToggled(isCompact: boolean) {
-    this.isSidebarCompact = isCompact; 
+  onCompanySidebarToggled(isCompanyCompact: boolean) {
+    this.isCompanySidebarCompact = isCompanyCompact;
   }
 }
 
