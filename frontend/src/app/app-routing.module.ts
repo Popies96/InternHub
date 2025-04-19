@@ -30,6 +30,7 @@ import { CompanyTasksComponent } from './company/company-tasks/company-tasks.com
 import { ApplicationsComponent } from './company/applications/applications.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
       {path: 'profile', component: ProfileComponent  , data: { breadcrumb: 'Profile' }},
       {path: '', component: IndexComponent },
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path: 'chatpopup', component: ChatpopupComponent  , data: { breadcrumb: 'Chat' }},
       {path :'intern' , component:InternshipsComponent, data: { breadcrumb: 'Internships' }} , 
       {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }},
       {path :'ide' , component:IdeComponent , data: { breadcrumb: 'IDE' } }, 
@@ -66,6 +68,7 @@ const routes: Routes = [
       {path: '', component: CompanyIndexComponent },
       {path: 'tasks', component: CompanyTasksComponent  , data: { breadcrumb: 'Tasks Management' }},
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path: 'chatpopup', component: ChatpopupComponent  , data: { breadcrumb: 'Chat' }},
       {path: 'intern', component: CompanyInternshipsComponent , data: { breadcrumb: 'Internships' }},
       {path: 'add_intern', component: AddInternshipComponent , data: { breadcrumb: 'Add Internship' }},
       {path: 'p', component: InternsComponent , data: { breadcrumb: 'Add Internship' }},

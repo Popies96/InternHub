@@ -46,6 +46,7 @@ import { RenduComponent } from './Student/rendu/rendu.component';
 import { SettingsComponent } from './Student/settings/settings.component';
 import { TasksComponent } from './Student/tasks/tasks.component';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
+import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
     CompanySidebarComponent,
     CompanyTasksComponent,
     ApplicationsComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    ChatpopupComponent
   ],
   imports: [
     BrowserModule,

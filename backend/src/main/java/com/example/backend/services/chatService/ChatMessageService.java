@@ -8,7 +8,6 @@ public interface ChatMessageService {
     ChatMessage save(ChatMessage chatMessage);
     List<ChatMessage> findChatMessages(String senderId, String recipientId);
 
-
 }
 
 

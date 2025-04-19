@@ -1,21 +1,9 @@
 .nbr-msg {
-    display: none; /* Initially hidden */
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 8px;
-    height: 8px;
-    background-color: red;
+    margin-left: 10px;
+    background-color: #f8fa6f;
+    color: rgb(255, 0, 0);
+    padding: 5px;
+    width: 10px;
     border-radius: 50%;
-    color: white;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  
-  /* When the notification is shown */
-  .nbr-msg.show {
-    display: flex; /* Show the notification dot */
-  }
+    height: 10px;
+}

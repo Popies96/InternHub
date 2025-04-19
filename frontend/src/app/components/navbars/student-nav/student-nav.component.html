@@ -74,60 +74,44 @@
   <div 
     id="messagesDropdown"
     [class.hidden]="!isMessagesDropdownOpen"
-    class="absolute right-0 mt-4 w-72 bg-white rounded-md shadow-lg overflow-hidden z-20 border border-gray-200"
-  >
-    <div class="py-1">
-      <div class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Messages (5)</div>
-      
-      <!-- Message Item 1 -->
-      <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b">
-        <div class="flex items-center">
-          <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">Eri Mitnick</p>
-            <p class="text-xs text-gray-500">Hey, about our meeting tomorrow...</p>
-          </div>
+    class="absolute right-0 mt-4 w-72 bg-white rounded-md shadow-lg overflow-hidden z-20 border border-gray-200">
+    
+    <ul class="space-y-4 max-h-80 overflow-y-auto">
+      <li *ngFor="let user of users"
+          class="flex items-center cursor-pointer p-3 rounded-lg hover:bg-blue-100 transition-colors relative"
+          [class.bg-blue-200]="user === selectedUser"
+          (click)="openChat(user)">
+          
+        <!-- Avatar -->
+        <div class="w-14 h-14 bg-gray-300 rounded-full overflow-hidden shadow-lg">
+          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)"
+               alt="User Avatar"
+               class="w-full h-full object-cover">
         </div>
-      </a>
 
-       <!-- Message Item 1 -->
-       <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b">
-        <div class="flex items-center">
-          <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">Ryan Mitnick</p>
-            <p class="text-xs text-gray-500">Hey, can we schedule a call...</p>
-          </div>
+        <!-- User Info -->
+        <div class="ml-4 flex-1">
+          <h2 class="text-lg font-medium text-gray-800">{{ user.nom }}</h2>
+          <p class="text-xs text-gray-500 mt-1">
+            <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
+              <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
+              {{ (lastMsg.content | slice:0:15) + (lastMsg.content.length > 15 ? '...' : '') }}
+            </ng-container>
+            <ng-template #noMsg>No Messages</ng-template>
+          </p>
         </div>
-      </a>
+      </li>
+    </ul>
 
-       <!-- Message Item 1 -->
-       <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b">
-        <div class="flex items-center">
-          <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">Alex Mitnick</p>
-            <p class="text-xs text-gray-500">Oh, this issue has been solved...</p>
-          </div>
-        </div>
-      </a>
-      
-      <!-- Message Item 2 -->
-      <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
-        <div class="flex items-center">
-          <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">Jasmine Mitnick</p>
-            <p class="text-xs text-gray-500">The documents are ready for review</p>
-          </div>
-        </div>
-      </a>
-    </div>
     <div class="bg-gray-50 px-4 py-2 text-center">
-      <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">View all messages</a>
+      <a href="/student/chat" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">View all messages</a>
     </div>
   </div>
+
+  <!-- Only ONE chat popup instance, placed outside the loop -->
+  <app-chatpopup #popup [SelectedUserInput]="userToSend"></app-chatpopup>
 </div>
+
 
 
 

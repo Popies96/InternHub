@@ -1,129 +1,95 @@
-<div class="grid grid-cols-4 flex-1 ">
-  <div class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
-      <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
-        <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar" class="w-12 h-12 rounded-full">
-      </div>
-      <div class="flex-1">
-        <h2 class="text-lg font-semibold">Alice</h2>
-        <p class="text-gray-600">Hoorayy!!</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
-      <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
-        <img src="https://placehold.co/200x/ad922e/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar" class="w-12 h-12 rounded-full">
-      </div>
-      <div class="flex-1">
-        <h2 class="text-lg font-semibold">Martin</h2>
-        <p class="text-gray-600">That pizza place was amazing! We should go again sometime. 🍕</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
-      <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
-        <img src="https://placehold.co/200x/2e83ad/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar" class="w-12 h-12 rounded-full">
-      </div>
-      <div class="flex-1">
-        <h2 class="text-lg font-semibold">Charlie</h2>
-        <p class="text-gray-600">Hey, do you have any recommendations for a good movie to watch?</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
-      <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
-        <img src="https://placehold.co/200x/c2ebff/0f0b14.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar" class="w-12 h-12 rounded-full">
-      </div>
-      <div class="flex-1">
-        <h2 class="text-lg font-semibold">David</h2>
-        <p class="text-gray-600">I just finished reading a great book! It was so captivating.</p>
-      </div>
-    </div>
-    
+<div class="grid grid-cols-4 flex-1 gap-4 p-4 bg-gray-50">
 
-  </div>
-<div class="flex h-screen bg-gray-50">
   <!-- User List -->
-  <div class="w-1/4 border-r border-gray-200 p-4 overflow-y-auto">
-    <h3 class="text-xl font-semibold mb-4">Users</h3>
-    <ul>
-      <li *ngFor="let user of users"
-      [id]="user.id"
-      (click)="selectUser(user)"
-      class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md relative"
-      [class.bg-gray-200]="user === selectedUser"
-      [class.active]="user === selectedUser">
-        <div class="w-12 h-12 bg-gray-300 rounded-full mr-3 relative">
-          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)" 
-               alt="User Avatar"
-               class="w-12 h-12 rounded-full">
-          <!-- 🔴 Notification Dot -->
-          <span class="nbr-msg hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">!</span>
-        </div>
-        <div class="flex-1">
-          <h2 class="text-lg font-semibold">{{ user.nom }}</h2>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <!-- Chat Area -->
-  <div class="flex-1 flex flex-col h-screen" *ngIf="selectedUser">
-    <!-- Chat Header -->
-    <div class="bg-white p-4 border-b border-gray-200">
-      <div class="flex items-center">
-        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser.prenom.charAt(0)" 
-             class="w-10 h-10 rounded-full mr-3">
-        <div>
-          <h2 class="font-semibold text-lg">{{ selectedUser.nom }}</h2>
-          <p class="text-sm text-gray-500">Online</p>
-        </div>
+  <ul class="space-y-4">
+    <li *ngFor="let user of users"
+        [id]="user.id"
+        (click)="selectUser(user)"
+        class="flex items-center cursor-pointer p-3 rounded-lg hover:bg-blue-100 transition-colors"
+        [class.bg-blue-200]="user === selectedUser"
+        [class.active]="user === selectedUser">
+      <!-- Avatar -->
+      <div class="w-14 h-14 bg-gray-300 rounded-full relative overflow-hidden shadow-lg">
+        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)"
+             alt="User Avatar"
+             class="w-full h-full object-cover">
       </div>
-    </div>
 
-
-    <!-- Chat Messages -->
-    <div class="chat-area flex-1 overflow-y-auto p-4 bg-gray-100 space-y-2">
-      <div *ngFor="let message of messages">
-        
-        <!-- Sent by current user (goes to selected user) – right side -->
-        <div *ngIf="+message.senderId === +currentUser && +message.recipientId === +selectedUser?.id" 
-        class="flex items-end justify-end mb-3">
-          <div class="bg-indigo-500 text-white rounded-lg p-3 max-w-xs">
-            <p>{{ message.content }}</p>
-            <small class="text-xs block mt-1 text-right opacity-70">
-              {{ message.timestamp | date:'shortTime' }}
-            </small>
-          </div>
-          <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=Y" class="w-8 h-8 rounded-full ml-2">
-        </div>
-    
-        <!-- Received from selected user (goes to current user) – left side -->
-     <div *ngIf="+message.senderId === +selectedUser?.id && +message.recipientId === +currentUser" 
-     class="flex items-end justify-start mb-3">
-          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom.charAt(0)" 
-               class="w-8 h-8 rounded-full mr-2">
-          <div class="bg-white text-black rounded-lg p-3 max-w-xs">
-            <p>{{ message.content }}</p>
-            <small class="text-xs block mt-1 text-right opacity-70">
-              {{ message.timestamp | date:'shortTime' }}
-            </small>
-          </div>
-        </div>
-    
+      <!-- User Info -->
+      <div class="ml-4 flex-1">
+        <h2 class="text-lg font-medium text-gray-800">{{ user.nom }}</h2>
+        <p class="text-xs text-gray-500 mt-1">
+          <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
+            <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
+            {{ (lastMsg.content | slice:0:15) + (lastMsg.content.length > 15 ? '...' : '') }}
+          </ng-container>
+          <ng-template #noMsg>No Messages</ng-template>
+        </p>
       </div>
-    </div>
+    </li>
+  </ul>
 
-    <!-- Message Input -->
-    <div class="bg-white border-t border-gray-200 p-4">
-      <div class="flex items-center">
-        <input [(ngModel)]="newMessage" 
-               type="text" 
-               placeholder="Type a message..." 
-               class="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-        <button (click)="sendMessage()" 
-                class="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-          Send
-        </button>
+</div>
+
+<!-- Chat Area -->
+<div class="flex-1 flex flex-col h-screen bg-white" *ngIf="selectedUser">
+  
+  <!-- Chat Header -->
+  <div class="bg-white p-4 border-b border-gray-200 shadow-sm">
+    <div class="flex items-center">
+      <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom?.charAt(0)"
+           alt="Selected User Avatar"
+           class="w-10 h-10 rounded-full mr-4 shadow-md">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">{{ selectedUser.nom }}</h2>
+        <p class="text-sm text-green-500">Online</p>
       </div>
     </div>
   </div>
+
+  <!-- Chat Messages -->
+  <div class="chat-area flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
+    <div *ngFor="let message of messages">
+      
+      <!-- Sent Message (Current User) -->
+      <div *ngIf="+message.senderId === +currentUser && +message.recipientId === +selectedUser?.id" 
+           class="flex justify-end mb-4">
+        <div class="bg-indigo-600 text-white rounded-lg px-4 py-3 max-w-xs shadow-md">
+          <p class="text-sm">{{ message.content }}</p>
+          <small class="text-xs opacity-80 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
+        </div>
+        <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=Y" 
+             alt="You"
+             class="w-8 h-8 rounded-full ml-3 shadow-sm">
+      </div>
+
+      <!-- Received Message (Other User) -->
+      <div *ngIf="+message.senderId === +selectedUser?.id && +message.recipientId === +currentUser" 
+           class="flex justify-start mb-4">
+        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom?.charAt(0)" 
+             alt="Sender Avatar"
+             class="w-8 h-8 rounded-full mr-3 shadow-sm">
+        <div class="bg-white text-gray-900 rounded-lg px-4 py-3 max-w-xs shadow-md">
+          <p class="text-sm">{{ message.content }}</p>
+          <small class="text-xs opacity-80 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Message Input -->
+  <div class="bg-white border-t border-gray-200 p-4">
+    <div class="flex items-center">
+      <input [(ngModel)]="newMessage" 
+             type="text" 
+             placeholder="Type a message..." 
+             class="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-md">
+      <button (click)="sendMessage()" 
+              class="ml-3 bg-blue-500 text-white px-5 py-2.5 rounded-full hover:bg-blue-600 transition duration-200">
+        Send
+      </button>
+    </div>
+  </div>
+
 </div>

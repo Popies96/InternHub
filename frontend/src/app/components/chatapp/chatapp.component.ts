@@ -3,7 +3,6 @@ import { WebService } from 'src/app/services/web.service';
 import { ChatMessage, MessageService } from 'src/app/services/message-service.service';
 import { HttpClient } from '@angular/common/http';
 import { User, UserService } from 'src/app/services/user.service';
-
 @Component({
   selector: 'app-chatapp',
   templateUrl: './chatapp.component.html',
@@ -18,6 +17,8 @@ export class ChatappComponent implements OnInit {
   recipientId = '';
   user!: User;
   UserName = '';
+  lastMessages: { [userId: string]: ChatMessage } = {};
+
 
   constructor(
     private wsService: WebService,
@@ -54,12 +55,12 @@ export class ChatappComponent implements OnInit {
         console.error('Error fetching users:', err);
       }
     });
-    
+    this.loadUsersAndLastMessages();
+
   }
 
   // Listen for incoming messages via WebSocket (the service is responsible for keeping the connection alive)
   listenForMessages(): void {
-    console.log('Setting up message listener...');
     this.wsService.onMessage().subscribe((msg) => {
       console.log('Received message:', msg);
   
@@ -76,25 +77,16 @@ export class ChatappComponent implements OnInit {
         this.messages.push(msg);
         setTimeout(() => {
           const chatArea = document.querySelector('.chat-area');
-          if (chatArea) {
-            chatArea.scrollTop = chatArea.scrollHeight;
-          }
+          if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
         }, 50);
-  
-        // Highlight the active user in the list
-        const selectedElement = document.getElementById(selected);
-        if (selectedElement) {
-          selectedElement.classList.add('active');
-        }
-  
-      } else {
-        // Show notification dot for the user who sent the message
-        const notifiedUser = document.getElementById(sender);
-        if (notifiedUser && !notifiedUser.classList.contains('active')) {
-          const nbrMsg = notifiedUser.querySelector('.nbr-msg');
-          if (nbrMsg) {
-            nbrMsg.classList.remove('hidden');
-            nbrMsg.textContent = ''; // empty text for dot
+      } else if (recipient === current) {
+        // 💡 This means someone sent ME a message but I'm not chatting with them
+        const userEl = document.getElementById(sender);
+        if (userEl && sender !== selected) {
+          const dot = userEl.querySelector('.nbr-msg') as HTMLElement;
+          if (dot) {
+            dot.classList.remove('hidden');
+            dot.textContent = '!'; // You can also put a number here
           }
         }
       }
@@ -108,8 +100,10 @@ export class ChatappComponent implements OnInit {
     console.log(`Selecting user ${user.id}, current user is ${this.currentUser}`);
   
     this.wsService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
+    
   
     this.loadMessages(this.currentUser, this.recipientId);
+    
   }
   
 
@@ -143,4 +137,30 @@ export class ChatappComponent implements OnInit {
       }
     });
   }
+
+  loadUsersAndLastMessages(): void {
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users.filter(u => u.id !== +this.currentUser); // Exclude self
+
+        this.users.forEach(user => {
+          this.messageService.getMessages(this.currentUser, user.id).subscribe({
+            next: (messages) => {
+              if (messages.length > 0) {
+                const lastMsg = messages[messages.length - 1]; // Just grab the last one
+                this.lastMessages[user.id] = lastMsg;
+              }
+            },
+            error: (err) => {
+              console.error('Error fetching messages with user', user.id, err);
+            }
+          });
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching users', err);
+      }
+    });
+  }
+ 
 }
