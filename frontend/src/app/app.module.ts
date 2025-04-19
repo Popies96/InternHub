@@ -20,6 +20,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { InternshipAiComponent } from './pages/internship-ai/internship-ai.component';
 import { ChatappComponent } from './components/chatapp/chatapp.component';
 import { UserComponent } from './components/user/user.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { UserComponent } from './components/user/user.component';
     InternshipAiComponent,
     ChatappComponent,
     UserComponent,
+    ConversationComponent,
   ],
   imports: [
     BrowserModule,

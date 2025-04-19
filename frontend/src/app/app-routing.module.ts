@@ -8,6 +8,7 @@ import { OnboardComponent } from './components/onboard/onboard.component';
 import { InternshipAiComponent } from './pages/internship-ai/internship-ai.component';
 import { ChatappComponent } from './components/chatapp/chatapp.component';
 import { UserComponent } from './components/user/user.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'dashboard', component: HomeComponent },
   { path: 'internshipAi', component: InternshipAiComponent },
   {path:'chat',component:ChatappComponent},
-  {path:'users',component:UserComponent}
+  {path:'users',component:UserComponent},
+  {path:'chatapp',component:ConversationComponent}
 
 
 ];

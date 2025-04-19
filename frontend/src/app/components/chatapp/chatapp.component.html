@@ -1,24 +1,83 @@
-<div class="user-list">
-  <h3>Users</h3>
-  <ul>
-    <li *ngFor="let user of users" (click)="selectUser(user)">
-      {{ user.prenom }} {{ user.nom }}
-    </li>
-  </ul>
-</div>
-
-<div *ngIf="selectedUser" class="chat-box">
-  <h3>Chat with {{ selectedUser.prenom }} {{ selectedUser.nom }}</h3>
-
-  <div class="messages">
-    <div *ngFor="let message of messages">
-      <strong>{{ message.senderId === currentUser ? 'You' : selectedUser.prenom }}:</strong>
-      {{ message.content }}
-      <br />
-      <small>{{ message.timestamp | date:'short' }}</small>
-    </div>
+<div class="flex h-screen bg-gray-50">
+  <!-- User List -->
+  <div class="w-1/4 border-r border-gray-200 p-4 overflow-y-auto">
+    <h3 class="text-xl font-semibold mb-4">Users</h3>
+    <ul>
+      <li *ngFor="let user of users"
+          (click)="selectUser(user)"
+          class="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
+          [class.bg-gray-200]="user === selectedUser">
+        <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
+          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)" 
+               alt="User Avatar"
+               class="w-12 h-12 rounded-full">
+        </div>
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold"> {{ user.nom }}</h2>
+        </div>
+      </li>
+    </ul>
   </div>
 
-  <input [(ngModel)]="newMessage" placeholder="Type a message..." />
-  <button (click)="sendMessage()">Send</button>
+  <!-- Chat Area -->
+  <div class="flex-1 flex flex-col h-screen" *ngIf="selectedUser">
+    <!-- Chat Header -->
+    <div class="bg-white p-4 border-b border-gray-200">
+      <div class="flex items-center">
+        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser.prenom.charAt(0)" 
+             class="w-10 h-10 rounded-full mr-3">
+        <div>
+          <h2 class="font-semibold text-lg">{{ selectedUser.nom }}</h2>
+          <p class="text-sm text-gray-500">Online</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto p-4 bg-gray-100 space-y-2">
+      <div *ngFor="let message of messages">
+        
+        <!-- Sent by current user (goes to selected user) – right side -->
+        <div *ngIf="+message.senderId === +currentUser && +message.recipientId === +selectedUser?.id" 
+        class="flex items-end justify-end mb-3">
+          <div class="bg-indigo-500 text-white rounded-lg p-3 max-w-xs">
+            <p>{{ message.content }}</p>
+            <small class="text-xs block mt-1 text-right opacity-70">
+              {{ message.timestamp | date:'shortTime' }}
+            </small>
+          </div>
+          <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=Y" class="w-8 h-8 rounded-full ml-2">
+        </div>
+    
+        <!-- Received from selected user (goes to current user) – left side -->
+     <div *ngIf="+message.senderId === +selectedUser?.id && +message.recipientId === +currentUser" 
+     class="flex items-end justify-start mb-3">
+          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom.charAt(0)" 
+               class="w-8 h-8 rounded-full mr-2">
+          <div class="bg-white text-black rounded-lg p-3 max-w-xs">
+            <p>{{ message.content }}</p>
+            <small class="text-xs block mt-1 text-right opacity-70">
+              {{ message.timestamp | date:'shortTime' }}
+            </small>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="bg-white border-t border-gray-200 p-4">
+      <div class="flex items-center">
+        <input [(ngModel)]="newMessage" 
+               type="text" 
+               placeholder="Type a message..." 
+               class="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+        <button (click)="sendMessage()" 
+                class="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

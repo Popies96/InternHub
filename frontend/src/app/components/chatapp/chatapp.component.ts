@@ -46,13 +46,15 @@ export class ChatappComponent implements OnInit {
     // Fetch the list of users to display in the UI
     this.userService.getUsers().subscribe({
       next: (users) => {
-        this.users = users;
+        // Convert currentUser to number before comparing
+        this.users = users.filter(user => user.id !== +this.currentUser);
         console.log('Fetched users:', this.users);
       },
       error: (err) => {
         console.error('Error fetching users:', err);
       }
     });
+    
   }
 
   // Listen for incoming messages via WebSocket (the service is responsible for keeping the connection alive)
