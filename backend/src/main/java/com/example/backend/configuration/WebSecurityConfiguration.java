@@ -28,9 +28,12 @@ import java.util.Map;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserServiceImpl userService;
     private final JwtUtil jwtUtil;
+
+
 
     @Autowired
     public WebSecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, UserServiceImpl userService, JwtUtil jwtUtil) {

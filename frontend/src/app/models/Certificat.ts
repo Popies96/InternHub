@@ -15,5 +15,4 @@ export class Certificate {
     studentLastName?: string;
     internshipId?: number;
     issuerId?: number;
-    skillBadges?: SkillBadge[];
   }  

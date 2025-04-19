@@ -9,26 +9,13 @@ public class CertificateRequest {
     private String title;
     private String description;
     private Long studentId;
+    private String studentFirstName;
+    private String studentLastName;
+    private String issuerFirstName;
+    private String issuerLastName;
+    private String intershipTitle;
     private Long internshipId;
     private Long issuerId;
     private String certificateContent;
-    public Long getStudentId() {
-        return studentId;
-    }
 
-    public Long getInternshipId() {
-        return internshipId;
-    }
-
-    public Long getIssuerId() {
-        return issuerId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCertificateContent() {
-        return certificateContent;
-    }
 }

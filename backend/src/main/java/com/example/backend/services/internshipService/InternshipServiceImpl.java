@@ -5,7 +5,9 @@ import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
 import com.example.backend.entity.Student;
+
 import com.example.backend.repository.EnterpriseRepository;
+
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
@@ -98,6 +100,7 @@ public class InternshipServiceImpl implements InternshipService{
             throw new RuntimeException("Internship or Student not found");
         }
     }
+
 
 
 }

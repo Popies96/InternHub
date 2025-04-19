@@ -2,6 +2,7 @@ package com.example.backend.services.internshipService;
 
 import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Internship;
+import com.example.backend.entity.User;
 
 import java.util.List;
 

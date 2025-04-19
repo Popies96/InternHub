@@ -9,11 +9,15 @@ import { CertificateService } from 'src/app/services/certificate.service';
   styleUrls: ['./add-certificates.component.css']
 })
 export class AddCertificatesComponent implements OnInit {
-  certificateForm: FormGroup;
+   certificateForm: FormGroup;
   statusOptions = ['ACTIVE', 'REVOKED'];
   isLoading = false;
-  studentDetails: any = null;
-  internshipDetails: any = null;
+  
+  // For dropdowns
+  internships: any[] = [];
+  students: any[] = [];
+  selectedInternshipId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private certificateService: CertificateService,
@@ -25,78 +29,86 @@ export class AddCertificatesComponent implements OnInit {
       verificationID: ['', Validators.required],
       status: ['ACTIVE', Validators.required],
       certificateContent: ['', [Validators.required, Validators.minLength(10)]],
-      studentId: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
-      internshipId: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      studentId: ['', Validators.required],
+      internshipId: ['', Validators.required],
       issuerId: ['']
     });
   }
-  loadStudentDetails(): void {
-    const studentId = this.certificateForm.get('studentId')?.value;
-    if (studentId) {
-      // Simulez la récupération des données étudiant
-      this.studentDetails = {
-        firstName: 'John', // Remplacez par une vraie requête API
-        lastName: 'Doe',
-        email: 'john.doe@example.com'
-      };
-      
-      // Alternative: Utilisez les champs existants du formulaire
-      this.certificateForm.patchValue({
-        studentFirstName: this.studentDetails.firstName,
-        studentLastName: this.studentDetails.lastName
-      });
-    }
+
+  // Getter for easy access to form controls
+  get formControls() {
+    return this.certificateForm.controls;
   }
-  
-  loadInternshipDetails(): void {
-    const internshipId = this.certificateForm.get('internshipId')?.value;
-    if (internshipId) {
-      // Simulez la récupération des données de stage
-      this.internshipDetails = {
-        title: 'Advanced Web Development', // Remplacez par une vraie requête API
-        duration: 12
-      };
-      
-      this.certificateForm.patchValue({
-        internshipTitle: this.internshipDetails.title
-      });
-    }
-  }
+
   ngOnInit(): void {
-    // Générer un ID de vérification par défaut
+    this.loadInternships();
     this.generateVerificationId();
+    
+    // Watch for internship selection changes
+    this.certificateForm.get('internshipId')?.valueChanges.subscribe(internshipId => {
+      if (internshipId) {
+        this.loadStudentsForInternship(internshipId);
+        this.selectedInternshipId = internshipId;
+      } else {
+        this.students = [];
+        this.selectedInternshipId = null;
+      }
+    });
   }
+
+  loadInternships(): void {
+    this.certificateService.getAllInternships().subscribe({
+      next: (internships) => {
+        this.internships = internships;
+      },
+      error: (err) => {
+        console.error('Error loading internships', err);
+      }
+    });
+  }
+
+  loadStudentsForInternship(internshipId: number): void {
+    this.certificateService.getStudentsByInternship(internshipId).subscribe({
+      next: (students) => {
+        this.students = students;
+        // Reset student selection when internship changes
+        this.certificateForm.get('studentId')?.setValue('');
+      },
+      error: (err) => {
+        console.error('Error loading students', err);
+        this.students = [];
+      }
+    });}
 
   generateVerificationId(): void {
     const verifId = 'VER-' + Math.random().toString(36).substring(2, 10).toUpperCase();
     this.certificateForm.patchValue({ verificationID: verifId });
   }
-// Add this method to both components
-navigateToCertificateList(): void {
-  this.router.navigate(['/certificates']);
-}
+
+  navigateToCertificateList(): void {
+    this.router.navigate(['/certificates']);
+  }
+
   onSubmit(): void {
     if (this.certificateForm.valid) {
       this.isLoading = true;
       const certificateData = this.certificateForm.value;
-
+  
       this.certificateService.createCertificate(certificateData).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/certificates'], {
-            queryParams: { created: true }
-          });
+          this.router.navigate(['/certificates']);
         },
         error: (err) => {
-          console.error('Error creating certificate', err);
           this.isLoading = false;
+          console.error('Detailed error:', err);
+          alert(`Failed to create certificate: ${err}`);
         }
       });
     } else {
       this.markFormGroupTouched(this.certificateForm);
     }
   }
-
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -106,7 +118,4 @@ navigateToCertificateList(): void {
       }
     });
   }
-
-  get f() { return this.certificateForm.controls; }
- 
 }

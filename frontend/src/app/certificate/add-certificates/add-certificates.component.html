@@ -2,7 +2,7 @@
   <h2 class="form-header">Add New Certificate</h2>
 
   <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Section Détails du certificat -->
+    <!-- Certificate Details Section -->
     <div class="form-section">
       <div class="card form-card">
         <div class="card-header">Certificate Details</div>
@@ -13,10 +13,10 @@
                 <label for="title" class="form-label">Title*</label>
                 <input type="text" class="form-control" id="title" formControlName="title"
                   placeholder="Enter certificate title"
-                  [ngClass]="{ 'is-invalid': f['title'].touched && f['title'].errors }">
-                <div *ngIf="f['title'].errors" class="invalid-feedback">
-                  <div *ngIf="f['title'].errors['required']">Title is required</div>
-                  <div *ngIf="f['title'].errors['minlength']">
+                  [ngClass]="{ 'is-invalid': formControls['title'].touched && formControls['title'].errors }">
+                <div *ngIf="formControls['title'].errors" class="invalid-feedback">
+                  <div *ngIf="formControls['title'].errors['required']">Title is required</div>
+                  <div *ngIf="formControls['title'].errors['minlength']">
                     Title must be at least 3 characters
                   </div>
                 </div>
@@ -27,8 +27,8 @@
               <div class="form-group">
                 <label for="issueDate" class="form-label">Issue Date*</label>
                 <input type="date" class="form-control" id="issueDate" formControlName="issueDate"
-                  [ngClass]="{ 'is-invalid': f['issueDate'].touched && f['issueDate'].errors }">
-                <div *ngIf="f['issueDate'].errors" class="invalid-feedback">
+                  [ngClass]="{ 'is-invalid': formControls['issueDate'].touched && formControls['issueDate'].errors }">
+                <div *ngIf="formControls['issueDate'].errors" class="invalid-feedback">
                   Issue date is required
                 </div>
               </div>
@@ -42,13 +42,13 @@
                 <div class="input-group">
                   <input type="text" class="form-control" id="verificationID" formControlName="verificationID"
                     placeholder="Verification ID"
-                    [ngClass]="{ 'is-invalid': f['verificationID'].touched && f['verificationID'].errors }">
+                    [ngClass]="{ 'is-invalid': formControls['verificationID'].touched && formControls['verificationID'].errors }">
                   <button type="button" class="btn btn-outline-secondary input-group-text"
                     (click)="generateVerificationId()">
                     <i class="bi bi-arrow-repeat"></i> Generate
                   </button>
                 </div>
-                <div *ngIf="f['verificationID'].errors" class="invalid-feedback">
+                <div *ngIf="formControls['verificationID'].errors" class="invalid-feedback">
                   Verification ID is required
                 </div>
               </div>
@@ -58,7 +58,7 @@
               <div class="form-group">
                 <label for="status" class="form-label">Status*</label>
                 <select class="form-select" id="status" formControlName="status"
-                  [ngClass]="{ 'is-invalid': f['status'].touched && f['status'].errors }">
+                  [ngClass]="{ 'is-invalid': formControls['status'].touched && formControls['status'].errors }">
                   <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
                 </select>
               </div>
@@ -69,10 +69,10 @@
             <label for="certificateContent" class="form-label">Content*</label>
             <textarea class="form-control" id="certificateContent" rows="5" formControlName="certificateContent"
               placeholder="Enter certificate content here..."
-              [ngClass]="{ 'is-invalid': f['certificateContent'].touched && f['certificateContent'].errors }"></textarea>
-            <div *ngIf="f['certificateContent'].errors" class="invalid-feedback">
-              <div *ngIf="f['certificateContent'].errors['required']">Content is required</div>
-              <div *ngIf="f['certificateContent'].errors['minlength']">
+              [ngClass]="{ 'is-invalid': formControls['certificateContent'].touched && formControls['certificateContent'].errors }"></textarea>
+            <div *ngIf="formControls['certificateContent'].errors" class="invalid-feedback">
+              <div *ngIf="formControls['certificateContent'].errors['required']">Content is required</div>
+              <div *ngIf="formControls['certificateContent'].errors['minlength']">
                 Content must be at least 10 characters
               </div>
             </div>
@@ -81,52 +81,51 @@
       </div>
     </div>
 
-    <!-- Section Beneficiary & Program -->
+    <!-- Program & Student Section -->
     <div class="form-section">
       <div class="card form-card">
-        <div class="card-header">Beneficiary & Program Details</div>
+        <div class="card-header">Program & Student Details</div>
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="studentId" class="form-label">Student*</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="studentId" formControlName="studentId"
-                    placeholder="Enter student ID"
-                    [ngClass]="{ 'is-invalid': f['studentId'].touched && f['studentId'].errors }">
-                  <button type="button" class="btn btn-outline-secondary" (click)="loadStudentDetails()">
-                    <i class="bi bi-search"></i> Find
-                  </button>
-                </div>
-                <div *ngIf="studentDetails" class="student-info mt-2 p-2 bg-light rounded">
-                  <p><strong>Name:</strong> {{studentDetails.firstName}} {{studentDetails.lastName}}</p>
-                  <p><strong>Email:</strong> {{studentDetails.email}}</p>
-                </div>
-                <div *ngIf="f['studentId'].errors" class="invalid-feedback">
-                  <div *ngIf="f['studentId'].errors['required']">Student ID is required</div>
-                  <div *ngIf="f['studentId'].errors['pattern']">Must be a valid number</div>
+                <label for="internshipId" class="form-label">Completed Programs*</label>
+                <select class="form-select" id="internshipId" formControlName="internshipId"
+                  [ngClass]="{ 'is-invalid': formControls['internshipId'].touched && formControls['internshipId'].errors }">
+                  <option value="">Select a completed program</option>
+                  <option *ngFor="let internship of internships" [value]="internship.id">
+                    {{ internship.title }} ({{ internship.durationInMonths }} months)
+                    - Completed on {{ internship.endDate | date }}
+                  </option>
+                </select>
+                <div *ngIf="formControls['internshipId'].errors" class="invalid-feedback">
+                  Program selection is required
                 </div>
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group">
-                <label for="internshipId" class="form-label">Program*</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="internshipId" formControlName="internshipId"
-                    placeholder="Enter program ID"
-                    [ngClass]="{ 'is-invalid': f['internshipId'].touched && f['internshipId'].errors }">
-                  <button type="button" class="btn btn-outline-secondary" (click)="loadInternshipDetails()">
-                    <i class="bi bi-search"></i> Find
-                  </button>
+                <label for="studentId" class="form-label">Student*</label>
+                <select class="form-select" id="studentId" formControlName="studentId"
+                  [disabled]="!selectedInternshipId || students.length === 0"
+                  [ngClass]="{ 'is-invalid': formControls['studentId'].touched && formControls['studentId'].errors }">
+                  <option value="">Select a student</option>
+                  <option *ngFor="let student of students" [value]="student.id">
+                    {{ student.prenom }} {{ student.nom }} 
+                    <span *ngIf="student.email">({{ student.email }})</span>
+                  </option>
+                </select>
+                <div *ngIf="formControls['studentId'].errors" class="invalid-feedback">
+                  <div *ngIf="formControls['studentId'].errors['required']">Student selection is required</div>
                 </div>
-                <div *ngIf="internshipDetails" class="internship-info mt-2 p-2 bg-light rounded">
-                  <p><strong>Program:</strong> {{internshipDetails.title}}</p>
-                  <p><strong>Duration:</strong> {{internshipDetails.duration}} weeks</p>
-                </div>
-                <div *ngIf="f['internshipId'].errors" class="invalid-feedback">
-                  <div *ngIf="f['internshipId'].errors['required']">Program ID is required</div>
-                  <div *ngIf="f['internshipId'].errors['pattern']">Must be a valid number</div>
+                <div *ngIf="selectedInternshipId && students.length === 0" class="alert alert-warning mt-2">
+                  No students found for the selected program.
+                  Please verify that:
+                  <ul>
+                    <li>The program has students assigned</li>
+                    <li>All program tasks are completed</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -145,16 +144,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="form-group">
-        <label for="issuerId" class="form-label">Issuer ID</label>
-        <input type="number" class="form-control" id="issuerId" formControlName="issuerId"
-          placeholder="Enter issuer ID (optional)">
-      </div>
-    </div>
-
-
-    <!-- Boutons d'action -->
+    <!-- Action Buttons -->
     <div class="btn-actions">
       <button type="button" class="btn btn-secondary" (click)="navigateToCertificateList()">
         <i class="bi bi-x-circle"></i> Cancel
