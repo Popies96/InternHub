@@ -23,13 +23,15 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllUsers(@RequestParam(required = false) String email) {
-        if (email == null) {
+    public ResponseEntity <List<User>> getAllUsers() {
             return ResponseEntity.ok(userRepository.findAll());
-        }
 
-        return userRepository.findByEmail(email)
-                .map(user -> ResponseEntity.ok(List.of(user))) // Wrap in a list for consistent return type
-                .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/email")
+    public Optional <User> getUserByEmail(@RequestParam String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user;
+    }
+
 }

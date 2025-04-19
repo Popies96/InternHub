@@ -30,8 +30,8 @@ export class ChatappComponent implements OnInit {
     // Fetch user from localStorage and establish WebSocket connection
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        this.currentUser = user[0].id; // Assuming the user object has an 'id' property
-        this.UserName = user[0].nom; // Assuming you need the username as well
+        this.currentUser = user.id; // Assuming the user object has an 'id' property
+        this.UserName = user.nom; // Assuming you need the username as well
         console.log('UserName:', this.UserName);
 
         // ✅ Connect WebSocket only after user is loaded
@@ -74,11 +74,33 @@ export class ChatappComponent implements OnInit {
   
       if (isCurrentChat) {
         this.messages.push(msg);
+        setTimeout(() => {
+          const chatArea = document.querySelector('.chat-area');
+          if (chatArea) {
+            chatArea.scrollTop = chatArea.scrollHeight;
+          }
+        }, 50);
+  
+        // Highlight the active user in the list
+        const selectedElement = document.getElementById(selected);
+        if (selectedElement) {
+          selectedElement.classList.add('active');
+        }
+  
       } else {
-        console.log('Message is not for current chat. Ignoring.');
+        // Show notification dot for the user who sent the message
+        const notifiedUser = document.getElementById(sender);
+        if (notifiedUser && !notifiedUser.classList.contains('active')) {
+          const nbrMsg = notifiedUser.querySelector('.nbr-msg');
+          if (nbrMsg) {
+            nbrMsg.classList.remove('hidden');
+            nbrMsg.textContent = ''; // empty text for dot
+          }
+        }
       }
     });
   }
+  
   
   selectUser(user: any): void {
     this.selectedUser = user;

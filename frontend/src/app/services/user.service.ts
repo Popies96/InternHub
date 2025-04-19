@@ -41,7 +41,7 @@ export class UserService {
       return throwError(() => new Error('Email not found in localStorage'));
     }
 
-    return this.http.get(`${baseUrl}user/all?email=${email}`).pipe(
+    return this.http.get(`${baseUrl}user/email?email=${email}`).pipe(
       catchError(err => {
         console.error('Error fetching user:', err);
         return throwError(() => err);
