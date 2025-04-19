@@ -16,7 +16,6 @@ export class InternshipService {
       throw new Error('Authorization header creation failed');
     }
   }
-  
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');
     if (token) {

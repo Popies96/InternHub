@@ -1,0 +1,205 @@
+<!-- InternHub Dashboard - Main Content -->
+ 
+    
+  <!-- CompanyHub Dashboard - Main Content -->
+<div class="space-y-6">
+
+    <video #dashboardVideo autoplay muted loop class="w-full h-[25vh] object-cover rounded-xl pb4-">
+        <source src="../../../assets/motion.mp4" type="video/mp4">
+    </video>
+    <!-- 1. Internship Program Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Active Internships Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 border-blue-500">
+        <h3 class="text-gray-500 text-sm font-medium">Active Internships</h3>
+        <p class="text-2xl font-bold mt-2">8 <span class="text-green-500 text-sm">(+2 this month)</span></p>
+        <div class="h-2 bg-gray-200 mt-2 rounded-full">
+          <div class="h-2 bg-blue-500 rounded-full" style="width: 65%"></div>
+        </div>
+      </div>
+      
+      <!-- Applications Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 border-purple-500">
+        <h3 class="text-gray-500 text-sm font-medium">New Applications</h3>
+        <p class="text-2xl font-bold mt-2">24</p>
+        <div class="mt-2 space-y-1">
+          <p class="text-sm text-gray-600">12 Software Engineer</p>
+          <p class="text-sm text-gray-600">8 UX Design</p>
+        </div>
+      </div>
+  
+      <!-- Interviews Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 border-green-500">
+        <h3 class="text-gray-500 text-sm font-medium">Interviews Scheduled</h3>
+        <p class="text-2xl font-bold mt-2">15</p>
+        <p class="text-sm mt-2 text-gray-600">5 today</p>
+      </div>
+  
+      <!-- Conversion Card -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 border-orange-500">
+        <h3 class="text-gray-500 text-sm font-medium">Conversion Rate</h3>
+        <p class="text-2xl font-bold mt-2">32%</p>
+        <p class="text-sm text-gray-600">Above industry average</p>
+      </div>
+    </div>
+  
+    <!-- 2. Recent Applications -->
+    <div class="bg-white rounded-lg shadow-sm p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Recent Applications</h2>
+        <a href="#" class="text-sm text-blue-600 hover:underline">View all applications</a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3">Candidate</th>
+              <th scope="col" class="px-6 py-3">Position</th>
+              <th scope="col" class="px-6 py-3">Status</th>
+              <th scope="col" class="px-6 py-3">Applied</th>
+              <th scope="col" class="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b hover:bg-gray-50">
+              <td class="px-6 py-4 flex items-center">
+                <img src="https://randomuser.me/api/portraits/women/42.jpg" class="w-8 h-8 rounded-full mr-3">
+                <span>Sarah Johnson</span>
+              </td>
+              <td class="px-6 py-4">Software Engineer Intern</td>
+              <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Review</span></td>
+              <td class="px-6 py-4">2 hours ago</td>
+              <td class="px-6 py-4">
+                <button class="text-blue-600 hover:underline">View</button>
+              </td>
+            </tr>
+            <tr class="bg-white border-b hover:bg-gray-50">
+              <td class="px-6 py-4 flex items-center">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-3">
+                <span>Michael Chen</span>
+              </td>
+              <td class="px-6 py-4">Data Science Intern</td>
+              <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Interview</span></td>
+              <td class="px-6 py-4">1 day ago</td>
+              <td class="px-6 py-4">
+                <button class="text-blue-600 hover:underline">View</button>
+              </td>
+            </tr>
+            <tr class="bg-white border-b hover:bg-gray-50">
+              <td class="px-6 py-4 flex items-center">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full mr-3">
+                <span>Emma Rodriguez</span>
+              </td>
+              <td class="px-6 py-4">UX Design Intern</td>
+              <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Offer Sent</span></td>
+              <td class="px-6 py-4">3 days ago</td>
+              <td class="px-6 py-4">
+                <button class="text-blue-600 hover:underline">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- 3. Active Internships & Performance -->
+    <div class="bg-white rounded-lg shadow-sm p-4">
+      <h2 class="text-lg font-semibold mb-4">Active Internship Programs</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Program 1 -->
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex justify-between">
+            <h3 class="font-medium">Summer Software Engineering</h3>
+            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Active</span>
+          </div>
+          <div class="mt-3">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Week 4/12</span>
+              <span>6 interns</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full">
+              <div class="bg-blue-600 p-0.5 h-3 rounded-full" style="width: 33%"></div>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-sm text-gray-600">2 projects completed</span>
+            <button class="text-sm text-blue-600 hover:underline">Manage →</button>
+          </div>
+        </div>
+        
+        <!-- Program 2 -->
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex justify-between">
+            <h3 class="font-medium">Data Science Fellowship</h3>
+            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">New</span>
+          </div>
+          <div class="mt-3">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Week 1/8</span>
+              <span>4 interns</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full">
+              <div class="bg-green-600 p-0.5 h-3 rounded-full" style="width: 12%"></div>
+            </div>
+          </div>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-sm text-gray-600">Orientation completed</span>
+            <button class="text-sm text-blue-600 hover:underline">Manage →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 4. Upcoming Tasks & Team Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Upcoming Tasks -->
+      <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
+        <h2 class="text-lg font-semibold mb-4">Upcoming Tasks</h2>
+        <div class="space-y-3">
+          <div class="flex items-center p-2 hover:bg-gray-50 rounded">
+            <div class="bg-red-100 p-2 rounded-full mr-3">
+              <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="font-medium">Finalize Intern Projects</p>
+              <p class="text-sm text-gray-500">Due tomorrow</p>
+            </div>
+          </div>
+          <div class="flex items-center p-2 hover:bg-gray-50 rounded">
+            <div class="bg-blue-100 p-2 rounded-full mr-3">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V3m8 4V3m-9 8h10"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="font-medium">Interview: Final Round</p>
+              <p class="text-sm text-gray-500">May 15, 10:00 AM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Team Activity -->
+      <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
+        <h2 class="text-lg font-semibold mb-4">Team Activity</h2>
+        <div class="space-y-4">
+          <div class="flex items-start">
+            <img src="https://randomuser.me/api/portraits/men/44.jpg" class="w-8 h-8 rounded-full mr-3">
+            <div>
+              <p class="text-sm"><span class="font-medium">David</span> reviewed 5 applications</p>
+              <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-8 h-8 rounded-full mr-3">
+            <div>
+              <p class="text-sm"><span class="font-medium">Lisa</span> scheduled interviews with 3 candidates</p>
+              <p class="text-xs text-gray-500 mt-1">Yesterday</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

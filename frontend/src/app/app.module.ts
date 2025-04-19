@@ -21,6 +21,31 @@ import { InternshipAiComponent } from './pages/internship-ai/internship-ai.compo
 import { ChatappComponent } from './components/chatapp/chatapp.component';
 import { UserComponent } from './components/user/user.component';
 import { ConversationComponent } from './pages/conversation/conversation.component';
+import { AddInternshipComponent } from './company/add-internship/add-internship.component';
+import { ApplicationsComponent } from './company/applications/applications.component';
+import { CompanyIndexComponent } from './company/company-index/company-index.component';
+import { CompanyInternshipsComponent } from './company/company-internships/company-internships.component';
+import { CompanyTasksComponent } from './company/company-tasks/company-tasks.component';
+import { CompanydashboardComponent } from './company/companydashboard/companydashboard.component';
+import { InternsComponent } from './company/interns/interns.component';
+import { IdeComponent } from './components/ide/ide.component';
+import { AdminNavComponent } from './components/navbars/admin-nav/admin-nav.component';
+import { StudentNavComponent } from './components/navbars/student-nav/student-nav.component';
+import { CompanySidebarComponent } from './components/sidebars/company-sidebar/company-sidebar.component';
+import { StudentSidebarComponent } from './components/sidebars/student-sidebar/student-sidebar.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { ApplicationComponent } from './Student/application/application.component';
+import { CertificateComponent } from './Student/certificate/certificate.component';
+import { CertificatesComponent } from './Student/certificates/certificates.component';
+import { DashboardComponent } from './Student/dashboard/dashboard.component';
+import { IndexComponent } from './Student/index/index.component';
+import { InternshipsComponent } from './Student/internships/internships.component';
+import { InterviewComponent } from './Student/interview/interview.component';
+import { RenduComponent } from './Student/rendu/rendu.component';
+import { SettingsComponent } from './Student/settings/settings.component';
+import { TasksComponent } from './Student/tasks/tasks.component';
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 
 @NgModule({
   declarations: [
@@ -41,6 +66,30 @@ import { ConversationComponent } from './pages/conversation/conversation.compone
     ChatappComponent,
     UserComponent,
     ConversationComponent,
+    StudentSidebarComponent,
+    StudentNavComponent,
+    AdminNavComponent,
+    ProfileComponent,
+    IndexComponent,
+    IdeComponent,
+    RenduComponent,
+    ApplicationComponent,
+    DashboardComponent,
+    SettingsComponent,
+    InternshipsComponent,
+    TasksComponent,
+    CertificateComponent,
+    InterviewComponent,
+    CertificatesComponent,
+    CompanydashboardComponent,
+    CompanyInternshipsComponent,
+    CompanyIndexComponent,
+    AddInternshipComponent,
+    InternsComponent,
+    CompanySidebarComponent,
+    CompanyTasksComponent,
+    ApplicationsComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +97,7 @@ import { ConversationComponent } from './pages/conversation/conversation.compone
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MonacoEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent],
