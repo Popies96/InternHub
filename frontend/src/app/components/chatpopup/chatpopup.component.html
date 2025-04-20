@@ -46,6 +46,7 @@
         <div class="flex items-center">
           <input [(ngModel)]="newMessage" 
                  type="text" 
+                 (keydown.enter)="sendMessage()"
                  placeholder="Type a message..." 
                  class="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-md">
           <button (click)="sendMessage()" 

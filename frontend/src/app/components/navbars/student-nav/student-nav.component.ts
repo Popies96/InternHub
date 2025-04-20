@@ -15,7 +15,7 @@ import { ViewChild } from '@angular/core';
   styleUrls: ['./student-nav.component.css']
 })
 export class StudentNavComponent  implements OnInit {
-
+  unseenMessages: { [userId: number]: boolean } = {};
     users: any[] = [];
     selectedUser: any = null;
     currentUser = ''; // Replace with actual logged-in user ID
@@ -45,6 +45,9 @@ userToSend: any;
 openChat(user: any): void {
   this.userToSend = user;
   this.popupRef.open(); // Calls the open method inside chatpopup
+  if (this.unseenMessages[user.id]) {
+    delete this.unseenMessages[user.id];
+  }
 }
   ngOnInit(): void {
     this.userService.getUserFromLocalStorage().subscribe({
@@ -221,31 +224,42 @@ selectUser(user: any): void {
 
   this.WebService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
   
+  this.unseenMessages[user.id] = true;
 
-}
+}  
 loadUsersAndLastMessages(): void {
   this.userService.getUsers().subscribe({
     next: (users) => {
       this.users = users.filter(u => u.id !== +this.currentUser); // Exclude self
 
-      this.users.forEach(user => {
-        this.messageService.getMessages(this.currentUser, user.id).subscribe({
-          next: (messages) => {
-            if (messages.length > 0) {
-              const lastMsg = messages[messages.length - 1]; // Just grab the last one
-              this.lastMessages[user.id] = lastMsg;
-            }
-          },
-          error: (err) => {
-            console.error('Error fetching messages with user', user.id, err);
-          }
-        });
+      // Load last messages
+      this.messageService.getLastMessages(this.currentUser).subscribe({
+        next: (lastMsgsMap) => {
+          this.lastMessages = lastMsgsMap;
+
+          // 🔥 Loop through users and check seen status
+          this.users.forEach(user => {
+            this.messageService.getSeenStatus(user.id, this.currentUser).subscribe({
+              next: (seen) => {
+                this.unseenMessages[user.id] = !seen; // true = unseen
+                console.log(`User ${user.id} => unseen:`, seen);
+              },
+              error: (err) => {
+                console.error(`Error checking seen for user ${user.id}:`, err);
+              }
+            });
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching last messages:', err);
+        }
       });
     },
     error: (err) => {
-      console.error('Error fetching users', err);
+      console.error('Error fetching users:', err);
     }
   });
 }
+
 
 }

@@ -51,6 +51,8 @@ export class ChatpopupComponent {
       console.error('Error fetching user from localStorage:', err);
     }
   });
+  this.wsService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
+
 
   }
 
@@ -123,30 +125,7 @@ export class ChatpopupComponent {
     });
   }
 
-  loadUsersAndLastMessages(): void {
-    this.userService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users.filter(u => u.id !== +this.currentUser); // Exclude self
 
-        this.users.forEach(user => {
-          this.messageService.getMessages(this.currentUser, user.id).subscribe({
-            next: (messages) => {
-              if (messages.length > 0) {
-                const lastMsg = messages[messages.length - 1]; // Just grab the last one
-                this.lastMessages[user.id] = lastMsg;
-              }
-            },
-            error: (err) => {
-              console.error('Error fetching messages with user', user.id, err);
-            }
-          });
-        });
-      },
-      error: (err) => {
-        console.error('Error fetching users', err);
-      }
-    });
-  }
   
   visible = false;
   open() {

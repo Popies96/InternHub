@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserDetailsService {
         }
         return user;
     }
+    public List<User> getAllUsers() {
+        return userRepository.findAll().stream()
+                .toList();
+    }
 
 
 }

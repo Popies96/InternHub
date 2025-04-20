@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final UserServiceImpl userService;
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
@@ -54,9 +57,8 @@ public class ChatController {
     public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId,
                                                               @PathVariable String recipientId) {
         List<ChatMessage> chat=chatMessageService.findChatMessages(senderId, recipientId);
-        chat.get(chat.size()-1).setSeen(true);
-        return ResponseEntity
-                .ok(chat);
+
+        return ResponseEntity.ok(chat);
     }
     @PostMapping("/users/{userId}")
     public ResponseEntity<User> getUser(@PathVariable long userId) {
@@ -64,14 +66,48 @@ public class ChatController {
         return ResponseEntity.ok(user);
     }
 
-//    @GetMapping("/seen/{senderId}/{recipientId}")
-    public boolean ReadOrNot(@PathVariable String senderId,
-                             @PathVariable String recipientId) {
-        List<ChatMessage> chatmessage=chatMessageService.findChatMessages(senderId, recipientId);
-        return chatmessage.get(chatmessage.size()-1).getSeen();
+    @GetMapping("/seen/{senderId}/{recipientId}")
+    public ResponseEntity<Boolean> isLastMessageSeen(@PathVariable String senderId,
+                                                     @PathVariable String recipientId) {
+        List<ChatMessage> messages = chatMessageService.findChatMessagesLast(senderId, recipientId);
 
+        if (messages.isEmpty())
+        {return ResponseEntity.ok(true); }// No message = nothing to notify
+
+        ChatMessage lastMessage = messages.get(messages.size() - 1);
+
+        boolean currentIsRecipient = recipientId.equals(lastMessage.getRecipientId());
+
+        if(!lastMessage.getSeen())
+        {
+            System.err.println("lehna");
+            return ResponseEntity.ok(false);}
+
+        return ResponseEntity.ok(true);
     }
 
+    @GetMapping("/last/{currentUserId}")
+    public ResponseEntity<Map<Long, ChatMessage>> getLastMessages(@PathVariable String currentUserId) {
+        List<User> users = userService.getAllUsers();
+        Map<Long, ChatMessage> lastMessages = new HashMap<>();
+
+        for (User user : users) {
+            if (!Long.toString(user.getId()).equals(currentUserId)) {
+                List<ChatMessage> messages = chatMessageService.findChatMessagesLast(currentUserId, Long.toString(user.getId()));
+
+                if (!messages.isEmpty()) {
+                    // Sort messages DESC by timestamp
+                    messages.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
+
+                    ChatMessage lastMessage = messages.get(0); // Now this is truly the latest
+                    System.err.println("Last Message for " + user.getId() + ": " + lastMessage.getContent());
+                    lastMessages.put(user.getId(), lastMessage);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(lastMessages);
+    }
 
 
 }

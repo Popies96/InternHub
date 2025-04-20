@@ -10,6 +10,7 @@ export interface ChatMessage {
   recipientId: string;
   content: string;
   timestamp: Date;
+  seen: boolean;
 }
 @Injectable({
   providedIn: 'root'
@@ -32,4 +33,11 @@ export class MessageService {
     return this.http.get<ChatMessage[]>(url);
   }
 
+  getSeenStatus(senderId: string, recipientId: string): Observable<boolean> {
+    return this.http.get<boolean>(`http://localhost:8088/internhub/seen/${senderId}/${recipientId}`);
+  }
+
+  getLastMessages(currentUserId: string): Observable<any> {
+    return this.http.get<any>(`http://localhost:8088/internhub/last/${currentUserId}`);
+  }
 }

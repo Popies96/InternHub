@@ -1,95 +1,103 @@
-<div class="grid grid-cols-4 flex-1 gap-4 p-4 bg-gray-50">
+<div class="flex h-screen bg-gray-100">
 
   <!-- User List -->
-  <ul class="space-y-4">
-    <li *ngFor="let user of users"
-        [id]="user.id"
-        (click)="selectUser(user)"
-        class="flex items-center cursor-pointer p-3 rounded-lg hover:bg-blue-100 transition-colors"
-        [class.bg-blue-200]="user === selectedUser"
-        [class.active]="user === selectedUser">
-      <!-- Avatar -->
-      <div class="w-14 h-14 bg-gray-300 rounded-full relative overflow-hidden shadow-lg">
-        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)"
-             alt="User Avatar"
-             class="w-full h-full object-cover">
-      </div>
+  <div class="w-full md:w-1/3 p-4 overflow-y-auto border-r border-gray-200 bg-white">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Chats</h2>
+    <div class="flex flex-col gap-2">
+      <div *ngFor="let user of users"
+           [id]="user.id"
+           (click)="selectUser(user)"
+           class="flex items-center cursor-pointer p-3 rounded-lg hover:bg-blue-50 transition-all"
+           [class.bg-blue-100]="user === selectedUser"
+           [class.active]="user === selectedUser">
 
-      <!-- User Info -->
-      <div class="ml-4 flex-1">
-        <h2 class="text-lg font-medium text-gray-800">{{ user.nom }}</h2>
-        <p class="text-xs text-gray-500 mt-1">
-          <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
-            <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
-            {{ (lastMsg.content | slice:0:15) + (lastMsg.content.length > 15 ? '...' : '') }}
-          </ng-container>
-          <ng-template #noMsg>No Messages</ng-template>
-        </p>
-      </div>
-    </li>
-  </ul>
+        <!-- Avatar -->
+        <div class="relative">
+          <div class="w-12 h-12 bg-gray-300 rounded-full overflow-hidden shadow-md">
+            <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)"
+                 alt="User Avatar"
+                 class="w-full h-full object-cover">
+          </div>
+          <!-- Red Notification Dot -->
+          <span *ngIf="unseenMessages[user.id]" 
+                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full animate-ping"></span>
+          <span *ngIf="unseenMessages[user.id]" 
+                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
+        </div>
 
-</div>
-
-<!-- Chat Area -->
-<div class="flex-1 flex flex-col h-screen bg-white" *ngIf="selectedUser">
-  
-  <!-- Chat Header -->
-  <div class="bg-white p-4 border-b border-gray-200 shadow-sm">
-    <div class="flex items-center">
-      <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom?.charAt(0)"
-           alt="Selected User Avatar"
-           class="w-10 h-10 rounded-full mr-4 shadow-md">
-      <div>
-        <h2 class="text-lg font-semibold text-gray-800">{{ selectedUser.nom }}</h2>
-        <p class="text-sm text-green-500">Online</p>
+        <!-- User Info -->
+        <div class="ml-4 flex-1 min-w-0">
+          <div class="flex justify-between items-center">
+            <h3 class="text-sm font-semibold text-gray-800 truncate">{{ user.nom }} {{ user.prenom }}</h3>
+          </div>
+          <p class="text-xs text-gray-500 truncate mt-1">
+            <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
+              <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
+              {{ (lastMsg.content | slice:0:25) + (lastMsg.content.length > 25 ? '...' : '') }}
+            </ng-container>
+            <ng-template #noMsg>No messages</ng-template>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Chat Messages -->
-  <div class="chat-area flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
-    <div *ngFor="let message of messages">
-      
-      <!-- Sent Message (Current User) -->
-      <div *ngIf="+message.senderId === +currentUser && +message.recipientId === +selectedUser?.id" 
-           class="flex justify-end mb-4">
-        <div class="bg-indigo-600 text-white rounded-lg px-4 py-3 max-w-xs shadow-md">
-          <p class="text-sm">{{ message.content }}</p>
-          <small class="text-xs opacity-80 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
-        </div>
-        <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=Y" 
-             alt="You"
-             class="w-8 h-8 rounded-full ml-3 shadow-sm">
-      </div>
+  <!-- Chat Area -->
+  <div class="flex-1 flex flex-col h-full bg-gray-50" *ngIf="selectedUser">
 
-      <!-- Received Message (Other User) -->
-      <div *ngIf="+message.senderId === +selectedUser?.id && +message.recipientId === +currentUser" 
-           class="flex justify-start mb-4">
-        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom?.charAt(0)" 
-             alt="Sender Avatar"
-             class="w-8 h-8 rounded-full mr-3 shadow-sm">
-        <div class="bg-white text-gray-900 rounded-lg px-4 py-3 max-w-xs shadow-md">
-          <p class="text-sm">{{ message.content }}</p>
-          <small class="text-xs opacity-80 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
+    <!-- Chat Header -->
+    <div class="bg-white p-4 border-b border-gray-300 shadow-sm">
+      <div class="flex items-center">
+        <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + selectedUser?.prenom?.charAt(0)"
+             alt="Selected User Avatar"
+             class="w-10 h-10 rounded-full mr-4 shadow-sm">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800">{{ selectedUser.nom }} {{ selectedUser.prenom }}</h2>
+          <p class="text-xs text-green-500">Online</p>
         </div>
       </div>
-
     </div>
-  </div>
 
-  <!-- Message Input -->
-  <div class="bg-white border-t border-gray-200 p-4">
-    <div class="flex items-center">
-      <input [(ngModel)]="newMessage" 
-             type="text" 
-             placeholder="Type a message..." 
-             class="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-md">
-      <button (click)="sendMessage()" 
-              class="ml-3 bg-blue-500 text-white px-5 py-2.5 rounded-full hover:bg-blue-600 transition duration-200">
-        Send
-      </button>
+    <!-- Chat Messages -->
+    <div class="chat-area flex-1 overflow-y-auto p-4 space-y-4">
+      <div *ngFor="let message of messages">
+
+        <!-- Sent Message -->
+        <div *ngIf="+message.senderId === +currentUser"
+             class="flex justify-end">
+          <div class="bg-blue-600 text-white rounded-2xl px-4 py-2 max-w-xs shadow-md">
+            <p class="text-sm">{{ message.content }}</p>
+            <small class="text-xs text-gray-200 opacity-80 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
+          </div>
+        </div>
+
+        <!-- Received Message -->
+        <div *ngIf="+message.senderId === +selectedUser?.id"
+             class="flex justify-start">
+          <div class="bg-white text-gray-900 rounded-2xl px-4 py-2 max-w-xs shadow-md border border-gray-200">
+            <p class="text-sm">{{ message.content }}</p>
+            <small class="text-xs text-gray-400 mt-1 block text-right">{{ message.timestamp | date:'shortTime' }}</small>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- Message Input -->
+    <div class="bg-white border-t border-gray-300 p-4">
+      <div class="flex items-center">
+        <input [(ngModel)]="newMessage"
+               (keydown.enter)="sendMessage()"
+               type="text"
+               placeholder="Type a message..."
+               class="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-inner">
+        <button (click)="sendMessage()"
+                class="ml-3 bg-blue-600 text-white px-5 py-2.5 rounded-full hover:bg-blue-700 transition duration-200 shadow">
+          Send
+        </button>
+      </div>
+    </div>
+
   </div>
 
 </div>
