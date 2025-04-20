@@ -1,0 +1,206 @@
+<div class=" mx-auto px-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">Add Internship</h2>
+    
+    <form class="space-y-8 mx-auto">
+      <!-- Basic Information Section -->
+      <div class="bg-white px-6 rounded-lg shadow-sm border border-gray-200 py-8">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+        
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label for="position-title" class="block text-sm font-medium text-gray-700">Position Title*</label>
+            <input type="text" id="position-title" name="position-title" required
+                   class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+          
+          <div>
+            <label for="department" class="block text-sm font-medium text-gray-700">Department*</label>
+            <select id="department" name="department" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="">Select Department</option>
+              <option>Engineering</option>
+              <option>Marketing</option>
+              <option>Human Resources</option>
+              <option>Finance</option>
+              <option>Design</option>
+              <option>Other</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="internship-type" class="block text-sm font-medium text-gray-700">Internship Type*</label>
+            <select id="internship-type" name="internship-type" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="">Select Type</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Remote</option>
+              <option>Hybrid</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="duration" class="block text-sm font-medium text-gray-700">Duration (months)*</label>
+            <input type="number" id="duration" name="duration" min="1" max="12" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="position-summary" class="block text-sm font-medium text-gray-700">Position Summary*</label>
+          <textarea id="position-summary" name="position-summary" rows="3" required
+          class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="Briefly describe the internship position"></textarea>
+        </div>
+      </div>
+      
+      <!-- Responsibilities & Requirements Section -->
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Responsibilities & Requirements</h3>
+        
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700">Key Responsibilities*</label>
+          <div id="responsibilities-container" class="mt-2 space-y-2">
+            <div class="flex items-center">
+              <input type="text" name="responsibilities[]" required
+              class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+              <button type="button" onclick="addResponsibilityField()" class="ml-2 p-2 text-indigo-600 hover:text-indigo-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label class="block text-sm font-medium text-gray-700">Requirements*</label>
+          <div id="requirements-container" class="mt-2 space-y-2">
+            <div class="flex items-center">
+              <input type="text" name="requirements[]" required
+              class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+              <button type="button" onclick="addRequirementField()" class="ml-2 p-2 text-indigo-600 hover:text-indigo-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="skills" class="block text-sm font-medium text-gray-700">Preferred Skills</label>
+          <input type="text" id="skills" name="skills"
+          class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
+                 placeholder="e.g., JavaScript, Photoshop, Data Analysis">
+          <p class="mt-1 text-sm text-gray-500">Separate skills with commas</p>
+        </div>
+      </div>
+      
+      <!-- Logistics Section -->
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Logistics</h3>
+        
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label for="location" class="block text-sm font-medium text-gray-700">Location*</label>
+            <input type="text" id="location" name="location" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+          
+          <div>
+            <label for="stipend" class="block text-sm font-medium text-gray-700">Stipend/Salary</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input type="number" id="stipend" name="stipend" min="0"
+              class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
+                     placeholder="0.00">
+              <div class="absolute inset-y-0 right-0 flex items-center">
+                <select class="h-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500">
+                  <option>per month</option>
+                  <option>per week</option>
+                  <option>per hour</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date*</label>
+            <input type="date" id="start-date" name="start-date" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+          
+          <div>
+            <label for="application-deadline" class="block text-sm font-medium text-gray-700">Application Deadline*</label>
+            <input type="date" id="application-deadline" name="application-deadline" required
+            class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="positions-available" class="block text-sm font-medium text-gray-700">Number of Positions Available*</label>
+          <input type="number" id="positions-available" name="positions-available" min="1" required
+          class=" block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500">
+        </div>
+      </div>
+      
+      <!-- Additional Information Section -->
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+        
+        <div class="mt-4">
+          <label for="benefits" class="block text-sm font-medium text-gray-700">Benefits & Perks</label>
+          <textarea id="benefits" name="benefits" rows="3"
+          class="block w-full border border-gray-300 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    placeholder="List any benefits or perks offered (e.g., flexible hours, mentorship, etc.)"></textarea>
+        </div>
+        
+        <div class="mt-6">
+          <label for="application-materials" class="block text-sm font-medium text-gray-700">Required Application Materials</label>
+          <div class="mt-2 space-y-2">
+            <div class="flex items-center">
+              <input id="resume-required" name="resume-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="resume-required" class="ml-2 block text-sm text-gray-700">Resume</label>
+            </div>
+            <div class="flex items-center">
+              <input id="cover-letter-required" name="cover-letter-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="cover-letter-required" class="ml-2 block text-sm text-gray-700">Cover Letter</label>
+            </div>
+            <div class="flex items-center">
+              <input id="portfolio-required" name="portfolio-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="portfolio-required" class="ml-2 block text-sm text-gray-700">Portfolio</label>
+            </div>
+            <div class="flex items-center">
+              <input id="transcript-required" name="transcript-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="transcript-required" class="ml-2 block text-sm text-gray-700">Transcript</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="additional-notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
+          <textarea id="additional-notes" name="additional-notes" rows="3"
+          class="block w-full border border-gray-300 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    placeholder="Any other important information for applicants"></textarea>
+        </div>
+      </div>
+      
+      <!-- Form Actions -->
+      <div class="flex justify-end space-x-4 pt-6">
+        <button type="button" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:border-indigo-500 focus:ring-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Save as Draft
+        </button>
+        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-500 focus:ring-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Post Internship
+        </button>
+      </div>
+    </form>
+  </div>
+  

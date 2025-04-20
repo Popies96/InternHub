@@ -1,39 +1,88 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import * as jwt_decode from 'jwt-decode';
 
 const baseUrl = 'http://localhost:8088/internhub/';
+
 @Injectable({
   providedIn: 'root',
 })
 export class JwtService {
-  constructor(private http: HttpClient) {}
+  private currentUserSubject = new BehaviorSubject<any>(null);
+  public currentUser = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.initializeAuthState();
+  }
+
+  private initializeAuthState(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const user = this.decodeToken(token);
+      this.currentUserSubject.next(user);
+    }
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      return jwt_decode.jwtDecode(token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
 
   loginWithOAuth() {
     window.location.href = baseUrl + 'google';
   }
+
   completeOnboarding(userData: any): Observable<any> {
-     const headers = this.createAuthorizedHeader();
-     if (headers) {
+    const headers = this.createAuthorizedHeader();
+    if (headers) {
       return this.http.post(baseUrl + 'update', userData, { headers });
-     } else {
-       throw new Error('Authorization header creation failed');
-     }
-    
+    } else {
+      throw new Error('Authorization header creation failed');
+    }
   }
 
   register(data: any): Observable<any> {
-    return this.http.post(baseUrl + 'signup', data);
+    return this.http.post(baseUrl + 'signup', data  , { responseType: 'text' });
   }
+
   login(data: any): Observable<any> {
-    return this.http.post(baseUrl + 'login', data);
+    return this.http.post(baseUrl + 'login', data );
   }
-  sendVerificationCode(identifier: string, method: String): Observable<string> {
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  getUserRole(): string | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    
+    const decoded = this.decodeToken(token);
+    return decoded?.roles[0] || null;
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  sendVerificationCode(identifier: string, method: string): Observable<string> {
     return this.http.post<string>(baseUrl + 'forgotPassword/request', {
       identifier,
       method,
     });
   }
+
   verifyCode(identifier: string, validationCode: string): Observable<any> {
     const body = {
       identifier: identifier,
@@ -49,13 +98,13 @@ export class JwtService {
     });
   }
 
-   private createAuthorizedHeader(): HttpHeaders | null {
-      const token = localStorage.getItem('token');
-      if (token) {
-        return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      } else {
-        console.log('No token found');
-        return null;
-      }
+  private createAuthorizedHeader(): HttpHeaders | null {
+    const token = this.getToken();
+    if (token) {
+      return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    } else {
+      console.log('No token found');
+      return null;
     }
+  }
 }

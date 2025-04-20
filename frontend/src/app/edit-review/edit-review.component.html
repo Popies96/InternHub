@@ -1,0 +1,36 @@
+<div class="review-form-container">
+  <h2>Edit Review</h2>
+
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+    <!-- Reviewer Section -->
+    <div class="form-group">
+      <label for="reviewerId">Reviewer ID*</label>
+      <input
+        id="reviewerId"
+        formControlName="reviewerId"
+        type="number"
+        class="form-control"
+        placeholder="Enter reviewer ID">
+      <div *ngIf="reviewForm.get('reviewerId')?.invalid && reviewForm.get('reviewerId')?.touched"
+           class="error-message">
+        <span *ngIf="reviewForm.get('reviewerId')?.errors?.['required']">
+          Reviewer ID is required
+        </span>
+        <span *ngIf="reviewForm.get('reviewerId')?.errors?.['pattern']">
+          Must be a positive number
+        </span>
+      </div>
+    </div>
+
+    <!-- Similar sections for revieweeId, internshipId, enterpriseId, comment, and scores go here -->
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-submit"
+        [disabled]="reviewForm.invalid">
+        Update Review
+      </button>
+    </div>
+  </form>
+</div>

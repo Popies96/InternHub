@@ -1,0 +1,299 @@
+<section class="pb-10 pt-8">
+    <div class="w-full max-w-7xl mx-auto px-4 md:px-6">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-0">
+          <div class="block">
+            <h2 class="font-manrope font-bold text-2xl leading-9 text-gray-900 mb-3">Internships</h2>
+            <p class="font-normal text-sm leading-6 text-gray-500">Remember to avoid sharing sensitive personal information online</p>
+          </div>
+          <div class="flex flex-col-reverse sm:flex-row sm:items-center gap-3.5 relative">
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              </span>
+              <input type="text" placeholder="Search here..." class="border-0 pr-4 py-2 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-6"/>
+            </div>
+            <!-- Filter Button and Dropdown Container -->
+            <div class="relative">
+              <button (click)="toggleDropdown()" data-dropdown-trigger class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.5553 2.5H3.44439C2.46249 2.5 1.6665 3.29599 1.6665 4.27788C1.6665 4.73582 1.84321 5.1761 2.15979 5.50698L6.83672 10.3951C6.96997 10.5343 7.03659 10.604 7.09715 10.6748C7.57182 11.2299 7.85102 11.9256 7.89183 12.6548C7.89703 12.7479 7.89703 12.8443 7.89703 13.037V15.419C7.89703 16.8534 9.30152 17.8668 10.6627 17.4146C11.5225 17.129 12.1026 16.3249 12.1026 15.419V13.4451C12.1026 12.8505 12.1026 12.5531 12.152 12.2695C12.2321 11.8095 12.4079 11.3715 12.668 10.9838C12.8284 10.7447 13.034 10.5299 13.4451 10.1002L17.8399 5.50698C18.1565 5.1761 18.3332 4.73582 18.3332 4.27788C18.3332 3.29599 17.5372 2.5 16.5553 2.5Z" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                Filter
+              </button>
+              <!-- Dropdown Menu -->
+              <div id="dropdown" [class.hidden]="!isDropdownOpen" class="absolute z-10 w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-2 right-0 ">
+                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
+                    Category
+                  </h6>
+                  <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+                    <li class="flex items-center">
+                      <input id="apple" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Apple (56)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="fitbit" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Fitbit (56)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="dell" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="dell" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Dell (56)
+                      </label>
+                    </li>
+                    <li class="flex items-center">
+                      <input id="asus" type="checkbox" value="" checked
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="asus" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Asus (97)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="logitech" type="checkbox" value="" checked
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="logitech" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Logitech (97)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="msi" type="checkbox" value="" checked
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="msi" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        MSI (97)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="bosch" type="checkbox" value="" checked
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="bosch" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Bosch (176)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="sony" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="sony" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Sony (234)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="samsung" type="checkbox" value="" checked
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="samsung" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Samsung (76)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="canon" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="canon" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Canon (49)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="microsoft" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="microsoft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Microsoft (45)
+                      </label>
+                    </li>
+              
+                    <li class="flex items-center">
+                      <input id="razor" type="checkbox" value=""
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              
+                      <label for="razor" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Razor (49)
+                      </label>
+                    </li>
+                  </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+    
+
+
+
+</section>
+
+<div class=" flex mx-auto gap-6 max-w-7xl px-2">
+
+<div class="w-full lg:w-[60%] py-6 bg-white rounded-lg shadow-sm">
+    <!--  List -->
+    <div class="space-y-8 items-center items-start ">
+           <!-- ------- -->
+      <div class="flex justify-between items-start border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+        <div class="w-20 h-20 mr-4 flex-shrink-0">
+            <img src="../../../assets/google.png" 
+                 alt="Apple iMac"
+                 class="w-full h-full object-contain rounded">
+          </div>
+        <div class="flex-1 ">
+          <h3 class="font-medium mb-1">Software Development Intern </h3>
+          <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">Hybrid</span>
+          <p class="mt-2 text-sm text-gray-600">Work on real projects with our engineering team</p>
+        </div>
+        <div class="p-4 text-right">
+            <button routerLink="/student/apply" class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                Apply                            
+        </button>
+        </div>
+      </div>
+  
+           <!-- ------- -->
+      <div class="flex justify-between items-start border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+        <div class="w-20 h-20 mr-4 flex-shrink-0">
+            <img src="../../../assets/google.png"
+                 alt="Apple iMac"
+                 class="w-full h-full object-contain rounded">
+          </div>
+        <div class="flex-1 ">
+          <h3 class="font-medium mb-1">Xbox Series X Diablo IV Bundle </h3>
+          <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">On-site</span>
+          <p class="mt-2 text-sm text-gray-600">Apple M3, 24" Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard layout</p>
+        </div>
+        <div class="p-4 text-right">
+            <button routerLink="/student/apply" class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                Apply                            
+        </button>
+        </div>
+      </div>
+        <!-- ------- -->
+      <div class="flex justify-between items-start border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+        <div class="w-20 h-20 mr-4 flex-shrink-0">
+            <img src="../../../assets/google.png"
+                 alt="Apple iMac"
+                 class="w-full h-full object-contain rounded">
+          </div>
+        <div class="flex-1 ">
+          <h3 class="font-medium mb-1">Xbox Series X Diablo IV Bundle </h3>
+          <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">On-site</span>
+          <p class="mt-2 text-sm text-gray-600">Apple M3, 24" Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard layout</p>
+        </div>
+        <div class="p-4 text-right">
+            <button routerLink="/student/apply" class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                Apply                            
+        </button>
+        </div>
+      </div>
+  
+      <!-- ------- -->
+      <div class="flex justify-between items-start border border-gray-300 border-slate-200 px-4 py-4 rounded-lg">
+        <div class="w-20 h-20 mr-4 flex-shrink-0">
+            <img src="../../../assets/google.png"
+                 alt="Apple iMac"
+                 class="w-full h-full object-contain rounded">
+          </div>
+        <div class="flex-1 ">
+          <h3 class="font-medium mb-1">Xbox Series X Diablo IV Bundle </h3>
+          <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Remote</span>
+          <p class="mt-2 text-sm text-gray-600">Apple M3, 24" Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard layout</p>
+        </div>
+        <div class="p-4 text-right">
+            <button routerLink="/student/apply" class="flex items-center py-2 px-5 max-sm:w-max rounded-lg bg-indigo-600 gap-2 font-semibold text-sm text-white transition-all duration-500 hover:bg-indigo-700">                           
+                Apply                            
+        </button>
+        </div>
+      </div>
+    </div>
+  
+
+    
+    
+  </div>
+
+  <div class="w-full lg:w-[40%]  mt-0  ">
+
+    <h5 class="text-xl leading-8 font-semibold text-gray-900 pl-4">Recommended</h5>
+
+   <div class="border-l border-gray-200 pl-6 space-y-8 pt-4">
+    <div class=" border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex items-center space-x-3">
+        <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="w-10 h-10 rounded-full">
+        <div>
+          <h3 class="font-medium">UX Design Intern</h3>
+          <p class="text-sm text-gray-500">Spotify</p>
+        </div>
+      </div>
+      <div class="mt-3 flex justify-between items-center">
+        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Remote</span>
+        <button routerLink="/student/apply" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">Quick Apply</button>
+      </div>
+    </div>
+
+
+
+    <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex items-center space-x-3">
+        <img src="https://logo.clearbit.com/tesla.com" alt="Tesla" class="w-10 h-10 rounded-full">
+        <div>
+          <h3 class="font-medium">Data Science Intern</h3>
+          <p class="text-sm text-gray-500">Tesla</p>
+        </div>
+      </div>
+      <div class="mt-3 flex justify-between items-center">
+        <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">On-site</span>
+        <button class="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">Quick Apply</button>
+      </div>
+    </div>
+
+
+
+
+    <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex items-center space-x-3">
+        <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" class="w-10 h-10 rounded-full">
+        <div>
+          <h3 class="font-medium">Software Engineer</h3>
+          <p class="text-sm text-gray-500">Microsoft</p>
+        </div>
+      </div>
+      <div class="mt-3 flex justify-between items-center">
+        <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">Hybrid</span>
+        <button class="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">Quick Apply</button>
+      </div>
+    </div>
+      
+  </div>
+  </div>
+
+
+
+
+
+</div>
+                                        

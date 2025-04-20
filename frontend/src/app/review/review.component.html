@@ -1,0 +1,53 @@
+<div class="review-container">
+  <div class="header">
+    <h2>Internship Reviews</h2>
+    <button routerLink="/student/add-review" class="add-review-button">+ Add Review</button>
+  </div>
+
+  <div *ngIf="reviews.length > 0; else noReviews" class="review-list">
+    <div *ngFor="let review of reviews" class="custom-card">
+      <div class="custom-container">
+        <div class="status-ind"></div>
+
+        <div class="right">
+          <div class="text-wrap">
+            <p class="text-content">
+              <a class="text-link">Review #{{ review.id }}</a> by
+              <a class="text-link">Intern</a>
+            </p>
+            <p class="time">{{ review.reviewDate | date: 'mediumDate' }}</p>
+            <p class="review-comment">{{ review.comment }}</p>
+          </div>
+
+          <div class="scores-section" *ngIf="review.scores && review.scores.length > 0"
+          >
+            <ul>
+              <li *ngFor="let score of review.scores">
+                <span class="criteria">{{ score.criteria }}</span>
+                <span class="stars">
+              <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                <i class="star" [ngClass]="{ 'filled': star <= score.score }">★</i>
+              </ng-container>
+            </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="button-wrap">
+            <button class="primary-cta" (click)="onEdit(review.id || 0)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="secondary-cta" (click)="onDelete(review.id || 0)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #noReviews>
+    <p class="no-reviews">No reviews yet. Be the first to share your experience!</p>
+  </ng-template>
+</div>

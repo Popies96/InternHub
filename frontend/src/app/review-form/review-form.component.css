@@ -1,0 +1,151 @@
+.review-form {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: white;
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #334155; /* slate-700 */
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #f1f5f9; /* slate-100 */
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #475569; /* slate-600 */
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #334155; /* slate-700 */
+}
+
+textarea.form-control {
+  min-height: 6rem;
+  resize: none;
+}
+
+.error-message {
+  margin-top: 0.5rem;
+  color: #ef4444; /* red-500 */
+  font-size: 0.875rem;
+}
+
+.scores-section {
+  margin-top: 2rem;
+}
+
+.scores-section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.score-group {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  background-color: #f8fafc; /* slate-50 */
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.score-group .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.star-rating {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #cbd5e1; /* slate-300 */
+  transition: color 0.3s ease;
+}
+
+.star.filled,
+.star:hover {
+  color: #fbbf24; /* amber-400 */
+}
+
+.btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-add,
+.btn-remove {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-add:hover,
+.btn-remove:hover {
+  border-color: #334155;
+}
+
+.btn-remove {
+  color: #ef4444;
+}
+
+.btn-remove:hover {
+  color: #b91c1c;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.btn-submit-icon {
+  background-color: #f1f5f9; /* light background */
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex-end;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-submit-icon:hover {
+  background-color: #e2e8f0; /* hover effect */
+}
+
+.btn-submit-icon .icon {
+  width: 24px;
+  height: 24px;
+  stroke: #334155; /* slate-700 */
+}
+
+
+
