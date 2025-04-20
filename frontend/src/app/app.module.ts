@@ -35,6 +35,8 @@ import { CompanySidebarComponent } from './components/sidebars/company-sidebar/c
 import { CompanyTasksComponent } from './company/company-tasks/company-tasks.component';
 import { ApplicationsComponent } from './company/applications/applications.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
+import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
 
 
 
@@ -71,6 +73,8 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
     CompanyTasksComponent,
     ApplicationsComponent,
     UnauthorizedComponent,
+    MsgPopupComponent,
+    InternshipsInfoComponent,
   ],
   imports: [
     BrowserModule,

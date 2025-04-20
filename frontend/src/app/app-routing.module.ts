@@ -25,6 +25,8 @@ import { CompanyTasksComponent } from './company/company-tasks/company-tasks.com
 import { ApplicationsComponent } from './company/applications/applications.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
+import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
 
 const routes: Routes = [
   {
@@ -42,10 +44,11 @@ const routes: Routes = [
       {path :'settings' , component:SettingsComponent , data: { breadcrumb: 'Settings' }}, 
       {path :'tasks' , component:TasksComponent , data: { breadcrumb: 'Tasks' }},
       {path : 'rendu' , component:RenduComponent , data: { breadcrumb: 'Report' }},
+      {path : 'intern-info' , component:InternshipsInfoComponent , data: { breadcrumb: 'Internship Information' }},
       {path : 'certif' , 
         children: [
           {path: '', component: CertificatesComponent, data: { breadcrumb: 'Certificates' }},
-          {path: 'certif_detail', component: CertificateComponent, data: { breadcrumb: 'Certificate' }}
+          {path: 'certif_detail', component: CertificateComponent, data: { breadcrumb: 'Certificate ' }}
         ]
       },
       {path : 'interview' , component:InterviewComponent , data: { breadcrumb: 'Interviews' } }
@@ -67,7 +70,7 @@ const routes: Routes = [
       {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }}
     ],
   },
-
+  {path: 'msg', component: MsgPopupComponent  , data: { roles: [] }},
   { path: 'signup', component: SignupComponent , data: { roles: [] }},
   { path: 'login', component: LoginComponent  , data: { roles: [] }},
   { path: '', component: HomeComponent, data: { roles: [] }},

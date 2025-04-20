@@ -22,8 +22,6 @@ export class AuthGuard implements CanActivate {
     console.log('Required Roles:', requiredRoles);
     console.log('Is User Logged In:', isLoggedIn);
     console.log('Current User Role:', userRole);
-
-    // Public route (no role required)
     if (!requiredRoles) {
       return true;
       

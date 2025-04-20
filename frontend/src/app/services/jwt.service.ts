@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 
 const baseUrl = 'http://localhost:8088/internhub/';
@@ -33,7 +32,7 @@ export class JwtService {
       return null;
     }
   }
-
+  
   loginWithOAuth() {
     window.location.href = baseUrl + 'google';
   }
@@ -69,6 +68,7 @@ export class JwtService {
     if (!token) return null;
     
     const decoded = this.decodeToken(token);
+    localStorage.setItem('email',decoded.sub);
     return decoded?.roles[0] || null;
   }
 

@@ -1,27 +1,36 @@
 package com.example.backend.dto;
-
+import lombok.*;
 import com.example.backend.entity.Task.TaskStatus;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskResponse {
     private Long id;
     private String title;
     private String description;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
     private TaskStatus status;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt ;
+    private LocalDateTime updatedAt ;
     private Long internshipId;
     private Long studentId;
     private String studentName;
-    private String internshipTitle;
-    private boolean overdue;
+    @Getter(AccessLevel.NONE) // Prevents Lombok from generating getOverdue()
+    private Boolean overdue;
 
-    // Constructors
-    public TaskResponse() {
+    // Custom getter for overdue that calculates it dynamically
+    public boolean isOverdue() {
+        if (deadline == null) {
+            return false;
+        }
+        return LocalDateTime.now().isAfter(deadline) &&
+                status != TaskStatus.COMPLETED;
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -46,11 +55,11 @@ public class TaskResponse {
         this.description = description;
     }
 
-    public LocalDate getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 
@@ -62,19 +71,19 @@ public class TaskResponse {
         this.status = status;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -101,20 +110,11 @@ public class TaskResponse {
     public void setStudentName(String studentName) {
         this.studentName = studentName;
     }
-
-    public String getInternshipTitle() {
-        return internshipTitle;
-    }
-
-    public void setInternshipTitle(String internshipTitle) {
-        this.internshipTitle = internshipTitle;
-    }
-
-    public boolean isOverdue() {
+    public Boolean getOverdue() {
         return overdue;
     }
 
-    public void setOverdue(boolean overdue) {
+    public void setOverdue(Boolean overdue) {
         this.overdue = overdue;
     }
 }

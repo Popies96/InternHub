@@ -1,17 +1,16 @@
 package com.example.backend.services.task;
 
-import com.example.backend.entity.Internship;
+import com.example.backend.dto.TaskRequest;
+import com.example.backend.dto.TaskResponse;
 import com.example.backend.entity.Task;
-
 import java.util.List;
 
 public interface TaskService {
+        TaskResponse createTask(TaskRequest taskRequest);
+        TaskResponse updateTask(Long id, TaskRequest taskRequest);
+        List<TaskResponse> getAllTasks();
+        TaskResponse getTaskById(Long id);
+        void deleteTask(Long id);
 
-        List<Task> retrieveTask();
-        Task updateTask(Task task);
-        Task addTask(Task task);
-        Task retrieveTask(long idTask);
-        void removeTask(long idTask);
-       /* List<Task> getTasksByStudent(Long studentId);
-        List<Task> getTasksByEnterprise(Long enterpriseId);*/
+        List<TaskResponse> getTasksByStudent(Long studentId);
 }

@@ -66,12 +66,10 @@ export class SignupComponent implements OnInit {
   }
   }
   onSubmit() {
-    console.log(this.signupForm.invalid);
     if (this.signupForm.valid) {
       console.log('Form submitted:', this.signupForm.value);
       this.jwtService.register(this.signupForm.value).subscribe(
         (data) => {
-          console.log(data);
           this.router.navigate(['/login']);
         },
         (error) => {

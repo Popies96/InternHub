@@ -1,13 +1,11 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entity.Internship;
-import com.example.backend.entity.Task;
-import com.example.backend.services.internshipService.InternshipService;
+import ch.qos.logback.classic.Logger;
+import com.example.backend.dto.TaskRequest;
+import com.example.backend.dto.TaskResponse;
 import com.example.backend.services.task.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,46 +13,44 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-    private final TaskService taskService;
 
+    private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")  // Only Admin can access all internships
-    public ResponseEntity<List<Task>> getAllTasks() {
-        return ResponseEntity.ok(taskService.retrieveTask());
-    }
-/*
-    @GetMapping("/student/{studentId}")
-    @PreAuthorize("hasRole('STUDENT') and #studentId == authentication.principal.id")  // Ensure the student can only view their own internships
-    public ResponseEntity<List<Task>> getTasksByStudent(@PathVariable Long studentId) {
-        return ResponseEntity.ok(taskService.getTasksByStudent(studentId));
-    }*/
-
-    @PostMapping("/enterprise/addTask")
-
-    //  @PreAuthorize("hasRole('ENTERPRISE')")
-    public ResponseEntity<Task> addTask(@RequestBody Task task) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("User Roles: " + auth.getAuthorities());
-        Task createdTask = taskService.addTask(task);
-        return ResponseEntity.ok(createdTask);
-    }
-
-    @PutMapping("/enterprise/updateTask/{id}")
+    @PostMapping("/enterprise")
     @PreAuthorize("hasRole('ENTERPRISE')")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        task.setId(id);
-        return ResponseEntity.ok(taskService.updateTask(task));
+    public ResponseEntity<TaskResponse> addTask( @RequestBody TaskRequest taskRequest) {
+        return ResponseEntity.ok(taskService.createTask(taskRequest));
     }
 
-    @DeleteMapping("/enterprise/deleteTask/{id}")
+    @PutMapping("/enterprise/{id}")
     @PreAuthorize("hasRole('ENTERPRISE')")
-    public ResponseEntity<Void> removeTask(@PathVariable Long id) {
-        taskService.removeTask(id);
+    public ResponseEntity<TaskResponse> updateTask(
+            @PathVariable Long id,
+            @RequestBody TaskRequest taskRequest) {
+        return ResponseEntity.ok(taskService.updateTask(id, taskRequest));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENTERPRISE', 'STUDENT')")
+    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+        return ResponseEntity.ok(taskService.getAllTasks());
+    }
+
+    @DeleteMapping("/enterprise/{id}")
+    @PreAuthorize("hasRole('ENTERPRISE')")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Add this method to your TaskController.java
+    @GetMapping("/student/{studentId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENTERPRISE', 'STUDENT')")
+    public ResponseEntity<List<TaskResponse>> getTasksByStudent(@PathVariable Long studentId) {
+        return ResponseEntity.ok(taskService.getTasksByStudent(studentId));
     }
 }

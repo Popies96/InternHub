@@ -1,35 +1,22 @@
 package com.example.backend.dto;
-
+import lombok.*;
 import com.example.backend.entity.Task.TaskStatus;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskRequest {
-
-
     private String title;
+
     private String description;
-    private LocalDate deadline;
+    private LocalDateTime deadline;  // Changed to LocalDate
+
     private TaskStatus status;
     private Long internshipId;
     private Long studentId;
-
-    // Constructors
-    public TaskRequest() {
-    }
-
-    public TaskRequest(String title, String description, LocalDate deadline, TaskStatus status, Long internshipId, Long studentId) {
-        this.title = title;
-        this.description = description;
-        this.deadline = deadline;
-        this.status = status;
-        this.internshipId = internshipId;
-        this.studentId = studentId;
-    }
 
     public String getTitle() {
         return title;
@@ -47,11 +34,11 @@ public class TaskRequest {
         this.description = description;
     }
 
-    public LocalDate getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 

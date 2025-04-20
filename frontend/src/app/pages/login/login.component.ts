@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
         (data) => {
           if (data.token != null) {
             const jwtToken = data.token;
+            console.log(jwtToken);
             localStorage.setItem('token', jwtToken);
             const roles = data.roles 
             if(roles.includes('ROLE_STUDENT') ){

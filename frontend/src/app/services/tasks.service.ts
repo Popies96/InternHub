@@ -2,23 +2,51 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const baseUrl = 'http://localhost:8088/internhub/';
+const baseUrl = 'http://localhost:8088/internhub/tasks';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TasksService {
-  constructor(
-    private http: HttpClient,
-  ) { }
+  constructor(private http: HttpClient) {}
 
-  addTask(taskData: any): Observable<any> {
+
+
+  // Get all tasks
+  getAllTasks(): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {
       throw new Error('No authorization token available');
     }
-    return this.http.post(baseUrl + 'enterprise/addTask', taskData, { headers });
+    return this.http.get(baseUrl, {headers});
   }
+
+  addTask(taskRequest: any): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.post(`${baseUrl}/enterprise`, taskRequest, { headers });
+  }
+
+  // Update a task (enterprise only)
+  updateTask(id: number, taskRequest: any): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.put(`${baseUrl}/enterprise/${id}`, taskRequest, { headers});
+  }
+
+  // Delete a task (enterprise only)
+  deleteTask(id: number): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.delete(`${baseUrl}/enterprise/${id}`, { headers});
+  }
+
 
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');

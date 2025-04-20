@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user.service';
+
 @Component({
   selector: 'app-admin-nav',
   templateUrl: './admin-nav.component.html',
@@ -9,7 +11,41 @@ import { filter } from 'rxjs/operators';
 export class AdminNavComponent {
 breadcrumbs: Array<{label: string, url: string}> = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+
+currentUserPic: string = ''; 
+currentUserId: number | null = null;
+currentUser: number | null = null;
+UserName: string = '';
+
+profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
+
+
+ngOnInit(): void {
+  this.userService.getUserFromLocalStorage().subscribe({
+    next: (user) => {
+      this.currentUser = user.id;
+      this.UserName = user.nom;
+      this.currentUserId = user.id;
+      this.currentUserPic = this.getUserProfilePic(user.id);
+    },
+    error: (err) => {
+      console.error('Error fetching user:', err);
+      this.currentUserPic = '';
+    }
+  });
+}
+
+getUserProfilePic(userId: number): string {
+  if (!userId) return ''; 
+  const index = Math.abs(userId) % this.profilePics.length;
+  return this.profilePics[index];
+}
+
+
+
+
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute ,  private userService: UserService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

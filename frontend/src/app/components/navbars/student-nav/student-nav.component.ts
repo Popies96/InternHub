@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt.service';
 import { filter } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-student-nav',
@@ -10,8 +11,37 @@ import { filter } from 'rxjs/operators';
 })
 export class StudentNavComponent {
   breadcrumbs: Array<{label: string, url: string}> = [];
+  currentUserPic: string = ''; 
+  currentUserId: number | null = null;
+  currentUser: number | null = null;
+  UserName: string = '';
+  index: number | null = null;
+  profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
+  
+  ngOnInit(): void {
+    this.userService.getUserFromLocalStorage().subscribe({
+      next: (user) => {
+        this.currentUser = user.id;
+        this.UserName = user.nom;
+        this.currentUserId = user.id;
+        this.index = this.getUserProfilePic(user.id);
+        this.currentUserPic =this.profilePics[this.index]
+      },
+      error: (err) => {
+        console.error('Error fetching user:', err);
+        this.currentUserPic = '';
+      }
+    });
+  }
+  
+  getUserProfilePic(userId: number): number {
+   
+    const index = Math.abs(userId) % this.profilePics.length;
+    
+    return index;
+  }
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute , private jwtService: JwtService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute , private jwtService: JwtService , private userService: UserService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -19,37 +49,56 @@ export class StudentNavComponent {
     });
   }
 
-  private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Array<{label: string, url: string}> = []): Array<{label: string, url: string}> {
-    const children: ActivatedRoute[] = route.children;
 
+ 
+
+
+  
+
+
+ 
+
+
+
+
+
+  private createBreadcrumbs(
+    route: ActivatedRoute,
+    url: string = '',
+    breadcrumbs: Array<{label: string, url: string}> = []
+  ): Array<{label: string, url: string}> {
+    const children: ActivatedRoute[] = route.children;
+  
     if (children.length === 0) {
       return breadcrumbs;
     }
-
+  
     for (const child of children) {
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-      if (routeURL !== '') {
-        url += `/${routeURL}`;
-      }
-
+      const newUrl = routeURL ? `${url}/${routeURL}` : url;
       const label = child.snapshot.data['breadcrumb'];
-      
-      // Special handling for 'apply' route to show 'Internships' as parent
-      if (routeURL === 'apply') {
-        breadcrumbs.push(
-          { label: 'Internships', url: '/student/intern' },
-          { label: this.formatLabel(label), url }
-        );
-        return breadcrumbs;
-      }
-      
-      // Skip if no label or if the route is 'student'
+
       if (label && routeURL !== 'student') {
-        breadcrumbs.push({ label: this.formatLabel(label), url });
+        breadcrumbs.push({
+          label: this.formatLabel(label),
+          url: newUrl
+        });
       }
 
-      return this.createBreadcrumbs(child, url, breadcrumbs);
+      if (routeURL === 'intern') {
+        breadcrumbs = [
+          { label: 'Internships', url: newUrl },
+          ...breadcrumbs
+        ];
+      }
+  
+      const childBreadcrumbs = this.createBreadcrumbs(child, newUrl, breadcrumbs);
+      
+      if (childBreadcrumbs.length > breadcrumbs.length) {
+        return childBreadcrumbs;
+      }
     }
+  
     return breadcrumbs;
   }
 
@@ -155,4 +204,15 @@ private closeMessagesOutside = (event: MouseEvent) => {
     document.removeEventListener('click', this.closeMessagesOutside);
   }
 };
+
+
+
+
+
+
+
+
+
 }
+
+

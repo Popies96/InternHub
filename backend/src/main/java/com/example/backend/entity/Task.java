@@ -3,24 +3,21 @@ package com.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "tasks")
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     private String title;
     private String description;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.PENDING; // Default value
@@ -28,23 +25,23 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "internship_id")
     private Internship internship;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDate.now();
-        this.updatedAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDate.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public enum TaskStatus {
@@ -54,6 +51,10 @@ public class Task {
         OVERDUE
     }
 
+    // Helper method to check if task is overdue
+    public boolean isOverdue() {
+        return LocalDateTime.now().isAfter(deadline) && status != TaskStatus.COMPLETED;
+    }
 
     public Long getId() {
         return id;
@@ -61,62 +62,6 @@ public class Task {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDate updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Internship getInternship() {
-        return internship;
-    }
-
-    public void setInternship(Internship internship) {
-        this.internship = internship;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getTitle() {
@@ -127,8 +72,59 @@ public class Task {
         this.title = title;
     }
 
-    // Helper method to check if task is overdue
-    public boolean isOverdue() {
-        return LocalDate.now().isAfter(deadline) && status != TaskStatus.COMPLETED;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public Internship getInternship() {
+        return internship;
+    }
+
+    public void setInternship(Internship internship) {
+        this.internship = internship;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

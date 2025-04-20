@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-student-sidebar',
@@ -8,39 +9,38 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 export class StudentSidebarComponent implements OnInit {
   isCompact = false;
   @Output() sidebarToggled = new EventEmitter<boolean>();
-  decodedToken: any;
+constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.decodeToken();
+    this.userService.getUserFromLocalStorage().subscribe({
+     
+      next: (user) => {
+        this.UserName = user.nom;
+        this.email = user.email;
+        this.currentUserId = user.id;
+        this.currentUserPic = localStorage.getItem('pfp') || '';
+        console.log(this.currentUserPic);
+      },
+      error: (err) => {
+        console.error('Error fetching user:', err);
+        this.currentUserPic = '';
+      }
+    });
   }
-
+  profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+2}.png`);
+  
   toggleSidebar() {
     this.isCompact = !this.isCompact;
     this.sidebarToggled.emit(this.isCompact);
   }
+  currentUserPic: string = ''; 
+  currentUserId: number | null = null;
+  currentUser: number| null = null;; 
+  UserName: string = '';
+  email: string = '';
+  
+ 
+  
+ 
 
-  private decodeToken() {
-    // 1. Get the token from storage (adjust key if different)
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    
-
-    
-    if (token) {
-      try {
-        // 2. Split the token into its parts
-        const tokenParts = token.split('.');
-        
-        // 3. Decode the payload (middle part)
-        const decodedPayload = atob(tokenParts[1]);
-        
-        // 4. Parse the JSON payload
-        this.decodedToken = JSON.parse(decodedPayload);
-        
-        console.log('Decoded token:', this.decodedToken);
-       
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }
-    }
-  }
 }
