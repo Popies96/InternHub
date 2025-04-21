@@ -13,13 +13,10 @@ constructor(private userService: UserService) {}
 
   ngOnInit() {
     this.userService.getUserFromLocalStorage().subscribe({
-     
       next: (user) => {
         this.UserName = user.nom;
         this.email = user.email;
-        this.currentUserId = user.id;
-        this.currentUserPic = localStorage.getItem('pfp') || '';
-        console.log(this.currentUserPic);
+        this.currentUserPic = this.getUserProfilePic(user.id);
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -27,8 +24,15 @@ constructor(private userService: UserService) {}
       }
     });
   }
-  profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+2}.png`);
+  profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
   
+
+  getUserProfilePic(userId: number): string {
+    if (!userId) return ''; 
+    const index = Math.abs(userId) % this.profilePics.length;
+    return this.profilePics[index];
+  }
+
   toggleSidebar() {
     this.isCompact = !this.isCompact;
     this.sidebarToggled.emit(this.isCompact);

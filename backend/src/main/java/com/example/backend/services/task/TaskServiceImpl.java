@@ -2,6 +2,8 @@ package com.example.backend.services.task;
 
 import com.example.backend.dto.TaskRequest;
 import com.example.backend.dto.TaskResponse;
+import com.example.backend.entity.Internship;
+import com.example.backend.entity.Student;
 import com.example.backend.entity.Task;
 import com.example.backend.entity.Task.TaskStatus;
 import com.example.backend.repository.InternshipRepository;
@@ -53,22 +55,36 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse updateTask(Long id, TaskRequest taskRequest) {
+        // Validate request
+        if (!StringUtils.hasText(taskRequest.getTitle())) {
+            throw new IllegalArgumentException("Task title cannot be empty");
+        }
+
+        // Find existing task
         Task existingTask = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
 
-        if (taskRequest.getTitle() != null) {
-            existingTask.setTitle(taskRequest.getTitle());
-        }
-        if (taskRequest.getDescription() != null) {
-            existingTask.setDescription(taskRequest.getDescription());
-        }
-        if (taskRequest.getDeadline() != null) {
-            existingTask.setDeadline(taskRequest.getDeadline());
-        }
-        if (taskRequest.getStatus() != null) {
-            existingTask.setStatus(taskRequest.getStatus());
+        // Update basic fields
+        existingTask.setTitle(taskRequest.getTitle());
+        existingTask.setDescription(taskRequest.getDescription());
+        existingTask.setDeadline(taskRequest.getDeadline());
+        existingTask.setStatus(taskRequest.getStatus() != null ?
+                taskRequest.getStatus() : existingTask.getStatus());
+
+        // Update relationships if they are provided in the request
+        if (taskRequest.getStudentId() != null) {
+            Student student = studentRepository.findById(taskRequest.getStudentId())
+                    .orElseThrow(() -> new EntityNotFoundException("Student not found with ID: " + taskRequest.getStudentId()));
+            existingTask.setStudent(student);
         }
 
+        if (taskRequest.getInternshipId() != null) {
+            Internship internship = internshipRepository.findById(taskRequest.getInternshipId())
+                    .orElseThrow(() -> new EntityNotFoundException("Internship not found with ID: " + taskRequest.getInternshipId()));
+            existingTask.setInternship(internship);
+        }
+
+        // Save and return the response
         Task updatedTask = taskRepository.save(existingTask);
         return toTaskResponse(updatedTask);
     }

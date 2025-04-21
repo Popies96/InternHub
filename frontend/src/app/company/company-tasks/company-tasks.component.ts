@@ -228,7 +228,7 @@ function formatDeadline(deadline: Date | string): string {
     description: this.taskForm.value.description,
     deadline: formatDeadline(this.taskForm.value.deadline),
     status: this.taskForm.value.status,
-    internshipId: this.taskForm.value.internshipId, // Changed from nested object
+    internshipId: this.taskForm.value.internshipId, 
     studentId: this.taskForm.value.studentId       // Changed from nested object
   };
 
@@ -251,14 +251,38 @@ function formatDeadline(deadline: Date | string): string {
   });
 }
 
+
+
+
   updateTask() {
     if (this.taskForm.invalid || !this.currentTaskId) {
       this.taskForm.markAllAsTouched();
       return;
     }
 
-    const taskData = this.taskForm.value;
-    this.tasksService.updateTask(this.currentTaskId, taskData).subscribe({
+    const taskRequest = {
+      title: this.taskForm.value.title,
+      description: this.taskForm.value.description,
+      deadline: formatDeadline(this.taskForm.value.deadline),
+      status: this.taskForm.value.status,
+      internshipId: this.taskForm.value.internshipId, 
+      studentId: this.taskForm.value.studentId       // Changed from nested object
+    };
+
+    function formatDeadline(deadline: Date | string): string {
+      let date: Date;
+      
+      if (deadline instanceof Date) {
+        date = deadline;
+      } else {
+        date = new Date(deadline);
+      }
+      
+      // Format as ISO string without milliseconds
+      return date.toISOString().split('.')[0];
+    }
+
+    this.tasksService.updateTask(this.currentTaskId, taskRequest).subscribe({
       next: () => {
         this.closeUpdateModal();
         this.fetchTasks();

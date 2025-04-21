@@ -1,6 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.SignupRequest;
+import com.example.backend.dto.UserRequest;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -31,11 +32,12 @@ public class UserController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity <SignupRequest> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity <UserRequest> getUserByEmail(@RequestParam String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        SignupRequest student = new SignupRequest();
+        UserRequest student = new UserRequest();
 
         student.setNom(user.get().getNom());
+        student.setId(user.get().getId());
         student.setPrenom(user.get().getPrenom());
         student.setEmail(user.get().getEmail());
         student.setPassword(user.get().getPassword());

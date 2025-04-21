@@ -12,8 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 export class StudentNavComponent {
   breadcrumbs: Array<{label: string, url: string}> = [];
   currentUserPic: string = ''; 
-  currentUserId: number | null = null;
-  currentUser: number | null = null;
+  email: string = '';
   UserName: string = '';
   index: number | null = null;
   profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
@@ -21,11 +20,9 @@ export class StudentNavComponent {
   ngOnInit(): void {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        this.currentUser = user.id;
         this.UserName = user.nom;
-        this.currentUserId = user.id;
-        this.index = this.getUserProfilePic(user.id);
-        this.currentUserPic =this.profilePics[this.index]
+        this.email = user.email;
+        this.currentUserPic = this.getUserProfilePic(user.id);
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -34,11 +31,10 @@ export class StudentNavComponent {
     });
   }
   
-  getUserProfilePic(userId: number): number {
-   
+  getUserProfilePic(userId: number): string {
+    if (!userId) return ''; 
     const index = Math.abs(userId) % this.profilePics.length;
-    
-    return index;
+    return this.profilePics[index];
   }
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute , private jwtService: JwtService , private userService: UserService) {

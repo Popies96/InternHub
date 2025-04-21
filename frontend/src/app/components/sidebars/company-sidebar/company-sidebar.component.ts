@@ -16,10 +16,8 @@ constructor(private userService: UserService) {}
   ngOnInit() {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        this.currentUser = user.id;
         this.UserName = user.nom;
         this.email = user.email;
-        this.currentUserId = user.id;
         this.currentUserPic = this.getUserProfilePic(user.id);
       },
       error: (err) => {
@@ -40,8 +38,6 @@ toggleCompanySidebar() {
 
 
 currentUserPic: string = ''; 
-currentUserId: number | null = null;
-currentUser: number | null = null;
 UserName: string = '';
 email: string = '';
 
