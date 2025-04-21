@@ -31,6 +31,9 @@ import { ApplicationsComponent } from './company/applications/applications.compo
 import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
+import { ForumComponent } from './components/forum/forum.component';
+import { TopicComponent } from './components/topic/topic.component';
+import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
 
 const routes: Routes = [
   {
@@ -42,6 +45,7 @@ const routes: Routes = [
       {path: 'profile', component: ProfileComponent  , data: { breadcrumb: 'Profile' }},
       {path: '', component: IndexComponent },
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
+      {path: 'topic', component: TopicComponent  , data: { breadcrumb: 'forum' }},
       {path: 'chatpopup', component: ChatpopupComponent  , data: { breadcrumb: 'Chat' }},
       {path :'intern' , component:InternshipsComponent, data: { breadcrumb: 'Internships' }} , 
       {path :'apply',component:ApplicationComponent , data: { breadcrumb: 'Application' }},
@@ -49,6 +53,7 @@ const routes: Routes = [
       {path :'settings' , component:SettingsComponent , data: { breadcrumb: 'Settings' }}, 
       {path :'tasks' , component:TasksComponent , data: { breadcrumb: 'Tasks' }},
       {path : 'rendu' , component:RenduComponent , data: { breadcrumb: 'Report' }},
+      { path: 'topics/:id', component: TopicDetailComponent },
       {path : 'certif' , 
         children: [
           {path: '', component: CertificatesComponent, data: { breadcrumb: 'Certificates' }},

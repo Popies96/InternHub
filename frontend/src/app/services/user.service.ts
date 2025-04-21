@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
@@ -36,17 +36,29 @@ export class UserService {
   }
 
   getUserFromLocalStorage(): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      return throwError(() => new Error('Authorization header creation failed'));
+    }
     const email = localStorage.getItem('email');
     if (!email) {
       return throwError(() => new Error('Email not found in localStorage'));
     }
 
-    return this.http.get(`${baseUrl}user/email?email=${email}`).pipe(
+    return this.http.get(`${baseUrl}user/email?email=${email}`,{ headers , responseType: 'json'}).pipe(
       catchError(err => {
         console.error('Error fetching user:', err);
-        return throwError(() => err);
-      })
+          return throwError(() => err);
+        })
     );
   }
-
+  private createAuthorizedHeader(): HttpHeaders | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    } else {
+      console.log('No token found');
+      return null;
+    }
+  }
 }

@@ -39,7 +39,7 @@ export class ChatpopupComponent {
   ngOnInit(): void {
   this.userService.getUserFromLocalStorage().subscribe({
     next: (user) => {
-      this.currentUser = user.id;
+      this.currentUser = String(user.id);
       this.UserName = user.nom;
 
       if (this.selectedUser) {

@@ -47,7 +47,9 @@ import { SettingsComponent } from './Student/settings/settings.component';
 import { TasksComponent } from './Student/tasks/tasks.component';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
-
+import { ForumComponent } from './components/forum/forum.component';
+import { TopicComponent } from './components/topic/topic.component';
+import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,7 +93,10 @@ import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
     CompanyTasksComponent,
     ApplicationsComponent,
     UnauthorizedComponent,
-    ChatpopupComponent
+    ChatpopupComponent,
+    ForumComponent,
+    TopicComponent,
+    TopicDetailComponent,
   ],
   imports: [
     BrowserModule,

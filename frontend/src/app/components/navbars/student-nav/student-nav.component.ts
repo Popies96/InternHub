@@ -52,7 +52,7 @@ openChat(user: any): void {
   ngOnInit(): void {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        this.currentUser = user.id; // Assuming the user object has an 'id' property
+        this.currentUser = String(user.id); // Assuming the user object has an 'id' property
         this.UserName = user.nom; // Assuming you need the username as well
         console.log('UserName:', this.UserName);
 

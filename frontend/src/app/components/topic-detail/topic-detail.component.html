@@ -1,0 +1,66 @@
+<div class="topic-detail-wrapper">
+    <div class="topic-card">
+      <div class="topic-card-header">
+        <button class="back-btn" routerLink="/student/topic">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </div>
+  
+      <div *ngIf="isLoading" class="loader">
+        <i class="fas fa-spinner fa-spin"></i> Loading topic...
+      </div>
+  
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+  
+      <div *ngIf="topic && !isLoading" class="topic-content-section">
+        <h1 class="topic-title">{{ topic.title }}</h1>
+  
+        <div class="topic-meta">
+          <span><i class="fas fa-user-circle"></i> Creator: {{ topic.prenom }}</span>
+          <span><i class="fas fa-calendar-day"></i> {{ topic.dateCreated | date:'mediumDate' }}</span>
+          <span><i class="fas fa-folder"></i> {{ topic.category }}</span>
+        </div>
+  
+        <div class="topic-body">
+          <div class="vote-box">
+            <button class="vote-btn up" (click)="upvoteTopic()">
+              <i class="fas fa-arrow-up"></i>
+            </button>
+            <div class="vote-count">{{ topic.votes }}</div>
+            <button class="vote-btn down" (click)="downvoteTopic()">
+              <i class="fas fa-arrow-down"></i>
+            </button>
+          </div>
+          <div class="topic-text">
+            <p>{{ topic.content }}</p>
+          </div>
+        </div>
+  
+        <div class="topic-tags">
+          <i class="fas fa-tags"></i>
+          <span class="tag" *ngFor="let tag of topic.tags">{{ tag }}</span>
+        </div>
+  
+        <div class="topic-stats">
+          <span><i class="fas fa-comments"></i> {{ topic.comments }} Comments</span>
+          <span><i class="fas fa-eye"></i> {{ topic.views }} Views</span>
+        </div>
+  
+        <div *ngIf="isCreator()">
+          <button class="btn-delete" (click)="deleteTopic(topic.id, currentUser)">
+            <i class="fas fa-trash"></i> Delete Topic
+          </button>
+        </div>
+  
+        <div class="comments-section">
+          <h3><i class="fas fa-comments"></i> Comments</h3>
+          <div class="no-comments" *ngIf="topic.comments === 0">
+            No comments yet. Be the first to reply!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
