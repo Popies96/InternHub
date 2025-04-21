@@ -46,5 +46,13 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL )
     private List<InternshipAi> internshipAiList;
+
+    public List<InternshipAi> getInternshipAiList() {
+        return internshipAiList;
+    }
+
+    public void setInternshipAiList(List<InternshipAi> internshipAiList) {
+        this.internshipAiList = internshipAiList;
+    }
 }
 

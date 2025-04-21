@@ -1,0 +1,15 @@
+<div class="">
+  <app-student-nav></app-student-nav>
+  
+  <div class="flex flex-1 "> <!-- Added overflow-hidden -->
+    <!-- Sidebar -->
+    <app-task-ai-sidebar class=" flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14"></app-task-ai-sidebar>
+    
+    <!-- Main Content -->
+    <div class=" overflow-auto pt-8 p-4">
+      
+        <router-outlet></router-outlet>
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,268 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">AI Internships</h1>
+      <p class="mt-1 text-sm text-gray-500">View all generated AI internships</p>
+    </div>
+    <div class="flex space-x-3">
+      <button routerLink="/student/internshipAi/create" 
+              class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Generate New Internship
+      </button>
+      <button  
+              class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-400  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700">
+        Delete all internships
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="max-w mx-auto mb-6">
+    <form>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <!-- Category Dropdown -->
+        <div class="relative flex-1">
+          <button (click)="toggleCategory()" 
+                  class="w-full z-10 inline-flex items-center justify-between py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100" 
+                  type="button">
+            {{ selectedCategory || 'Filter by Category' }}
+            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <!-- Dropdown Menu -->
+          <div id="dropdownCategory" [class.hidden]="!isCategoryOpen" 
+               class="absolute left-0 mt-1 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full border border-slate-200">
+            <ul class="py-2 text-sm text-gray-700">
+              <li *ngFor="let category of uniqueCategories">
+                <button type="button" 
+                        (click)="filterByCategory(category)"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  {{ category }}
+                </button>
+              </li>
+              <li>
+                <button type="button" 
+                        (click)="clearCategoryFilter()"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-blue-600">
+                  Clear Filter
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Status Dropdown -->
+        <div class="relative flex-1">
+          <button (click)="toggleStatus()" 
+                  class="w-full z-10 inline-flex items-center justify-between py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100" 
+                  type="button">
+            {{ selectedStatus || 'Filter by Status' }}
+            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <!-- Dropdown Menu -->
+          <div id="dropdownStatus" [class.hidden]="!isStatusOpen" 
+               class="absolute left-0 mt-1 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full border border-slate-200">
+            <ul class="py-2 text-sm text-gray-700">
+              <li>
+                <button type="button" 
+                        (click)="filterByStatus(true)"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Active
+                </button>
+              </li>
+              <li>
+                <button type="button" 
+                        (click)="filterByStatus(false)"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Inactive
+                </button>
+              </li>
+              <li>
+                <button type="button" 
+                        (click)="clearStatusFilter()"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-blue-600">
+                  Clear Filter
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Search Input -->
+        <div class="relative flex-[2]">
+          <input type="search" [(ngModel)]="searchQuery" (input)="applySearch()" name="searchQuery"
+                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
+                 placeholder="Search internships..." />
+          <button type="button" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+            <span class="sr-only">Search</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Internship List -->
+  <div class="space-y-6">
+  <!-- Internship Card -->
+  <div *ngFor="let internship of filteredInternships" class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
+    <div class="px-6 py-4 bg-gray-50 flex justify-between items-center cursor-pointer" (click)="toggleInternshipDetails(internship.id)">
+      <!-- Header content remains the same -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+          <span class="text-indigo-600 font-medium">{{ internship.title | slice:0:1 }}</span>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium text-gray-900">{{ internship.title }}</h3>
+          <div class="mt-1 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              {{ internship.category }}
+            </span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': internship.active,
+                    'bg-gray-100 text-gray-800': !internship.active
+                  }">
+              {{ internship.active ? 'Active' : 'Inactive' }}
+            </span>
+            <span class="text-sm text-gray-500">
+              {{ internship.startDate | date }} - {{ internship.endDate | date }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <span class="text-indigo-600 hover:text-indigo-900 text-sm font-medium mr-2">
+          {{ expandedInternships[internship.id] ? 'Hide' : 'Show' }} Details
+        </span>
+        <svg [class.rotate-180]="expandedInternships[internship.id]" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Details Section (shown only when expanded) -->
+    <div *ngIf="expandedInternships[internship.id]" class="bg-white border-t border-gray-200 px-6 py-4">
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Left Content Grid -->
+        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Description</h4>
+            <p class="mt-1 text-sm text-gray-900">{{ internship.description }}</p>
+          </div>
+          <div class="space-y-3">
+            <div>
+                 <h4 class="text-sm font-medium text-gray-500">Duration</h4>
+            <p class="mt-1 text-sm text-gray-900">
+              {{ calculateDuration(internship.startDate, internship.endDate) }} weeks
+            </p>
+            </div>
+           
+            <div>
+            <h4 class="text-sm font-medium text-gray-500">Company</h4>
+            <p class="mt-1 text-sm text-gray-900">{{ internship.companyName }}</p>
+          </div>
+          </div>
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Skills</h4>
+            <div class="mt-1 flex flex-wrap gap-2">
+              <span 
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                {{ internship.technology }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Number of tasks</h4>
+            <p class="mt-1 text-sm text-gray-900">{{ internship.companyName }}</p>
+          </div>
+        </div>
+        
+        <!-- Right Actions Column -->
+        <div class="md:w-48 flex flex-col space-y-3">
+  <h4 class="text-sm font-medium text-gray-500">Actions</h4>
+  
+  <!-- Delete Button -->
+<button (click)="openDeleteConfirmation(internship.id)" 
+        class="group w-full inline-flex items-center justify-center px-3 py-2 rounded-md shadow-sm text-sm font-medium transition-all duration-150 ease-in-out
+               bg-red-600 hover:bg-red-700 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+  <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+  Delete
+</button>
+
+  <!-- Status Toggle Button -->
+  <button routerLink="/workflow/{{ internship.id }}"
+          class="group w-full inline-flex items-center justify-center px-3 py-2 rounded-md shadow-sm text-sm font-medium transition-all duration-150 ease-in-out
+                 focus:outline-none focus:ring-2 focus:ring-offset-2"
+          [ngClass]="{
+            'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500': !internship.active,
+            'bg-gray-200 hover:bg-gray-300 text-gray-700 focus:ring-gray-400': internship.active
+          }">
+    <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path *ngIf="!internship.active" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      <path *ngIf="internship.active" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h6m0 0v6m0-6l-7 7-4-4-6 6" />
+    </svg>
+    {{ internship.active ? 'Continue' : 'Completed' }}
+  </button>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State (remains the same) -->
+  <div *ngIf="filteredInternships.length === 0" class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No internships found</h3>
+    <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+    <div class="mt-6">
+      <button routerLink="/student/internshipAi/create" 
+              type="button" 
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Generate New Internship
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="relative p-4 w-full max-w-md">
+    <div class="relative bg-white rounded-lg shadow">
+      <button type="button" 
+              (click)="closeDeleteConfirmation()"
+              class="absolute top-3 end-2.5 text-gray-400 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <div class="p-4 md:p-5 text-center">
+        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <h3 class="mb-5 text-lg font-normal text-gray-500">Are you sure you want to delete this internship?</h3>
+        <button (click)="confirmDelete()" 
+                type="button" 
+                class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
+          Yes, I'm sure
+        </button>
+        <button (click)="closeDeleteConfirmation()" 
+                type="button" 
+                class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
+          No, cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

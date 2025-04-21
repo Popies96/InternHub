@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ForgotPasswordComponent } from 'src/app/components/forgot-password/forgot-password.component';
 import { JwtService } from 'src/app/services/jwt.service';
 
@@ -13,7 +14,11 @@ export class LoginComponent implements OnInit {
   @ViewChild(ForgotPasswordComponent)
   forgotPasswordComponent!: ForgotPasswordComponent;
 
-  constructor(private fb: FormBuilder, private jwtservice: JwtService) {}
+  constructor(
+    private fb: FormBuilder,
+    private jwtservice: JwtService,
+    private router: Router
+  ) {}
 
   loginWithOAuth() {
     this.jwtservice.loginWithOAuth();
@@ -42,6 +47,12 @@ export class LoginComponent implements OnInit {
           if (data.token != null) {
             const jwtToken = data.token;
             localStorage.setItem('token', jwtToken);
+            const roles = data.roles;
+            if (roles.includes('ROLE_STUDENT')) {
+              this.router.navigate(['/student']);
+            } else if (roles.includes('ROLE_ENTERPRISE')) {
+              this.router.navigate(['/company']);
+            }
           }
         },
         (error) => {

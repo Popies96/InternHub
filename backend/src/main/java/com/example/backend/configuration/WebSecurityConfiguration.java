@@ -55,6 +55,7 @@ public class WebSecurityConfiguration {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/internship/**").hasAnyRole("ENTERPRISE", "STUDENT")
                         .requestMatchers("/student/**").hasRole("STUDENT")
+                        .requestMatchers("/internshipAi/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
 
