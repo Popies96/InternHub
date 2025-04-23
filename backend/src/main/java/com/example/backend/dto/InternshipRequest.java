@@ -5,8 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class InternshipResponse {
-    private Long id;
+public class InternshipRequest {
     private String title;
     private String description;
     private String location;
@@ -14,16 +13,8 @@ public class InternshipResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private InternshipStatus status;
-    private Long enterpriseId;  // Direct DB field
+    private Long enterpriseId; // Maps to enterprise_id in DB
     private Long studentId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -98,24 +89,5 @@ public class InternshipResponse {
     }
 
 
-    // Direct DB field
-
-    // Optional nested objects (uncomment if needed)
-    /*
-    private EnterpriseSummary enterprise;
-    private StudentSummary student;
-
-    @Data
-    public static class EnterpriseSummary {
-        private Long id;
-        private String name;
-    }
-
-    @Data
-    public static class StudentSummary {
-        private Long id;
-        private String firstName;
-        private String lastName;
-    }
-    */
+    // Maps to student_id in DB (nullable)
 }

@@ -12,13 +12,19 @@ export class CompanySidebarComponent implements OnInit {
   decodedToken: any;
 
 
+  currentUserPic: string = ''; 
+  UserName: string = '';
+  email: string = '';
+  
+  profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
+
 constructor(private userService: UserService) {}
   ngOnInit() {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
         this.UserName = user.nom;
         this.email = user.email;
-        this.currentUserPic = this.getUserProfilePic(user.id);
+        this.currentUserPic = localStorage.getItem('pfp') || '' ;
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -34,20 +40,6 @@ isCompanyCompact = false;
 toggleCompanySidebar() {
   this.isCompanyCompact = !this.isCompanyCompact;
   this.CompanysidebarToggled.emit(this.isCompanyCompact);
-}
-
-
-currentUserPic: string = ''; 
-UserName: string = '';
-email: string = '';
-
-profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
-
-
-getUserProfilePic(userId: number): string {
-  if (!userId) return ''; 
-  const index = Math.abs(userId) % this.profilePics.length;
-  return this.profilePics[index];
 }
 
 }

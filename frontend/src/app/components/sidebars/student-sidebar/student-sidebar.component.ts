@@ -16,7 +16,7 @@ constructor(private userService: UserService) {}
       next: (user) => {
         this.UserName = user.nom;
         this.email = user.email;
-        this.currentUserPic = this.getUserProfilePic(user.id);
+        this.currentUserPic = localStorage.getItem('pfp') || '' ;
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -27,11 +27,7 @@ constructor(private userService: UserService) {}
   profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
   
 
-  getUserProfilePic(userId: number): string {
-    if (!userId) return ''; 
-    const index = Math.abs(userId) % this.profilePics.length;
-    return this.profilePics[index];
-  }
+ 
 
   toggleSidebar() {
     this.isCompact = !this.isCompact;

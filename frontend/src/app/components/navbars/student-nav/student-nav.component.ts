@@ -23,6 +23,7 @@ export class StudentNavComponent {
         this.UserName = user.nom;
         this.email = user.email;
         this.currentUserPic = this.getUserProfilePic(user.id);
+        localStorage.setItem('pfp', this.currentUserPic);
       },
       error: (err) => {
         console.error('Error fetching user:', err);

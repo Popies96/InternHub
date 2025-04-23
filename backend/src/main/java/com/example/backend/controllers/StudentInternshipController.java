@@ -1,8 +1,13 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dto.InternshipResponse;
+import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
+import com.example.backend.entity.InternshipStatus;
+import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.services.internshipService.InternshipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,15 +16,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/internship")
 public class StudentInternshipController {
     private final InternshipService internshipService;
-
+    private final UserServiceImpl userService ;
     @Autowired
-    public StudentInternshipController(InternshipService internshipService) {
+    public StudentInternshipController(InternshipService internshipService, UserServiceImpl userService) {
         this.internshipService = internshipService;
+        this.userService = userService;
     }
 
     @GetMapping("/admin")
@@ -68,5 +75,35 @@ public class StudentInternshipController {
     public ResponseEntity<Void> removeInternship(@PathVariable Long id) {
         internshipService.removeInternship(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/enterprise")
+    @PreAuthorize("hasRole('ENTERPRISE')")
+    public ResponseEntity<List<InternshipResponse>> getInternshipsByEnterprise() {
+
+        Enterprise enterprise = (Enterprise) userService.getAuthenticatedUser();
+        List<Internship> internships = internshipService.getInternshipsByEnterprise(enterprise.getId());
+        System.out.println(internships);
+        List<InternshipResponse> responses = internships.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
+    }
+
+    private InternshipResponse toResponse(Internship entity) {
+        InternshipResponse response = new InternshipResponse();
+        response.setId(entity.getId());
+        response.setTitle(entity.getTitle());
+        response.setDescription(entity.getDescription());
+        response.setLocation(entity.getLocation());
+        response.setDurationInMonths(entity.getDurationInMonths());
+        response.setStartDate(entity.getStartDate());
+        response.setEndDate(entity.getEndDate());
+        response.setStatus(InternshipStatus.valueOf(entity.getStatus().toString()));
+        response.setEnterpriseId(entity.getEnterprise() != null ? entity.getEnterprise().getId() : null);
+        response.setStudentId(entity.getStudent() != null ? entity.getStudent().getId() : null);
+        return response;
     }
 }

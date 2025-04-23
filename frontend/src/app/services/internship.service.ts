@@ -7,15 +7,19 @@ const baseUrl = 'http://localhost:8088/internhub/internship/';
 })
 export class InternshipService {
   constructor(private http: HttpClient) {}
-
+  getInternshipsByStudent(studentId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl}/student/${studentId}`);
+  }
+  
   getInternshipByEnterprise(): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (headers) {
-      return this.http.get(baseUrl + 'enterprise', { headers });
+      return this.http.get(baseUrl + 'enterprise', { headers } );
     } else {
       throw new Error('Authorization header creation failed');
     }
   }
+
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');
     if (token) {

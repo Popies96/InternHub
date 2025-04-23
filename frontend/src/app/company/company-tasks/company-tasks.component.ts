@@ -2,6 +2,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TasksService } from 'src/app/services/tasks.service';
+import { UserService } from 'src/app/services/user.service';
+import { InternshipService } from 'src/app/services/internship.service';
 
 @Component({
   selector: 'app-company-tasks',
@@ -9,79 +11,9 @@ import { TasksService } from 'src/app/services/tasks.service';
   styleUrls: ['./company-tasks.component.css']
 })
 export class CompanyTasksComponent implements OnInit {
-
-  
-  // Static lists (as requested)
-  internships: any[] = [
-    {
-      id: 1,
-      title: 'Frontend Developer Internship',
-      description: 'Work with Angular and help build UI components.',
-      location: 'Remote',
-      durationInMonths: 3,
-      startDate: '2025-06-01',
-      endDate: '2025-09-01',
-      status: 'OPEN'
-    },
-    {
-      id: 2,
-      title: 'Backend Developer Internship',
-      description: 'Build REST APIs with Spring Boot.',
-      location: 'New York',
-      durationInMonths: 6,
-      startDate: '2025-05-15',
-      endDate: '2025-11-15',
-      status: 'IN_PROGRESS'
-    },
-    {
-      id: 3,
-      title: 'UI/UX Design Internship',
-      description: 'Assist in creating user-friendly interfaces.',
-      location: 'San Francisco',
-      durationInMonths: 4,
-      startDate: '2025-07-01',
-      endDate: '2025-11-01',
-      status: 'CLOSED'
-    }
-  ];
-
-  students: any[] = [
-    {
-      id: 3,
-      nom: 'Smith',
-      prenom: 'John',
-      password: 'hashed-password',
-      email: 'john.smith@example.com',
-      phone: 1234567890,
-      role: 'STUDENT',
-      cin: 987654321,
-      school: 'MIT'
-    },
-    {
-      id: 102,
-      nom: 'Doe',
-      prenom: 'Jane',
-      password: 'hashed-password',
-      email: 'jane.doe@example.com',
-      phone: 1122334455,
-      role: 'STUDENT',
-      cin: 123456789,
-      school: 'Stanford University'
-    },
-    {
-      id: 103,
-      nom: 'Ali',
-      prenom: 'Yasmine',
-      password: 'hashed-password',
-      email: 'yasmine.ali@example.com',
-      phone: 9988776655,
-      role: 'STUDENT',
-      cin: 456789123,
-      school: 'Harvard'
-    }
-  ];
-
-  // Dynamic task data
+  // Dynamic data from backend
+  internships: any[] = [];
+  students: any[] = [];
   tasks: any[] = [];
   interns: any[] = [];
   expandedInterns: { [key: number]: boolean } = {};
@@ -90,45 +22,121 @@ export class CompanyTasksComponent implements OnInit {
   taskForm!: FormGroup;
   isInt = false;
   isStatus = false;
-  isDepart = false;
   showAddModal = false;
   showUpdateModal = false;
   currentTaskId: number | null = null;
+  
 
-  constructor(private fb: FormBuilder, private tasksService: TasksService) {
+  constructor(
+    private fb: FormBuilder,
+    private tasksService: TasksService,
+    private userService: UserService,
+    private internshipService: InternshipService
+  ) {
     this.createForm();
   }
 
   ngOnInit(): void {
-    this.fetchTasks();
+    this.fetchInitialData();
   }
 
 
-  private createAuthorizedHeader(): HttpHeaders | null {
-    const token = localStorage.getItem('token');
-    if (token) {
-      return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    } else {
-      console.log('No token found');
-      return null;
-    }
-  }
+selectedInternship: string = '';
+selectedStatus: string = '';
+searchQuery: string = '';
+filteredInterns: any[] = [];
 
-  createForm() {
-    this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.maxLength(500)]],
-      deadline: ['', Validators.required],
-      status: ['PENDING', Validators.required],
-      internshipId: ['', Validators.required],
-      studentId: ['', Validators.required]
+// Add these methods to your component class
+selectInternship(internship: string) {
+  this.selectedInternship = internship === 'All Internships' ? '' : internship;
+  this.isInt = false;
+  this.applyFilters();
+}
+
+selectStatus(status: string) {
+  this.selectedStatus = status === 'All Statuses' ? '' : status;
+  this.isStatus = false;
+  this.applyFilters();
+}
+
+
+applyFilters() {
+  this.filteredInterns = this.interns.filter(intern => {
+    // Filter by internship program
+    const internshipMatch = !this.selectedInternship || 
+      intern.internshipProgram === this.selectedInternship;
+    
+    // Filter by task status (if intern has tasks)
+    const statusMatch = !this.selectedStatus || 
+      intern.tasks.some((task: any) => task.status === this.selectedStatus);
+
+    const searchMatch = !this.searchQuery || 
+      `${intern.firstName} ${intern.lastName}`.toLowerCase().includes(this.searchQuery.toLowerCase());
+
+      
+    
+    return internshipMatch && statusMatch &&  searchMatch;
+  });
+}
+
+clearFilters() {
+  this.selectedInternship = '';
+  this.selectedStatus = '';
+  this.searchQuery = '';
+  this.filteredInterns = [...this.interns];
+}
+
+  private fetchInitialData() {
+    this.userService.getUserFromLocalStorage().subscribe({
+      next: (user) => {
+        // Get internships for this enterprise
+        this.internshipService.getInternshipByEnterprise().subscribe({
+          next: (internships: any) => {
+            this.internships = internships;
+            console.log('Internships:', this.internships);
+            
+            const studentIds = new Set<number>();
+            this.internships.forEach(internship => {
+              if (internship.studentId) {
+                console.log('Student ID:', internship.studentId);
+                studentIds.add(internship.studentId);
+              }
+            });
+
+            // Load student details
+            studentIds.forEach(id => {
+              this.userService.getUserById(id).subscribe({
+                next: (student) => {
+                  this.students.push(student);
+                  console.log('Student:', student);
+                  // When we have students, load tasks
+                  if (this.students.length === studentIds.size) {
+                    this.fetchTasks();
+                  }
+                },
+                error: (error) => {
+                  console.error('Error loading student:', error);
+                }
+              });
+            });
+          },
+          error: (error) => {
+            console.error('Error loading internships:', error);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error loading user:', error);
+      }
     });
   }
 
   fetchTasks() {
     this.tasksService.getAllTasks().subscribe({
       next: (tasks) => {
-        this.tasks = tasks;
+        this.tasks = tasks.filter((task: any) => 
+          this.internships.some(internship => internship.id === task.internshipId)
+        );
         this.groupTasksByIntern();
       },
       error: (error) => {
@@ -139,33 +147,44 @@ export class CompanyTasksComponent implements OnInit {
 
   groupTasksByIntern() {
     const internsMap = new Map<number, any>();
-    
-    this.tasks.forEach(task => {
-      if (!internsMap.has(task.studentId)) {
-        const student = this.students.find(s => s.id === task.studentId) || {
-          id: task.studentId,
-          nom: 'Unknown',
-          prenom: 'Student'
-        };
-        
-        internsMap.set(task.studentId, {
-          id: student.id,
-          firstName: student.prenom,
-          lastName: student.nom,
-          profileImage: 'https://randomuser.me/api/portraits/lego/1.jpg',
-          position: this.getInternshipTitle(task.internshipId),
-          status: 'ACTIVE',
-          internshipProgram: this.getInternshipTitle(task.internshipId),
-          tasks: []
-        });
-      }
-      internsMap.get(task.studentId).tasks.push(task);
+  
+    // First, create entries for all students (even those without tasks)
+    this.students.forEach(student => {
+      internsMap.set(student.id, {
+        id: student.id,
+        firstName: student.prenom,
+        lastName: student.nom,
+        profileImage: 'https://randomuser.me/api/portraits/lego/1.jpg',
+        position: this.getStudentPosition(student.id),
+        status: 'ACTIVE',
+        internshipProgram: this.getStudentInternship(student.id),
+        tasks: [] // Start with empty task array
+      });
     });
-
+  
+    // Then, assign tasks to students who have them
+    this.tasks.forEach(task => {
+      if (internsMap.has(task.studentId)) {
+        internsMap.get(task.studentId).tasks.push(task);
+      }
+    });
+  
     this.interns = Array.from(internsMap.values());
+    this.filteredInterns = [...this.interns]; // Initialize filtered interns
     this.interns.forEach(intern => {
       this.expandedInterns[intern.id] = false;
     });
+  }
+  // Helper method to get student's position/internship title
+  private getStudentPosition(studentId: number): string {
+    const internship = this.internships.find(i => i.studentId === studentId);
+    return internship ? internship.title : 'Intern';
+  }
+  
+  // Helper method to get student's internship program
+  private getStudentInternship(studentId: number): string {
+    const internship = this.internships.find(i => i.studentId === studentId);
+    return internship ? internship.title : 'General Internship';
   }
 
   getInternshipTitle(internshipId: number): string {
@@ -178,81 +197,69 @@ export class CompanyTasksComponent implements OnInit {
     return student ? `${student.prenom} ${student.nom}` : 'Unknown Student';
   }
 
+  // UI toggle methods
   toggleInt() {
     this.isInt = !this.isInt;
     this.isStatus = false;
-    this.isDepart = false;
+    
   }
 
   toggleStatus() {
     this.isStatus = !this.isStatus;
     this.isInt = false;
-    this.isDepart = false;
-  }
-
-  toggleDepart() {
-    this.isDepart = !this.isDepart;
-    this.isInt = false;
-    this.isStatus = false;
+    
   }
 
   toggleIntern(internId: number) {
     this.expandedInterns[internId] = !this.expandedInterns[internId];
   }
 
-
-
-// company-tasks.component.ts
-addTask() {
-  if (this.taskForm.invalid) {
-    this.taskForm.markAllAsTouched();
-    return;
+  // Form methods
+  private createForm() {
+    this.taskForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.maxLength(500)]],
+      deadline: ['', Validators.required],
+      status: ['PENDING', Validators.required],
+      internshipId: ['', Validators.required],
+      studentId: ['', Validators.required],
+      type: ['PDF', Validators.required],
+      priority: ['MEDIUM', Validators.required]
+    });
   }
 
-  // In your component
-function formatDeadline(deadline: Date | string): string {
-  let date: Date;
-  
-  if (deadline instanceof Date) {
-    date = deadline;
-  } else {
-    date = new Date(deadline);
-  }
-  
-  // Format as ISO string without milliseconds
-  return date.toISOString().split('.')[0];
-}
- 
-  const taskRequest = {
-    title: this.taskForm.value.title,
-    description: this.taskForm.value.description,
-    deadline: formatDeadline(this.taskForm.value.deadline),
-    status: this.taskForm.value.status,
-    internshipId: this.taskForm.value.internshipId, 
-    studentId: this.taskForm.value.studentId       // Changed from nested object
-  };
-
-  console.log('Task Request:', taskRequest);
-
-  this.tasksService.addTask(taskRequest).subscribe({
-    next: () => {
-      this.closeAddModal();
-      this.fetchTasks();
-      alert('Task added successfully!');
-    },
-    error: (error) => {
-      console.error('Error adding task:', error);
-      if (error.status === 403) {
-        alert('You do not have permission to perform this action. Please log in again.');
-      } else {
-        alert('Failed to add task. Please try again.');
-      }
+  // Task CRUD operations
+  addTask() {
+    if (this.taskForm.invalid) {
+      this.taskForm.markAllAsTouched();
+      return;
     }
-  });
-}
 
+    const taskRequest = {
+      title: this.taskForm.value.title,
+      description: this.taskForm.value.description,
+      deadline: this.formatDeadline(this.taskForm.value.deadline),
+      status: this.taskForm.value.status,
+      internshipId: this.taskForm.value.internshipId,
+      studentId: this.taskForm.value.studentId,
+      type: this.taskForm.value.type,
+      priority: this.taskForm.value.priority
+    };
 
-
+    this.tasksService.addTask(taskRequest).subscribe({
+      next: () => {
+        this.closeAddModal();
+        this.fetchTasks();
+        alert('Task added successfully!');
+      },
+      error: (error) => {
+        console.error('Error adding task:', error);
+        alert(error.status === 403 
+          ? 'Permission denied. Please log in again.' 
+          : 'Failed to add task. Please try again.');
+      }
+    });
+  }
 
   updateTask() {
     if (this.taskForm.invalid || !this.currentTaskId) {
@@ -263,24 +270,13 @@ function formatDeadline(deadline: Date | string): string {
     const taskRequest = {
       title: this.taskForm.value.title,
       description: this.taskForm.value.description,
-      deadline: formatDeadline(this.taskForm.value.deadline),
+      deadline: this.formatDeadline(this.taskForm.value.deadline),
       status: this.taskForm.value.status,
-      internshipId: this.taskForm.value.internshipId, 
-      studentId: this.taskForm.value.studentId       // Changed from nested object
+      internshipId: this.taskForm.value.internshipId,
+      studentId: this.taskForm.value.studentId,
+      type: this.taskForm.value.type,
+      priority: this.taskForm.value.priority
     };
-
-    function formatDeadline(deadline: Date | string): string {
-      let date: Date;
-      
-      if (deadline instanceof Date) {
-        date = deadline;
-      } else {
-        date = new Date(deadline);
-      }
-      
-      // Format as ISO string without milliseconds
-      return date.toISOString().split('.')[0];
-    }
 
     this.tasksService.updateTask(this.currentTaskId, taskRequest).subscribe({
       next: () => {
@@ -293,6 +289,12 @@ function formatDeadline(deadline: Date | string): string {
     });
   }
 
+  private formatDeadline(deadline: Date | string): string {
+    const date = deadline instanceof Date ? deadline : new Date(deadline);
+    return date.toISOString().split('.')[0];
+  }
+
+  // Modal methods
   openAddTaskModal(internId?: number) {
     this.currentTaskId = null;
     this.showAddModal = true;
@@ -311,7 +313,9 @@ function formatDeadline(deadline: Date | string): string {
       deadline: new Date(task.deadline).toISOString().split('T')[0],
       status: task.status,
       internshipId: task.internshipId,
-      studentId: task.studentId
+      studentId: task.studentId,
+      type: task.type || 'PDF',
+      priority: task.priority || 'MEDIUM'
     });
   }
 
@@ -339,6 +343,7 @@ function formatDeadline(deadline: Date | string): string {
     this.taskForm.reset();
   }
 
+  // UI helper methods
   getStatusColor(status: string): string {
     switch (status) {
       case 'COMPLETED': return 'bg-green-100 text-green-800';
@@ -351,10 +356,14 @@ function formatDeadline(deadline: Date | string): string {
 
   getPriorityColor(priority: string): string {
     switch (priority) {
+      case 'CRITICAL': return 'bg-purple-100 text-purple-800';
       case 'HIGH': return 'bg-red-100 text-red-800';
       case 'MEDIUM': return 'bg-yellow-100 text-yellow-800';
       case 'LOW': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   }
+
+
+  
 }

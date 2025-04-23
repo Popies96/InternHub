@@ -2,15 +2,11 @@ package com.example.backend.services.task;
 
 import com.example.backend.dto.TaskRequest;
 import com.example.backend.dto.TaskResponse;
-import com.example.backend.entity.Internship;
-import com.example.backend.entity.Student;
-import com.example.backend.entity.Task;
-import com.example.backend.entity.Task.TaskStatus;
+import com.example.backend.entity.*;
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.StudentRepository;
 import com.example.backend.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,8 +34,9 @@ public class TaskServiceImpl implements TaskService {
         task.setTitle(taskRequest.getTitle());
         task.setDescription(taskRequest.getDescription());
         task.setDeadline(taskRequest.getDeadline());
-        task.setStatus(taskRequest.getStatus() != null ?
-                taskRequest.getStatus() : TaskStatus.PENDING);
+        task.setStatus(taskRequest.getStatus() != null ?taskRequest.getStatus() : TaskStatus.PENDING);
+        task.setType(taskRequest.getType());
+        task.setPriority(taskRequest.getPriority() != null ?taskRequest.getPriority() : TaskPriority.MEDIUM );
         // Set student and internship with proper existence checks
         task.setStudent(studentRepository.findById(taskRequest.getStudentId())
                 .orElseThrow(() -> new EntityNotFoundException("Student not found with ID: " + taskRequest.getStudentId())));
@@ -68,9 +65,9 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setTitle(taskRequest.getTitle());
         existingTask.setDescription(taskRequest.getDescription());
         existingTask.setDeadline(taskRequest.getDeadline());
-        existingTask.setStatus(taskRequest.getStatus() != null ?
-                taskRequest.getStatus() : existingTask.getStatus());
-
+        existingTask.setStatus(taskRequest.getStatus() != null ? taskRequest.getStatus() : existingTask.getStatus());
+        existingTask.setType(taskRequest.getType() != null ? taskRequest.getType() : existingTask.getType());
+        existingTask.setPriority(taskRequest.getPriority() != null ? taskRequest.getPriority() : existingTask.getPriority() );
         // Update relationships if they are provided in the request
         if (taskRequest.getStudentId() != null) {
             Student student = studentRepository.findById(taskRequest.getStudentId())
@@ -130,6 +127,8 @@ public class TaskServiceImpl implements TaskService {
         response.setDescription(task.getDescription());
         response.setDeadline(task.getDeadline());
         response.setStatus(task.getStatus());
+        response.setType(task.getType());
+        response.setPriority(task.getPriority());
         response.setCreatedAt(LocalDateTime.now());
         response.setUpdatedAt(LocalDateTime.now());
 

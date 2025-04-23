@@ -27,6 +27,7 @@ ngOnInit(): void {
       this.UserName = user.nom;
       this.currentUserId = user.id;
       this.currentUserPic = this.getUserProfilePic(user.id);
+      localStorage.setItem('pfp', this.currentUserPic);
     },
     error: (err) => {
       console.error('Error fetching user:', err);

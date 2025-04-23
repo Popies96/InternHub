@@ -10,8 +10,6 @@ const baseUrl = 'http://localhost:8088/internhub/tasks';
 export class TasksService {
   constructor(private http: HttpClient) {}
 
-
-
   // Get all tasks
   getAllTasks(): Observable<any> {
     const headers = this.createAuthorizedHeader();
@@ -19,6 +17,15 @@ export class TasksService {
       throw new Error('No authorization token available');
     }
     return this.http.get(baseUrl, {headers});
+  }
+
+  // Get tasks by student ID
+  getTasksByStudent(studentId: number): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.get(`${baseUrl}/student/${studentId}`, { headers });
   }
 
   addTask(taskRequest: any): Observable<any> {
@@ -46,7 +53,6 @@ export class TasksService {
     }
     return this.http.delete(`${baseUrl}/enterprise/${id}`, { headers});
   }
-
 
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');

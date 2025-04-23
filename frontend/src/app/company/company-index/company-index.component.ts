@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-company-index',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./company-index.component.css']
 })
 export class CompanyIndexComponent {
+ @ViewChild('dashboardVideo') videoRef!: ElementRef<HTMLVideoElement>;
 
+  ngAfterViewInit() {
+    this.videoRef.nativeElement.volume = 0;
+  }
 }

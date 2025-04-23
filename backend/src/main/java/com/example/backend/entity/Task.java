@@ -2,8 +2,9 @@ package com.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -14,17 +15,31 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     private String title;
     private String description;
     private LocalDateTime deadline;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus status = TaskStatus.PENDING; // Default value
+    private TaskStatus status = TaskStatus.PENDING;
+    private String type;
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority = TaskPriority.MEDIUM;
+
+    public TaskPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(TaskPriority priority) {
+        this.priority = priority;
+    }
 
     @ManyToOne
     @JoinColumn(name = "internship_id")
     private Internship internship;
+
+
     private LocalDateTime createdAt;
 
     @ManyToOne
@@ -33,10 +48,10 @@ public class Task {
 
     private LocalDateTime updatedAt;
 
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
@@ -44,12 +59,9 @@ public class Task {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public enum TaskStatus {
-        PENDING,
-        IN_PROGRESS,
-        COMPLETED,
-        OVERDUE
-    }
+
+
+
 
     // Helper method to check if task is overdue
     public boolean isOverdue() {
@@ -126,5 +138,16 @@ public class Task {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        if (type != null && !List.of("PDF", "CODE", "TEXT").contains(type.toUpperCase())) {
+            throw new IllegalArgumentException("Invalid task type. Must be PDF, CODE, or TEXT");
+        }
+        this.type = type != null ? type.toUpperCase() : "TEXT";
     }
 }

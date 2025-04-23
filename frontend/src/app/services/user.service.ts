@@ -47,6 +47,24 @@ export class UserService {
 
     return this.http.get(`${baseUrl}user/email?email=${email}` , { headers , responseType: 'json'} )
   }
+
+  // Add this method to your existing UserService
+getUserById(userId: number): Observable<any> {
+  const headers = this.createAuthorizedHeader();
+  if (!headers) {
+    throw new Error('No authorization token available');
+  }
+  return this.http.get(`${baseUrl}user/${userId}`, { headers , responseType: 'json'});
+}
+
+getAllStudents(): Observable<any[]> {
+  const headers = this.createAuthorizedHeader();
+  if (!headers) {
+    throw new Error('No authorization token available');
+  }
+  return this.http.get<any[]>(`${baseUrl}students`, { headers });
+}
+  
   private createAuthorizedHeader(): HttpHeaders | null {
       const token = localStorage.getItem('token');
       if (token) {

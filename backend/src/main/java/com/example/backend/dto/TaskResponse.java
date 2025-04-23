@@ -1,6 +1,9 @@
 package com.example.backend.dto;
+import com.example.backend.entity.TaskPriority;
+import com.example.backend.entity.TaskType;
 import lombok.*;
-import com.example.backend.entity.Task.TaskStatus;
+import com.example.backend.entity.TaskStatus;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -13,13 +16,31 @@ public class TaskResponse {
     private String description;
     private LocalDateTime deadline;
     private TaskStatus status;
+    private String type;
+    private TaskPriority priority;
     private LocalDateTime createdAt ;
     private LocalDateTime updatedAt ;
     private Long internshipId;
     private Long studentId;
     private String studentName;
-    @Getter(AccessLevel.NONE) // Prevents Lombok from generating getOverdue()
+    @Getter(AccessLevel.NONE)
     private Boolean overdue;
+
+    public TaskPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(TaskPriority priority) {
+        this.priority = priority;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     // Custom getter for overdue that calculates it dynamically
     public boolean isOverdue() {
