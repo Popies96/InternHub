@@ -36,18 +36,20 @@ export class ChatappComponent implements OnInit {
         this.UserName = user.nom; // Assuming you need the username as well
         console.log('UserName:', this.UserName);
 
+        this.wsService.connect(String(this.currentUser)); // OK to call multiple times, internally it should avoid reconnecting
+        this.loadUsersAndLastMessages();
+
+        this.listenForMessages();
         // ✅ Connect WebSocket only after user is loaded
-  
+
       },
       error: (err) => {
         console.error('Error fetching user from localStorage:', err);
       }
     });
-    this.listenForMessages();
 
     // Fetch the list of users to display in the UI
 
-    this.loadUsersAndLastMessages();
 
 
 
@@ -56,34 +58,19 @@ export class ChatappComponent implements OnInit {
   // Listen for incoming messages via WebSocket (the service is responsible for keeping the connection alive)
   listenForMessages(): void {
     this.wsService.onMessage().subscribe((msg) => {
-      console.log('Received message:', msg);
+      console.log('Received message:ddddddddddddddddddd', msg);
   
+      msg.timestamp = new Date(msg.timestamp);
+
       const sender = String(msg.senderId);
       const recipient = String(msg.recipientId);
       const selected = String(this.selectedUser?.id);
       const current = String(this.currentUser);
   
-      const isCurrentChat =
-        (sender === selected && recipient === current) ||
-        (sender === current && recipient === selected);
-  
-      if (isCurrentChat) {
-        this.messages.push(msg);
-        setTimeout(() => {
-          const chatArea = document.querySelector('.chat-area');
-          if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
-        }, 50);
-      } else if (recipient === current) {
-        // 💡 This means someone sent ME a message but I'm not chatting with them
-        const userEl = document.getElementById(sender);
-        if (userEl && sender !== selected) {
-          const dot = userEl.querySelector('.nbr-msg') as HTMLElement;
-          if (dot) {
-            dot.classList.remove('hidden');
-            dot.textContent = '!'; // You can also put a number here
-          }
-        }
-      }
+
+        this.messages.push(msg)
+     
+      
     });
   }
   
@@ -91,11 +78,12 @@ export class ChatappComponent implements OnInit {
   selectUser(user: any): void {
     this.selectedUser = user;
     this.recipientId = user.id;
+
     console.log(`Selecting user ${user.id}, current user is ${this.currentUser}`);
-  
-    this.wsService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
-    
+
     this.loadMessages(this.currentUser, this.recipientId);
+    console.log("type of this current user", typeof this.currentUser);
+     
     this.unseenMessages[user.id] = true;
     if (this.unseenMessages[user.id]) {
       delete this.unseenMessages[user.id];
@@ -111,14 +99,15 @@ export class ChatappComponent implements OnInit {
     const message = {
       senderId: this.currentUser,
       recipientId: this.selectedUser.id,
-      content: this.newMessage.trim()
+      content: this.newMessage.trim(),
+      timestamp: new Date()
     };
 
     // Publish message to WebSocket destination
     this.wsService.publish('/app/chat', message);
 
     // Add the message to the UI manually (for immediate display)
-    this.messages.push({ ...message, timestamp: new Date() } as ChatMessage);
+    this.messages.push({ ...message } as ChatMessage);
     this.newMessage = ''; // Reset input field
   }
 

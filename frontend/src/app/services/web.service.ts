@@ -16,6 +16,7 @@ export class WebService {
     this.stompClient = new StompClient({
       brokerURL: `ws://localhost:8088/internhub/ws?token=${token}`, // WebSocket broker URL
       connectHeaders: {
+    
       },
     });
   
@@ -31,7 +32,7 @@ export class WebService {
       console.log('Successfully connected to WebSocket. Frame:', frame); // Add this
       console.log('WebSocket connected');
 
-      // Subscribe to user-specific message queue
+      console.log('User ID:', userId); // Add this
       this.stompClient.subscribe(`/user/${userId}/queue/messages`, (message: IMessage) => {
         console.log('Raw message received:', message); // Add this
 

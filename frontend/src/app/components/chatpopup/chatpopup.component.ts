@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { WebService } from 'src/app/services/web.service';
 import { ChatMessage, MessageService } from 'src/app/services/message-service.service';
 import { HttpClient } from '@angular/common/http';
@@ -9,18 +9,18 @@ import { User, UserService } from 'src/app/services/user.service';
   templateUrl: './chatpopup.component.html',
   styleUrls: ['./chatpopup.component.css']
 })
-export class ChatpopupComponent {
+export class ChatpopupComponent implements OnInit {
 
   users: any[] = [];
   selectedUser: any = null;
   messages: ChatMessage[] = [];
   newMessage = '';
-  currentUser = ''; // Replace with actual logged-in user ID
+  currentUser = '';
   recipientId = '';
   user!: User;
   UserName = '';
   lastMessages: { [userId: string]: ChatMessage } = {};
-
+  visible = false;
 
   constructor(
     private wsService: WebService,
@@ -28,48 +28,51 @@ export class ChatpopupComponent {
     private http: HttpClient,
     private userService: UserService
   ) {}
+
   @Input() set SelectedUserInput(user: User | undefined) {
     if (user) {
       this.selectedUser = user;
       this.recipientId = String(user.id);
-      this.loadMessages(this.currentUser, this.recipientId);
+      if (this.currentUser) {
+        this.loadMessages(this.currentUser, this.recipientId);
+      }
     }
   }
 
   ngOnInit(): void {
-  this.userService.getUserFromLocalStorage().subscribe({
-    next: (user) => {
-      this.currentUser = String(user.id);
-      this.UserName = user.nom;
+    this.userService.getUserFromLocalStorage().subscribe({
+      next: (user) => {
+        this.currentUser = String(user.id);
+        this.UserName = user.nom;
 
-      if (this.selectedUser) {
-        this.recipientId = this.selectedUser.id;
-        this.loadMessages(this.currentUser, this.recipientId);
+        if (this.selectedUser) {
+          this.recipientId = this.selectedUser.id;
+          this.loadMessages(this.currentUser, this.recipientId);
+        }
+
+        this.wsService.connect(this.currentUser);
+        this.listenForMessages();
+      },
+      error: (err) => {
+        console.error('Error fetching user from localStorage:', err);
       }
-    },
-    error: (err) => {
-      console.error('Error fetching user from localStorage:', err);
-    }
-  });
-  this.wsService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
-
-
+    });
   }
 
-  // Listen for incoming messages via WebSocket (the service is responsible for keeping the connection alive)
   listenForMessages(): void {
     this.wsService.onMessage().subscribe((msg) => {
       console.log('Received message:', msg);
-  
+
+      // Normalize timestamp
       const sender = String(msg.senderId);
       const recipient = String(msg.recipientId);
       const selected = String(this.selectedUser?.id);
       const current = String(this.currentUser);
-  
+
       const isCurrentChat =
         (sender === selected && recipient === current) ||
         (sender === current && recipient === selected);
-  
+
       if (isCurrentChat) {
         this.messages.push(msg);
         setTimeout(() => {
@@ -77,47 +80,41 @@ export class ChatpopupComponent {
           if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
         }, 50);
       } else if (recipient === current) {
-        // 💡 This means someone sent ME a message but I'm not chatting with them
+        // Someone sent me a message from another conversation
         const userEl = document.getElementById(sender);
         if (userEl && sender !== selected) {
           const dot = userEl.querySelector('.nbr-msg') as HTMLElement;
           if (dot) {
             dot.classList.remove('hidden');
-            dot.textContent = '!'; // You can also put a number here
+            dot.textContent = '!'; // Optional: show number of new messages
           }
         }
       }
     });
   }
-  
-  
 
-  
-
-  // Send a message to the selected user
   sendMessage(): void {
     if (!this.newMessage.trim() || !this.selectedUser) return;
 
     const message = {
       senderId: this.currentUser,
       recipientId: this.selectedUser.id,
-      content: this.newMessage.trim()
+      content: this.newMessage.trim(),
+      timestamp: new Date() // For immediate display
     };
 
-    // Publish message to WebSocket destination
     this.wsService.publish('/app/chat', message);
-
-    // Add the message to the UI manually (for immediate display)
-    this.messages.push({ ...message, timestamp: new Date() } as ChatMessage);
-    this.newMessage = ''; // Reset input field
+    this.messages.push(message as ChatMessage);
+    this.newMessage = '';
   }
 
-  // Load previous messages between the sender and recipient
   loadMessages(senderId: string, recipientId: string): void {
     this.messageService.getMessages(senderId, recipientId).subscribe({
       next: (data) => {
-        console.log('Fetched messages:', data);
-        this.messages = data;
+        this.messages = data.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp) // Normalize timestamps
+        }));
       },
       error: (err) => {
         console.error('Error fetching messages:', err);
@@ -125,15 +122,11 @@ export class ChatpopupComponent {
     });
   }
 
-
-  
-  visible = false;
-  open() {
+  open(): void {
     this.visible = true;
   }
 
-  close() {
+  close(): void {
     this.visible = false;
   }
-
 }

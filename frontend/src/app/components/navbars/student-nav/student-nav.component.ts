@@ -64,17 +64,7 @@ openChat(user: any): void {
       }
     });
 
-    // Fetch the list of users to display in the UI
-    this.userService.getUsers().subscribe({
-      next: (users) => {
-        // Convert currentUser to number before comparing
-        this.users = users.filter(user => user.id !== +this.currentUser);
-        console.log('Fetched users:', this.users);
-      },
-      error: (err) => {
-        console.error('Error fetching users:', err);
-      }
-    });
+
   }
 
   private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Array<{label: string, url: string}> = []): Array<{label: string, url: string}> {
@@ -192,6 +182,16 @@ isMessagesDropdownOpen = false;
 
 toggleMessagesDropdown() {
   this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
+  this.userService.getUsers().subscribe({
+    next: (users) => {
+      // Convert currentUser to number before comparing
+      this.users = users.filter(user => user.id !== +this.currentUser);
+      console.log('Fetched users:', this.users);
+    },
+    error: (err) => {
+      console.error('Error fetching users:', err);
+    }
+  });
   
   if (this.isMessagesDropdownOpen) {
     setTimeout(() => {

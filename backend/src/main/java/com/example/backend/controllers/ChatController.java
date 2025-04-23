@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +38,14 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
+        System.err.println("weeeeew");
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
-        System.out.println("Message saved with ID: " + savedMsg.getId());
+        System.err.println("Message saved with ID: " + savedMsg.getId());
+        LocalDateTime localTimestamp = savedMsg.getTimestamp().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
 
-        System.out.println("Attempting to send to /user/" + chatMessage.getRecipientId() + "/queue/messages");
+        System.err.println("Attempting to send to /user/" + chatMessage.getRecipientId() + "/queue/messages");
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
                 new ChatNotification(
