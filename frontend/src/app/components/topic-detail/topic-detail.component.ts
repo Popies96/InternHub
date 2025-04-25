@@ -1,40 +1,47 @@
-// topic-detail.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TopicService } from 'src/app/services/topic.service';
-import { Topic } from 'src/app/services/topic.service';
 import { UserService } from 'src/app/services/user.service';
+
 @Component({
   selector: 'app-topic-detail',
   templateUrl: './topic-detail.component.html',
   styleUrls: ['./topic-detail.component.css']
 })
 export class TopicDetailComponent implements OnInit {
-  topic: any;
+  topic: any = null;
   isLoading = true;
   error: string | null = null;
-  currentUser!: number;
+  currentUser: number | null = null;
+  voteCount: number = 0;
+  commentCount: number = 0;
+  viewCount!: number;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private topicService: TopicService,
-    private userService:UserService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     const topicId = this.route.snapshot.paramMap.get('id');
     if (topicId) {
       this.loadTopic(+topicId);
+      this.loadCurrentUser();
+    } else {
+      this.error = 'Invalid topic ID';
+      this.isLoading = false;
     }
+  }
+
+  loadCurrentUser(): void {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        this.currentUser = user.id; // Assuming the user object has an 'id' property
-
-        // ✅ Connect WebSocket only after user is loaded
-  
+        this.currentUser = user.id;
       },
       error: (err) => {
-        console.error('Error fetching user from localStorage:', err);
+        console.error('Error loading user:', err);
       }
     });
   }
@@ -42,8 +49,17 @@ export class TopicDetailComponent implements OnInit {
   loadTopic(id: number): void {
     this.isLoading = true;
     this.topicService.getTopicById(id).subscribe({
-      next: (data) => {
-        this.topic = data;
+      next: (topic) => {
+        this.topic = {
+          ...topic,
+          imagePath: topic.imagePath
+            ? `http://localhost:8088/internhub/topic/${topic.id}/image`
+            : null,
+        };
+
+        console.log('Topic loaded:', this.topic);
+        console.log("topic viewss",topic.views)
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -55,23 +71,27 @@ export class TopicDetailComponent implements OnInit {
   }
 
   upvoteTopic(): void {
-    // Implement upvote logic
+    if (!this.topic?.id) return;
+    this.voteCount++;
+    console.log('Upvoted topic:', this.topic.id);
   }
 
   downvoteTopic(): void {
-    // Implement downvote logic
+    if (!this.topic?.id) return;
+    this.voteCount--;
+    console.log('Downvoted topic:', this.topic.id);
   }
-  deleteTopic(id: number, userId: number): void {
-    this.topicService.deleteTopic(id, userId).subscribe({
-      next: () => {
-        // Handle successful deletion (e.g., navigate back to the forum or show a success message)
+  viewTopic(id: number) {
+    this.topicService.incrementViewCount(id).subscribe({
+      next: (updatedTopic) => {
+        this.topic.views = updatedTopic.views;
+        this.viewCount = updatedTopic.views; // <-- add this line!
       },
       error: (err) => {
-        console.error('Failed to delete topic', err);
+        console.error('Error updating view count:', err);
       }
     });
   }
-  isCreator(): boolean {
-    return this.topic && this.currentUser === this.topic.userId; // Assuming topic has userId field
-  }
 }
+
+

@@ -22,4 +22,7 @@ public class TopicDTO {
     private String prenom; // <-- ADD THIS
     private LocalDateTime dateCreated;
     private LocalDateTime updatedAt;
+    private String imagePath;
+    private int views;
+
 }

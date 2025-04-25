@@ -28,7 +28,8 @@ public class Topic {
     private User user;
     private LocalDateTime dateCreated;
     private LocalDateTime updatedAt;
-
+    private String imagePath;
+    private int views;
 
 
 }

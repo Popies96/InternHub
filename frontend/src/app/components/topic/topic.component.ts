@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TopicService,Topic  } from 'src/app/services/topic.service';
+import { TopicService, Topic } from 'src/app/services/topic.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -8,185 +8,315 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './topic.component.html',
   styleUrls: ['./topic.component.css']
 })
-export class TopicComponent implements OnInit { topics: any[] = [];
-  filteredTopics: any[] = [];
+export class TopicComponent implements OnInit {
+  topics: Topic[] = [];
+  filteredTopics: Topic[] = [];
   categories: any[] = [];
   popularTags: string[] = [];
-
+  previewUrl: string | null = null;
+  selectedFile: File | null = null;
+  showNewTopicModal = false;
+  showUpdateTopicModal = false;
+  topicToUpdate: Topic = {
+    id: 0,
+    title: '',
+    content: '',
+    category: '',
+    tags: [],
+    userId: 0,
+    prenom: '',
+    dateCreated: new Date(),
+    imagePath: '',
+    views: 0
+  };
   activeCategory: string = '';
   activeCategoryName: string = 'All';
   sortOption: string = 'newest';
-  showNewTopicModal = false;
-  topic!: Topic;
-  selectedTopic: any = null; // Holds the selected topic for display
-
+  searchKeyword: string = '';
   currentPage: number = 1;
   pageSize: number = 5;
   totalPages: number = 1;
-  currentUser!: number;
-  UserName!: string;
+  currentUser: number | null = null;
+  error: string | null = null;
+
   newTopic = {
-    userId: Number,
     title: '',
     category: '',
     content: '',
     tags: '',
-      prenom: ''
+    prenom: ''
   };
 
-  constructor(private topicService: TopicService,private userService: UserService,private router: Router) {}
+  constructor(
+    private topicService: TopicService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
-    this.loadTopics(); // Fetch all topics on initial load
-
-
+    this.loadTopics();
+    this.loadCurrentUser();
   }
-  selectTopic(topicId: number): void {
-    this.router.navigate(['/student/topics', topicId]);
-  }
-  loadCategories() {
-    this.categories = [
-      { id: 'General_Discussion', name: 'General', icon: 'fas fa-comments'},
-      { id: 'Support', name: 'Support', icon: 'fas fa-life-ring' },
-      // { id: 'feature', name: 'Feature Requests', icon: 'fas fa-lightbulb', count: 0 }
-    ];
-  }
-  
-  loadTopics() {
-    this.topicService.getAllTopics().subscribe(data => {
-      this.topics = data;
-      this.extractTags();
-      this.updateCategoryCounts();
-      this.applyFilters();
-      console.log('Topics fetched successfully:', this.topics);
 
+  loadCurrentUser(): void {
+    this.userService.getUserFromLocalStorage().subscribe({
+      next: (user) => {
+        this.currentUser = user.id;
+        this.newTopic.prenom = user.nom || '';
+      },
+      error: (err) => {
+        console.error('Error loading user:', err);
+      }
     });
   }
-  
-  getTopicById(id: number): void {
-    this.topicService.getTopicById(id).subscribe(
-      (data) => {
-        this.topic = data;
-        console.log('Topic fetched successfully:', this.topic);
-      },
-      (error) => {
-        console.error('Error fetching topic:', error);
-      }
-    );
+
+  loadCategories(): void {
+    this.categories = [
+      { id: 'General_Discussion', name: 'General', icon: 'fas fa-comments' },
+      { id: 'Support', name: 'Support', icon: 'fas fa-life-ring' },
+    ];
   }
-  filterByCategory(categoryId: string) {
-    this.activeCategory = categoryId;
-    const selected = this.categories.find(c => c.id === categoryId);
-    this.activeCategoryName = selected ? selected.name : 'All';
-    this.currentPage = 1;
-  
-    if (categoryId === 'All') {
-      this.loadTopics(); // If All is selected, load all topics again
-    } else {
-      this.topicService.getTopicsByCategory(categoryId).subscribe(data => {
+
+  loadTopics(): void {
+    this.topicService.getAllTopics().subscribe({
+      next: (data) => {
         this.topics = data;
         this.extractTags();
         this.updateCategoryCounts();
         this.applyFilters();
-      });
-    }
-  }
-  extractTags() {
-    const allTags = this.topics.flatMap(topic => topic.tags || []);
-    const uniqueTags = Array.from(new Set(allTags));
-    this.popularTags = uniqueTags.slice(0, 10); // show top 10
+      },
+      error: (err) => {
+        console.error('Error loading topics:', err);
+        this.error = 'Failed to load topics';
+      }
+    });
   }
 
-  updateCategoryCounts() {
+  extractTags(): void {
+    const allTags = this.topics.flatMap(topic => topic.tags || []);
+    const uniqueTags = Array.from(new Set(allTags));
+    this.popularTags = uniqueTags.slice(0, 10);
+  }
+
+  updateCategoryCounts(): void {
     for (let category of this.categories) {
       category.count = this.topics.filter(t => t.category === category.id).length;
     }
   }
 
+  applyFilters(): void {
+    let result = [...this.topics];
 
-  applyFilters() {
-    let result = this.topics;
-
+    // Apply category filter
     if (this.activeCategory) {
       result = result.filter(t => t.category === this.activeCategory);
     }
 
-    if (this.sortOption === 'newest') {
-      result = result.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
-    } else if (this.sortOption === 'oldest') {
-      result = result.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime());
-    } else if (this.sortOption === 'most-commented') {
-      result = result.sort((a, b) => b.comments - a.comments);
+    // Apply search filter
+    if (this.searchKeyword.trim()) {
+      const keyword = this.searchKeyword.toLowerCase();
+      result = result.filter(t => 
+        t.title.toLowerCase().includes(keyword) || 
+        t.content.toLowerCase().includes(keyword) ||
+        (t.tags && t.tags.some(tag => tag.toLowerCase().includes(keyword)))
+      );
     }
 
+    // Apply sorting
+
+
+    // Update pagination
     this.totalPages = Math.ceil(result.length / this.pageSize);
-    this.filteredTopics = result.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+    this.filteredTopics = result.slice(
+      (this.currentPage - 1) * this.pageSize,
+      this.currentPage * this.pageSize
+    );
   }
 
-  prevPage() {
+  selectTopic(topicId: number): void {
+    this.router.navigate(['/student/topics', topicId]);
+  }
+
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => this.previewUrl = reader.result as string;
+      reader.readAsDataURL(file);
+    }
+  }
+
+  filterByCategory(categoryId: string): void {
+    this.activeCategory = categoryId === 'All' ? '' : categoryId;
+    const selected = this.categories.find(c => c.id === categoryId);
+    this.activeCategoryName = selected ? selected.name : 'All';
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.applyFilters();
     }
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.applyFilters();
     }
   }
 
-  openNewTopicModal() {
+  openNewTopicModal(): void {
     this.showNewTopicModal = true;
   }
 
-  closeNewTopicModal() {
+  closeNewTopicModal(): void {
     this.showNewTopicModal = false;
-    this.resetNewTopic();
+    this.resetNewTopicForm();
   }
+submitUpdatedTopic(): void {
+  if (!this.currentUser || !this.topicToUpdate.id) return;
 
-  resetNewTopic() {
+  const topicPayload = {
+    ...this.topicToUpdate,
+    tags: Array.isArray(this.topicToUpdate.tags) 
+      ? this.topicToUpdate.tags 
+      : String(this.topicToUpdate.tags).split(',').map(tag => tag.trim())
+  };
 
-  }
+  console.log('Submitting updated topic:', topicPayload);
+  console.log('Selected file:', this.selectedFile);
 
-  submitNewTopic() {
-    const topicPayload = {
-      ...this.newTopic,
-      tags: this.newTopic.tags.split(',').map(tag => tag.trim())
-    };
-    const userId = this.currentUser; // Replace with actual user ID logic
-  
-    this.topicService.createTopic(userId, topicPayload).subscribe(() => {
-      this.closeNewTopicModal();
+  // Pass the correct order of arguments (id, userId, topicPayload, file)
+  this.topicService.updateTopic(
+    this.topicToUpdate.id, // topic id first
+    this.currentUser,       // userId second
+    topicPayload,           // topic data
+    this.selectedFile || undefined  // file if present
+  ).subscribe({
+    next: () => {
+      this.closeUpdateTopicModal();
       this.loadTopics();
-    });
+    },
+    error: (err) => {
+      console.error('Error updating topic:', err);
+      this.error = 'Failed to update topic';
+    }
+  });
+}
+
+
+  submitTopic(): void {
+    if (!this.currentUser) return;
+
+    const topicPayload = {
+      title: this.newTopic.title,
+      content: this.newTopic.content,
+      category: this.newTopic.category,
+      tags: this.newTopic.tags.split(',').map(tag => tag.trim()),
+      userId: this.currentUser,
+      prenom: this.newTopic.prenom
+    };
+
+    this.topicService.createTopic(this.currentUser, topicPayload, this.selectedFile || undefined)
+      .subscribe({
+        next: () => {
+          this.closeNewTopicModal();
+          this.loadTopics();
+        },
+        error: (err) => {
+          console.error('Error creating topic:', err);
+          this.error = 'Failed to create topic';
+        }
+      });
   }
 
-  upvoteTopic(topicId: number) {
-    // Implement upvote API call here
+  resetNewTopicForm(): void {
+    this.newTopic = {
+      title: '',
+      category: '',
+      content: '',
+      tags: '',
+      prenom: this.newTopic.prenom // Keep the same user name
+    };
+    this.selectedFile = null;
+    this.previewUrl = null;
+  }
+
+  upvoteTopic(topicId: number): void {
     console.log(`Upvoted topic ${topicId}`);
+    // Implement actual upvote logic here
   }
 
-  downvoteTopic(topicId: number) {
-    // Implement downvote API call here
+  downvoteTopic(topicId: number): void {
     console.log(`Downvoted topic ${topicId}`);
+    // Implement actual downvote logic here
   }
-  searchKeyword: string = '';
 
   searchTopics(): void {
-    if (!this.searchKeyword.trim()) {
-      return; // prevent empty search
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  openUpdateTopicModal(topic: Topic): void {
+    this.topicToUpdate = { ...topic };
+    this.showUpdateTopicModal = true;
+  }
+
+  closeUpdateTopicModal(): void {
+    this.showUpdateTopicModal = false;
+    this.resetUpdateForm();
+  }
+
+
+
+  resetUpdateForm(): void {
+    this.topicToUpdate = {
+      id: 0,
+      title: '',
+      content: '',
+      category: '',
+      tags: [],
+      userId: this.currentUser || 0,
+      prenom: this.newTopic.prenom,
+      dateCreated: new Date(),
+      imagePath: '',
+      views: 0
+    };
+    this.selectedFile = null;
+    this.previewUrl = null;
+  }
+
+  openDeleteModal(topic: Topic): void {
+    if (confirm('Are you sure you want to delete this topic?')) {
+      if (topic.id !== undefined) {
+        this.deleteTopic(topic.id);  // Pass the topic ID to the delete method
+      } else {
+        console.error('Topic ID is undefined');
+      }
     }
+  }
   
-    this.topicService.searchTopics(this.searchKeyword).subscribe({
-      next: (topics) => {
-        this.filteredTopics = topics; // display the search results
+ deleteTopic(topicId: number): void {
+    if (this.currentUser === null) return;
+
+    this.topicService.deleteTopic(topicId, this.currentUser).subscribe({
+      next: () => {
+        this.loadTopics();  // Reload topics after deletion
+        // No need to navigate, we want to stay on the forum page
       },
       error: (err) => {
-        console.error('Search failed', err);
+        console.error('Failed to delete topic:', err);
+        this.error = 'Failed to delete topic';
       }
     });
+  }
+  isCreator(topicUserId: number): boolean {
+    return this.currentUser !== null && topicUserId === this.currentUser;
   }
 }
