@@ -1,7 +1,9 @@
 package com.example.backend.services.certificateService;
 
+import com.example.backend.dto.InternshipResponse;
 import com.example.backend.dto.certifcate.CertificateRequest;
 import com.example.backend.dto.certifcate.CertificateResponse;
+import com.example.backend.entity.Internship;
 
 
 import java.util.List;
@@ -9,11 +11,14 @@ import java.util.List;
 public interface CertificateService {
     CertificateResponse createCertificate(CertificateRequest request);
     CertificateResponse getCertificateById(Long id);
-    List<CertificateResponse> getAllCertificates();
-    List<CertificateResponse> getCertificatesByStudent(Long studentId);
-    List<CertificateResponse> getCertificatesByInternship(Long internshipId);
+
     CertificateResponse updateCertificate(Long id, CertificateRequest request);
-    void revokeCertificate(Long id);
+
     void deleteCertificate(Long id);
+    void sendCertificateByEmail(Long certificateId, String recipientEmail);
+    List<CertificateResponse> getCertificatesForAuthenticatedStudent();
+    List<CertificateResponse> getAllCertificatesForAuthenticatedIssuer();
+     List<InternshipResponse> getCompletedInternshipsForAuthenticatedEnterprise();
+
 }
 

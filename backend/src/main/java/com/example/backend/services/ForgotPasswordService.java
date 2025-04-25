@@ -17,7 +17,7 @@ import java.util.Random;
 public class ForgotPasswordService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
+   @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired

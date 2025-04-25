@@ -1,0 +1,11 @@
+<div>
+  <app-admin-nav></app-admin-nav>
+  <div class="grid min-h-screen transition-all duration-300" 
+       [class.grid-cols-[5%,95%]]="isCompanySidebarCompact"
+       [class.grid-cols-[22%,78%]]="!isCompanySidebarCompact">
+    <app-company-sidebar [class.compact]="isCompanySidebarCompact" (CompanysidebarToggled)="onCompanySidebarToggled($event)"></app-company-sidebar>
+    <div class="overflow-auto pt-8 p-4"> 
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

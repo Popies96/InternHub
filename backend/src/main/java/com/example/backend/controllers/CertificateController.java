@@ -1,11 +1,13 @@
 
 package com.example.backend.controllers;
 
+import com.example.backend.dto.InternshipResponse;
 import com.example.backend.dto.certifcate.CertificateRequest;
 import com.example.backend.dto.certifcate.CertificateResponse;
 import com.example.backend.dto.certifcate.StudentDTO;
 
 import com.example.backend.entity.Certificate;
+import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
 import com.example.backend.entity.Student;
 import com.example.backend.repository.CertificateRepository;
@@ -15,6 +17,7 @@ import com.example.backend.services.certificateService.CertificateService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/certificates")
 public class CertificateController {
     private CertificateService certificateService;
@@ -40,8 +44,9 @@ public class CertificateController {
     }
 
     @PostMapping
-    //@PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
     public ResponseEntity<CertificateResponse> createCertificate(@RequestBody CertificateRequest request) {
+
         CertificateResponse response = certificateService.createCertificate(request);
         return ResponseEntity.ok(response);
     }
@@ -51,28 +56,38 @@ public class CertificateController {
         CertificateResponse response = certificateService.getCertificateById(id);
         return ResponseEntity.ok(response);
     }
+
     @GetMapping
-    public ResponseEntity<List<CertificateResponse>> getAllCertificates() {
-        List<CertificateResponse> responses = certificateService.getAllCertificates();
+    @PreAuthorize("hasRole('ENTERPRISE')")
+    public ResponseEntity<List<CertificateResponse>> getAllCertificatesForAuthenticatedIssuer() {
+        List<CertificateResponse> responses = certificateService.getAllCertificatesForAuthenticatedIssuer();
         return ResponseEntity.ok(responses);
     }
 
-
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<CertificateResponse>> getCertificatesByStudent(@PathVariable Long studentId) {
-        List<CertificateResponse> responses = certificateService.getCertificatesByStudent(studentId);
+    @GetMapping("/internships/completed")
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
+    public ResponseEntity<List<InternshipResponse>> getCompletedInternships() {
+        List<InternshipResponse> responses = certificateService.getCompletedInternshipsForAuthenticatedEnterprise();
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/internship/{internshipId}")
-    //@PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
-    public ResponseEntity<List<CertificateResponse>> getCertificatesByInternship(@PathVariable Long internshipId) {
-        List<CertificateResponse> responses = certificateService.getCertificatesByInternship(internshipId);
-        return ResponseEntity.ok(responses);
+    @GetMapping("/internships/{internshipId}/students")
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
+    public ResponseEntity<List<StudentDTO>> getStudentsWithCompletedInternship(
+            @PathVariable Long internshipId) {
+        List<Student> students = studentRepository.findStudentsWithCompletedInternship(internshipId);
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<StudentDTO> dtos = students.stream()
+                .map(StudentDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
+
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
     public ResponseEntity<CertificateResponse> updateCertificate(
             @PathVariable Long id,
             @RequestBody CertificateRequest request) {
@@ -80,23 +95,22 @@ public class CertificateController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/revoke")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> revokeCertificate(@PathVariable Long id) {
-        certificateService.revokeCertificate(id);
-        return ResponseEntity.noContent().build();
-    }
+
 
     @DeleteMapping("/{id}")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCertificate(@PathVariable Long id) {
         certificateService.deleteCertificate(id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/internships")
-    public ResponseEntity<List<Internship>> getAllInternshipsForCertificates() {
-        List<Internship> internships = internshipRepository.findAllWithStudents();
-        return ResponseEntity.ok(internships);
+
+
+
+    @GetMapping("/my-certificates")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<CertificateResponse>> getCertificatesForAuthenticatedStudent() {
+        List<CertificateResponse> responses = certificateService.getCertificatesForAuthenticatedStudent();
+        return ResponseEntity.ok(responses);
     }
     @GetMapping("/{id}/details")
     public ResponseEntity<CertificateResponse> getCertificateDetails(@PathVariable Long id) {
@@ -117,22 +131,25 @@ public class CertificateController {
 
         // Internship details
         if (certificate.getInternship() != null) {
-            dto.setIntershipTitle(certificate.getInternship().getTitle());
+            dto.setInternshipTitle(certificate.getInternship().getTitle());
+        }
 
+        // Issuer details (Enterprise)
+        if (certificate.getIssuer() != null && certificate.getIssuer() instanceof Enterprise) {
+            Enterprise enterpriseIssuer = (Enterprise) certificate.getIssuer();
+            dto.setIssuerCompanyName(enterpriseIssuer.getCompanyName());
         }
 
         return ResponseEntity.ok(dto);
     }
-    @GetMapping("/internships/{internshipId}/students")
-    public ResponseEntity<List<StudentDTO>> getStudentsWithCompletedInternship(
-            @PathVariable Long internshipId) {
-        List<Student> students = studentRepository.findStudentsWithCompletedInternship(internshipId);
-        if (students.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        List<StudentDTO> dtos = students.stream()
-                .map(StudentDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
+
+    @PreAuthorize("hasRole('ENTERPRISE') or hasRole('ADMIN')")
+
+    @PostMapping("/{id}/send-email")
+    public ResponseEntity<Void> sendCertificateByEmail(
+            @PathVariable Long id,
+            @RequestParam String recipientEmail) {
+        certificateService.sendCertificateByEmail(id, recipientEmail);
+        return ResponseEntity.ok().build();
     }
 }

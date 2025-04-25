@@ -1,4 +1,4 @@
-import { SkillBadge } from "./skillbadge";
+
 
 export class Certificate {
     id?: number;
@@ -9,10 +9,9 @@ export class Certificate {
     certificateContent?: string;
     studentId?: number;
     studentFirstName?: string;  
-    issuerFirstName?: string;
-    issuerLastName?: string;
     internshipTitle?: string;
     studentLastName?: string;
     internshipId?: number;
     issuerId?: number;
+    issuerCompanyName?: string; 
   }  

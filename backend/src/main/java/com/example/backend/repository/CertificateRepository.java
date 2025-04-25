@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface CertificateRepository  extends JpaRepository<Certificate, Long> {
     List<Certificate> findByStudentId(Long studentId);
     List<Certificate> findByInternshipId(Long internshipId);
-//    List<Certificate> findByIssuerId(Long issuerId);
+    List<Certificate> findByIssuerId(Long issuerId);
+
   //  Optional<Certificate> findByCertificateId(String certificateId);
 }

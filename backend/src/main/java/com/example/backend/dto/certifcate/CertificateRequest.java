@@ -1,7 +1,10 @@
 package com.example.backend.dto.certifcate;
 
+import com.example.backend.entity.CertificateStatus;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,8 +17,11 @@ public class CertificateRequest {
     private String issuerFirstName;
     private String issuerLastName;
     private String intershipTitle;
+    private CertificateStatus status;
+    private LocalDate issueDate;
+    private String verificationID;
     private Long internshipId;
-    private Long issuerId;
+  //  private Long issuerId;
     private String certificateContent;
 
 }

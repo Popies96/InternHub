@@ -21,10 +21,14 @@ public class CertificateResponse {
     private String studentLastName;
     private String issuerFirstName;
     private String issuerLastName;
-    private String intershipTitle;
     private Long internshipId;
+    private String internshipTitle;
     private Long issuerId;
-    //   private List<SkillBadgeResponse> skillBadges;
+    private String issuerCompanyName;
+
+
+
+
 
 
 

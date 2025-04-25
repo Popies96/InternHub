@@ -20,10 +20,40 @@ import { OnboardComponent } from './components/onboard/onboard.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { InternshipAiComponent } from './pages/internship-ai/internship-ai.component';
 
-import { CertificatesComponent } from './certificate/certificates/certificates.component';
-import { EditCertificatesComponent } from './certificate/edit-certificates/edit-certificates.component';
-import { AddCertificatesComponent } from './certificate/add-certificates/add-certificates.component';
-import { DetailsCertificatesComponent } from './certificate/details-certificates/details-certificates.component';
+import { StudentSidebarComponent } from './components/sidebars/student-sidebar/student-sidebar.component';
+import { StudentNavComponent } from './components/navbars/student-nav/student-nav.component';
+import { AdminNavComponent } from './components/navbars/admin-nav/admin-nav.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { IndexComponent } from './Student/index/index.component';
+
+import { RenduComponent } from './Student/rendu/rendu.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
+import { ApplicationComponent } from './Student/application/application.component';
+import { DashboardComponent } from './Student/dashboard/dashboard.component';
+
+import { SettingsComponent } from './Student/settings/settings.component';
+import { InternshipsComponent } from './Student/internships/internships.component';
+import { TasksComponent } from './Student/tasks/tasks.component';
+import { InterviewComponent } from './Student/interview/interview.component';
+import { CompanydashboardComponent } from './company/companydashboard/companydashboard.component';
+import { CompanyInternshipsComponent } from './company/company-internships/company-internships.component';
+import { CompanyIndexComponent } from './company/company-index/company-index.component';
+import { AddInternshipComponent } from './company/add-internship/add-internship.component';
+import { InternsComponent } from './company/interns/interns.component';
+import { CompanySidebarComponent } from './components/sidebars/company-sidebar/company-sidebar.component';
+import { CompanyTasksComponent } from './company/company-tasks/company-tasks.component';
+import { ApplicationsComponent } from './company/applications/applications.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
+import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
+import { StudentCertificatesComponent } from './Student/student-certificates/student-certificates.component';
+import { StudentDetailsCertifComponent } from './Student/student-details-certif/student-details-certif.component';
+import { EditCertificatesComponent } from './company/certificate/edit-certificates/edit-certificates.component';
+import { AddCertificatesComponent } from './company/certificate/add-certificates/add-certificates.component';
+import { CertificatesComponent } from './company/certificate/certificates/certificates.component';
+import { DetailsCertificatesComponent } from './company/certificate/details-certificates/details-certificates.component';
+import { AiCertificateAssistantComponent } from './components/ai-certificate-assistant/ai-certificate-assistant.component';
+
 
 
 @NgModule({
@@ -32,7 +62,6 @@ import { DetailsCertificatesComponent } from './certificate/details-certificates
     SignupComponent,
     HomeComponent,
     LoginComponent,
-
     NavbarComponent,
     HeroSectionComponent,
     AboutComponent,
@@ -47,7 +76,43 @@ import { DetailsCertificatesComponent } from './certificate/details-certificates
     CertificatesComponent,
     EditCertificatesComponent,
     AddCertificatesComponent,
-    DetailsCertificatesComponent
+    DetailsCertificatesComponent,
+    AppComponent,
+    SignupComponent,
+    HomeComponent,
+    LoginComponent,
+    StudentSidebarComponent,
+    StudentNavComponent,
+    AdminNavComponent,
+    ProfileComponent,
+    IndexComponent,
+
+    RenduComponent,
+    ConversationComponent,
+    ApplicationComponent,
+    DashboardComponent,
+    SettingsComponent,
+    InternshipsComponent,
+    TasksComponent,
+
+    InterviewComponent,
+    CertificatesComponent,
+    CompanydashboardComponent,
+    CompanyInternshipsComponent,
+    ForgotPasswordComponent,
+    OnboardComponent,
+    CompanyIndexComponent,
+    AddInternshipComponent,
+    InternsComponent,
+    CompanySidebarComponent,
+    CompanyTasksComponent,
+    ApplicationsComponent,
+    UnauthorizedComponent,
+    MsgPopupComponent,
+    InternshipsInfoComponent,
+    StudentCertificatesComponent,
+    StudentDetailsCertifComponent,
+    AiCertificateAssistantComponent,
 
   ],
   imports: [
@@ -56,11 +121,13 @@ import { DetailsCertificatesComponent } from './certificate/details-certificates
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    ReactiveFormsModule,
-    FormsModule,
+
+  
     
+
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
