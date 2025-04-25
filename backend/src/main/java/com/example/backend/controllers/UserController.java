@@ -34,7 +34,6 @@ public class UserController {
             req.setPrenom(user.getPrenom());
             req.setEmail(user.getEmail());
             req.setPassword(user.getPassword());
-            req.setRole(user.getRole().name());
             return req;
         }).collect(Collectors.toList());
 

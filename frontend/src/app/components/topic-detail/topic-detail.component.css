@@ -1,0 +1,264 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f5f7fb;
+    color: #333;
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+/* Forum Container */
+.forum-container {
+    max-width: 1300px;
+    margin: 50px auto;
+    padding: 30px;
+    background: linear-gradient(145deg, #f0f4f8, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.forum-container:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+/* Forum Header */
+.forum-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.forum-header h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.back-btn-wrapper .back-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-btn-wrapper .back-btn i {
+    margin-right: 10px;
+}
+
+.back-btn-wrapper .back-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Loader */
+.loader {
+    text-align: center;
+    font-size: 24px;
+    color: #3498db;
+    padding: 50px 0;
+}
+
+.loader .fas {
+    animation: spin 1.5s infinite linear;
+}
+
+/* Topic Details */
+.topic-detail-content {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.topic-title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+/* New Content Color */
+.topic-body .topic-text p {
+    font-size: 18px;
+    color: #6c757d;
+    /* Soft gray for the content */
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+    text-align: justify;
+}
+
+/* Topic Meta */
+.topic-meta {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #7f8c8d;
+}
+
+.topic-meta span i {
+    margin-right: 10px;
+}
+
+.topic-meta span {
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.topic-meta span:hover {
+    color: #3498db;
+}
+
+/* Topic Image */
+.topic-image {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.topic-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease;
+}
+
+.topic-image img:hover {
+    transform: scale(1.05);
+}
+
+/* Topic Tags */
+.topic-tags {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.topic-tags .tag {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.topic-tags .tag:hover {
+    transform: scale(1.05);
+    background-color: #2980b9;
+}
+
+/* Topic Stats */
+.topic-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-top: 30px;
+}
+
+.topic-stats span {
+    display: flex;
+    align-items: center;
+}
+
+.topic-stats span i {
+    margin-right: 10px;
+}
+
+/* Error Message */
+.error-message {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .forum-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .topic-meta {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .topic-meta span {
+        margin-bottom: 10px;
+    }
+
+    .topic-title {
+        font-size: 30px;
+    }
+
+    .topic-text p {
+        font-size: 16px;
+    }
+
+    .topic-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .topic-stats span {
+        margin-bottom: 10px;
+    }
+
+    .topic-tags {
+        justify-content: center;
+    }
+}
+
+/* Animations */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

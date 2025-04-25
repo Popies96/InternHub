@@ -1,0 +1,49 @@
+<div class="forum-container">
+  <header class="forum-header">
+    <h1>Topic Details</h1>
+    <div class="back-btn-wrapper">
+      <button class="back-btn" routerLink="/student/topic">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="isLoading" class="loader">
+    <i class="fas fa-spinner fa-spin"></i> Loading topic...
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="topic && !isLoading" class="topic-detail-content">
+    <h1 class="topic-title">{{ topic.title }}</h1>
+    
+    <div class="topic-meta">
+      <span><i class="fas fa-user-circle"></i> Creator: {{ topic.prenom }}</span>
+      <span><i class="fas fa-calendar-day"></i> {{ topic.dateCreated | date:'mediumDate' }}</span>
+      <span><i class="fas fa-folder"></i> {{ topic.category }}</span>
+    </div>
+
+    <div *ngIf="topic.imagePath" class="topic-image">
+      <img [src]="topic.imagePath" alt="Topic Image" class="responsive-img" />
+    </div>
+
+    <div class="topic-body">
+      <div class="topic-text">
+        <p>{{ topic.content }}</p>
+      </div>
+    </div>
+
+    <div class="topic-tags" *ngIf="topic.tags && topic.tags.length > 0">
+      <i class="fas fa-tags"></i>
+      <span class="tag" *ngFor="let tag of topic.tags">{{ tag }}</span>
+    </div>
+
+    <div class="topic-stats">
+      <span><i class="fas fa-comments"></i> {{ commentCount }} Comments</span>
+      <span><i class="fas fa-eye"></i> {{ topic.views }} Views</span>
+    </div>
+    
+  </div>
+</div>

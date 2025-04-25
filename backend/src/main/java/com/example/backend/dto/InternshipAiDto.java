@@ -1,5 +1,7 @@
 package com.example.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,15 +16,16 @@ public class InternshipAiDto {
         private String companyName;
         private String category;
         private Long studentId;
-    private boolean isActive ;
+
+    private boolean active ;
         private List<TaskAiDto> taskAiList;
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public Long getId() {

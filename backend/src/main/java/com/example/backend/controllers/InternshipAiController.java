@@ -45,6 +45,9 @@ public class InternshipAiController {
 
         InternshipAiDto internshipAiDto = new InternshipAiDto();
         internshipAiDto.setStudentId(internshipAi.getStudent().getId());
+        internshipAiDto.setActive(internshipAi.isActive());
+        System.out.println(internshipAi.isActive());
+        System.out.println(internshipAiDto.isActive());
         BeanUtils.copyProperties(internshipAi,internshipAiDto );
 
         if (internshipAi.getTaskAiList() != null) {

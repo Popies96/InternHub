@@ -21,6 +21,10 @@ import { TaskAiResponseComponent } from './pages/Student/internshipAi/task-ai-re
 import { InternshipAiDetailsComponent } from './pages/Student/internshipAi/internship-ai-details/internship-ai-details.component';
 import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
 import { ConversationComponent } from './pages/conversation/conversation.component';
+import { CompanydashboardComponent } from './pages/company/companydashboard/companydashboard.component';
+import { CompanyIndexComponent } from './pages/company/company-index/company-index.component';
+import { TopicComponent } from './components/topic/topic.component';
+import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
 
 const routes: Routes = [
   {
@@ -35,11 +39,6 @@ const routes: Routes = [
       //   data: { breadcrumb: 'Profile' },
       // },
       { path: '', component: IndexComponent },
-      // {
-      //   path: 'chat',
-      //   component: ConversationComponent,
-      //   data: { breadcrumb: 'Chat' },
-      // },
       {
         path: 'intern',
         component: InternshipsComponent,
@@ -65,7 +64,6 @@ const routes: Routes = [
         component: ApplicationComponent,
         data: { breadcrumb: 'Application' },
       },
-      // { path: 'ide', component: IdeComponent, data: { breadcrumb: 'IDE' } },
       {
         path: 'settings',
         component: SettingsComponent,
@@ -81,16 +79,12 @@ const routes: Routes = [
         component: ConversationComponent,
         data: { breadcrumb: 'Chat' },
       },
-      // {
-      //   path: 'tasks',
-      //   component: TasksComponent,
-      //   data: { breadcrumb: 'Tasks' },
-      // },
-      // {
-      //   path: 'rendu',
-      //   component: RenduComponent,
-      //   data: { breadcrumb: 'Report' },
-      // },
+      {
+        path: 'topic',
+        component: TopicComponent,
+        data: { breadcrumb: 'forum' },
+      },
+      { path: 'topics/:id', component: TopicDetailComponent },
       {
         path: 'certif',
         children: [
@@ -113,13 +107,26 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'company',
+    canActivate: [AuthGuardService],
+    data: { roles: ['ROLE_ENTERPRISE'] },
+    component: CompanydashboardComponent,
+    children: [
+      { path: '', component: CompanyIndexComponent },
+      {
+        path: 'chat',
+        component: ConversationComponent,
+        data: { breadcrumb: 'Chat' },
+      },
+      {
+        path: 'chatpopup',
+        component: ChatpopupComponent,
+        data: { breadcrumb: 'Chat' },
+      },
+    ],
+  },
 
-
-
-
-
-
-  
   { path: '', component: LandingComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },

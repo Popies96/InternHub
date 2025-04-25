@@ -75,7 +75,7 @@ private final TaskAiService taskAiService;
         internship.setTechnology(internshipAi.getTechnology());
         internship.setCompanyName(internshipAi.getCompanyName());
         internship.setCategory(internshipAi.getCategory());
-
+internship.setActive(internshipAi.isActive());
         // Tasks update
         if (internshipAi.getTaskAiList() != null) {
             List<TaskAi> taskList = internshipAi.getTaskAiList().stream().map(taskAi -> {
@@ -134,7 +134,7 @@ private final TaskAiService taskAiService;
         dto.setCompanyName(internship.getCompanyName());
         dto.setCategory(internship.getCategory());
         dto.setStudentId(internship.getStudent() != null ? internship.getStudent().getId() : null);
-
+dto.setActive(internship.isActive());
         if (internship.getTaskAiList() != null) {
             List<TaskAiDto> taskDtos = internship.getTaskAiList().stream().map(task -> {
                 TaskAiDto taskDto = new TaskAiDto();

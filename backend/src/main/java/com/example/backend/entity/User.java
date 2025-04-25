@@ -26,7 +26,8 @@ public class User {
     private int phone;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
+    @OneToMany(mappedBy = "user")
+    private List<Topic> topic;
 
 
     public Long getId() {

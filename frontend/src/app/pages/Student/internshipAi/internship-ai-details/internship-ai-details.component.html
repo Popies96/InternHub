@@ -19,10 +19,10 @@
       <div class="flex flex-col items-end">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-2"
               [ngClass]="{
-                'bg-green-100 text-green-800': !internship.active,
-                'bg-blue-100 text-blue-800': internship.active
+                'bg-green-100 text-green-800': internship.active,
+                'bg-blue-100 text-blue-800': !internship.active
               }">
-          {{ internship.active ? 'Inactive' : 'active' }}
+          {{ internship.active ? 'active' : 'Inactive' }}
         </span>
         <div class="flex items-center text-gray-500 text-sm">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

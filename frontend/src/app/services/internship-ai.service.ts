@@ -26,6 +26,18 @@ export class InternshipAiService {
       throw new Error('Authorization header creation failed');
     }
   }
+  updateInternshipAi(internshipAi : InternshipAi,id: number): Observable<InternshipAi> {
+    const headers = this.createAuthorizedHeader();
+    if (headers) {
+      return this.http.put<InternshipAi>(
+        baseUrl + 'update/' + id,
+        internshipAi,
+        { headers }
+      );
+    } else {
+      throw new Error('Authorization header creation failed');
+    }
+  }
 
   deleteInternshipAi(id: number): Observable<any> {
     const headers = this.createAuthorizedHeader();

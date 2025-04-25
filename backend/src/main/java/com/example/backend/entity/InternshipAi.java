@@ -27,7 +27,7 @@ public class InternshipAi {
     private String technology;
     private String companyName;
     private String category;
-    private boolean isActive = true;
+    private boolean isActive ;
 
     @ManyToOne
     @JoinColumn(name = "student_id")

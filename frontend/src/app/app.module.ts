@@ -34,6 +34,12 @@ import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { ChatappComponent } from './components/chatapp/chatapp.component';
 import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
 import { ConversationComponent } from './pages/conversation/conversation.component';
+import { CompanySidebarComponent } from './components/sidebars/company-sidebar/company-sidebar.component';
+import { TopicComponent } from './components/topic/topic.component';
+import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
+import { CompanydashboardComponent } from './pages/company/companydashboard/companydashboard.component';
+import { CompanyIndexComponent } from './pages/company/company-index/company-index.component';
+import { ForumComponent } from './components/forum/forum.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +73,12 @@ import { ConversationComponent } from './pages/conversation/conversation.compone
     ChatappComponent,
     ChatpopupComponent,
     ConversationComponent,
+    CompanySidebarComponent,
+    TopicComponent,
+    TopicDetailComponent,
+    CompanydashboardComponent,
+    CompanyIndexComponent,
+    ForumComponent,
   ],
   imports: [
     BrowserModule,
