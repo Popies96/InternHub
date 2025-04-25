@@ -4,6 +4,8 @@ import com.example.backend.entity.User;
 import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.utils.JwtAuthenticationFilter;
 import com.example.backend.utils.JwtUtil;
+import com.example.backend.utils.TokenHandshakeInterceptor;
+import com.example.backend.utils.WebSocketAuthChannelInterceptorAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +53,7 @@ public class WebSecurityConfiguration {
                         new StaticHeadersWriter("Access-Control-Allow-Origin", "http://localhost:4200")
                 ).and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/signup","/forgotPassword/**").permitAll()
+                        .requestMatchers("/login","/signup","/forgotPassword/**","/ws","/user/**","/messages/**","/last/**","/seen/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/internship/**").hasAnyRole("ENTERPRISE", "STUDENT")
                         .requestMatchers("/student/**").hasRole("STUDENT")
@@ -101,5 +103,14 @@ public class WebSecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
        return configuration.getAuthenticationManager();
+    }
+    @Bean
+    public WebSocketAuthChannelInterceptorAdapter webSocketAuthInterceptor(JwtUtil jwtUtil) {
+        return new WebSocketAuthChannelInterceptorAdapter(jwtUtil);
+    }
+
+    @Bean
+    public TokenHandshakeInterceptor tokenHandshakeInterceptor() {
+        return new TokenHandshakeInterceptor();
     }
 }

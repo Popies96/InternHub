@@ -24,19 +24,23 @@ export class InternshipAiComponent {
   };
   categories = Object.keys(this.allSkillsByCategory);
   skills: string[] = [];
+  isGenerating =false;
 
-  constructor(private fb: FormBuilder, private geminiService: GeminiService , private internshipAiService: InternshipAiService,private router:Router) {
+  constructor(
+    private fb: FormBuilder,
+    private geminiService: GeminiService,
+    private internshipAiService: InternshipAiService,
+    private router: Router
+  ) {
     this.internshipForm = this.fb.group({
       duration: ['', Validators.required],
       selectedSkills: [[], Validators.required],
       category: ['', Validators.required],
       description: [''],
     });
-       this.internshipForm
-         .get('category')
-         ?.valueChanges.subscribe((category) => {
-           this.updateSkills(category);
-         });
+    this.internshipForm.get('category')?.valueChanges.subscribe((category) => {
+      this.updateSkills(category);
+    });
   }
 
   async generate() {
@@ -55,32 +59,31 @@ export class InternshipAiComponent {
       include tasks title,description make it detailed in each step ,responseType each task only have one response each either text or code or pdf when and for the text make that task for writing simple document like feature idea and stuff like that
     `;
     try {
-   const result = await this.geminiService.generateText(prompt);
-   console.log(prompt);
-   console.log('Raw result:', result);
+      const result = await this.geminiService.generateText(prompt);
+      console.log(prompt);
+      console.log('Raw result:', result);
 
-   const parsed = typeof result === 'string' ? JSON.parse(result) : result;
+      const parsed = typeof result === 'string' ? JSON.parse(result) : result;
 
-   this.generatedInternship = {
-    
-     title: parsed.title,
-     description: parsed.description,
-     startDate: parsed.startDate,
-     endDate: parsed.endDate,
-     technology: parsed.technology,
-     companyName: parsed.companyName,
-     category: parsed.category,
-     active: true,
-     taskAiList: (parsed.tasks || []).map((task: Task) => ({
-       title: task.title,
-       description: task.description,
-       responseType: task.responseType,
-       status: 'PENDING',
-     })),
-   };
+      this.generatedInternship = {
+        title: parsed.title,
+        description: parsed.description,
+        startDate: parsed.startDate,
+        endDate: parsed.endDate,
+        technology: parsed.technology,
+        companyName: parsed.companyName,
+        category: parsed.category,
+        active: true,
+        taskAiList: (parsed.tasks || []).map((task: Task) => ({
+          title: task.title,
+          description: task.description,
+          responseType: task.responseType,
+          status: 'PENDING',
+        })),
+      };
 
-   console.log('Mapped internship object:', this.generatedInternship);
-    this.showModal = true;
+      console.log('Mapped internship object:', this.generatedInternship);
+      this.showModal = true;
     } catch (error) {
       console.error('Error generating internship:', error);
     }
@@ -88,16 +91,18 @@ export class InternshipAiComponent {
   validateInternship() {
     // Save or send the internship where needed
     console.log('Internship validated:', this.generatedInternship);
-    this.internshipAiService.createInternshipAi(this.generatedInternship).subscribe(
-      (response) => {
-        console.log('Internship created successfully:', response);
-        this.router.navigate(['/student/internshipAi']);
-      },
-      (error) => {
-        console.error('Error creating internship:', error);
-        // Handle error, e.g., show an error message
-      }
-    )
+    this.internshipAiService
+      .createInternshipAi(this.generatedInternship)
+      .subscribe(
+        (response) => {
+          console.log('Internship created successfully:', response);
+          this.router.navigate(['/student/internshipAi']);
+        },
+        (error) => {
+          console.error('Error creating internship:', error);
+          // Handle error, e.g., show an error message
+        }
+      );
 
     this.closeModal();
   }

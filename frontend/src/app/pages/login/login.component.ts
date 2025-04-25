@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
           if (data.token != null) {
             const jwtToken = data.token;
             localStorage.setItem('token', jwtToken);
+            localStorage.setItem('email', this.loginForm.value.email);
             const roles = data.roles;
             if (roles.includes('ROLE_STUDENT')) {
               this.router.navigate(['/student']);

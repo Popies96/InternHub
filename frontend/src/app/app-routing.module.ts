@@ -19,6 +19,8 @@ import { InternshipAiListComponent } from './pages/Student/internshipAi/internsh
 import { TaskAiWorkflowComponent } from './pages/Student/internshipAi/task-ai-workflow/task-ai-workflow.component';
 import { TaskAiResponseComponent } from './pages/Student/internshipAi/task-ai-response/task-ai-response.component';
 import { InternshipAiDetailsComponent } from './pages/Student/internshipAi/internship-ai-details/internship-ai-details.component';
+import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 const routes: Routes = [
   {
@@ -69,6 +71,16 @@ const routes: Routes = [
         component: SettingsComponent,
         data: { breadcrumb: 'Settings' },
       },
+      {
+        path: 'chatpopup',
+        component: ChatpopupComponent,
+        data: { breadcrumb: 'Chat' },
+      },
+      {
+        path: 'chat',
+        component: ConversationComponent,
+        data: { breadcrumb: 'Chat' },
+      },
       // {
       //   path: 'tasks',
       //   component: TasksComponent,
@@ -101,6 +113,13 @@ const routes: Routes = [
       },
     ],
   },
+
+
+
+
+
+
+  
   { path: '', component: LandingComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
@@ -112,17 +131,15 @@ const routes: Routes = [
     data: { breadcrumb: 'workflow' },
     children: [
       {
-         
-      path: '', 
-      component:InternshipAiDetailsComponent,
-      data: { breadcrumb: 'Ai internship details' }
-    },
-        {
+        path: '',
+        component: InternshipAiDetailsComponent,
+        data: { breadcrumb: 'Ai internship details' },
+      },
+      {
         path: 'task/:taskId',
         component: TaskAiResponseComponent,
-        data: { breadcrumb: 'Tasks' }
-        ,}
-      
+        data: { breadcrumb: 'Tasks' },
+      },
     ],
   },
   { path: 'unauthorized', component: UnauthorizedComponent },

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TaskAiService {
     List<TaskAi> retrieveTaskAi();
-    TaskAi updateTaskAi(TaskAi task);
+    TaskAi updateTaskAi(TaskAi task,Long id);
     TaskAi addTaskAi(TaskAi task);
     TaskAi retrieveTaskAi(long idTask);
     void removeTaskAi(long idTask);

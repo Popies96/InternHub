@@ -31,6 +31,9 @@ import { TaskAiResponseComponent } from './pages/Student/internshipAi/task-ai-re
 import { InternshipAiDetailsComponent } from './pages/Student/internshipAi/internship-ai-details/internship-ai-details.component';
 import { IdeComponent } from './components/ide/ide.component';
 import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
+import { ChatappComponent } from './components/chatapp/chatapp.component';
+import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +64,9 @@ import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
     TaskAiResponseComponent,
     InternshipAiDetailsComponent,
     IdeComponent,
+    ChatappComponent,
+    ChatpopupComponent,
+    ConversationComponent,
   ],
   imports: [
     BrowserModule,

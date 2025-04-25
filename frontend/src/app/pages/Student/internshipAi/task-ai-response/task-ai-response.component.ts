@@ -11,17 +11,20 @@ import { PdfService } from 'src/app/services/pdf.service';
   styleUrls: ['./task-ai-response.component.css'],
 })
 export class TaskAiResponseComponent implements OnInit {
+  // Task data
   task: Task | null = null;
+  loading = true;
+  taskId: number | null = null;
+
+  // Response handling
+  userCode: string = '';
+  userText: string = '';
+  extractedText = '';
+  fileToUpload: File | null = null;
+
+  // Evaluation results
   verdict: string | null = null;
   feedback: string | null = null;
-  loading = true;
-  internshipId: number | null = null;
-  userCode: string = '';
-  taskId: number | null = null;
-  userText: string = ''; // For text editor content
-  textFormat: string = 'text'; // For text format (text or code)
-  //pdf
-  extractedText = '';
   isLoading = false;
   errorMessage = '';
 
@@ -34,122 +37,219 @@ export class TaskAiResponseComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.taskId = +params['taskId']; // Convert to number
-      console.log('Task ID changed:', this.taskId);
-
+      this.taskId = +params['taskId'];
       if (this.taskId) {
         this.fetchTaskAi();
-        this.verdict = null;
-        this.feedback = null;
+        this.resetEvaluation();
       }
     });
   }
 
   fetchTaskAi(): void {
     this.loading = true;
-    this.task = null; // Clear previous task
+    this.task = null;
 
-    this.internshipAiService.getTaskAiById(this.taskId!).subscribe(
-      (data) => {
+    this.internshipAiService.getTaskAiById(this.taskId!).subscribe({
+      next: (data) => {
         this.task = data;
-        console.log('Task data:', data);
+        this.initializeEditors();
         this.loading = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching task:', error);
         this.loading = false;
-      }
-    );
+      },
+    });
   }
+
+  resetEvaluation(): void {
+    this.verdict = null;
+    this.feedback = null;
+    this.errorMessage = '';
+  }
+
   initializeEditors(): void {
     if (!this.task) return;
 
-    if (this.task.responseType === 'code') {
-      this.userCode = '';
-      // Set language based on file extension or other logic
-    } else if (this.task.responseType === 'text') {
-      this.userText = '';
-    }
+    // Reset all input fields
+    this.userCode = '';
+    this.userText = '';
+    this.extractedText = '';
+    this.fileToUpload = null;
   }
 
-  executeCode(): void {
-    // Implement code execution logic
-    console.log('Executing code:', this.userCode);
-  }
-
-  formatText(): void {
-    // Implement text formatting logic
-    console.log('Formatting text');
-  }
   async onFileSelected(event: Event) {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.resetEvaluation();
     const input = event.target as HTMLInputElement;
 
-    if (!input.files?.length) return;
+    if (!input.files?.length) {
+      return;
+    }
+
+    this.fileToUpload = input.files[0];
+    this.isLoading = true;
 
     try {
-      const file = input.files[0];
-      this.extractedText = await this.pdfService.extractTextFromPdf(file);
+      // Validate file type
+      if (this.fileToUpload.type !== 'application/pdf') {
+        throw new Error('Please upload a PDF file');
+      }
+
+      // Extract text from PDF
+      this.extractedText = await this.pdfService.extractText(this.fileToUpload);
+      this.userText = this.extractedText;
     } catch (error) {
-      console.error('Error extracting text:', error);
-      this.errorMessage = 'Failed to extract text from PDF';
+      console.error('Error processing file:', error);
+      this.errorMessage =
+        error instanceof Error ? error.message : 'Failed to process file';
+      this.fileToUpload = null;
     } finally {
       this.isLoading = false;
     }
   }
 
-  saveText(): void {
-    // Implement text saving logic
-    console.log('Saving text:', this.userText);
-  }
+  async evaluateResponse() {
+    if (!this.task) return;
 
-  async generate() {
-    if (!this.userText.trim()) {
-      console.warn('User input is empty. Please enter some text.');
-      return;
-    }
-
-    const prompt = `
-You are an internship task evaluator AI.
-
-The user has submitted a response to the following task:
-Task: "${this.task?.description}"
-User's Response: "${this.userText}"
-
-Your job:
-1. Analyze the user’s response.
-2. If it correctly addresses the task, reply with:
-{
-  "verdict": "passed",
-  "feedback": "Brief supportive comment or clarification of the task if needed."
-}
-3. If the response is wrong, incomplete, or off-topic, reply with:
-{
-  "verdict": "refused",
-  "feedback": "Explain what the user missed or misunderstood. DO NOT provide the correct answer."
-}
-  4. If the user asking you to clarify the task and explain more, reply with:
-{
-  "verdict": "info",
-  "feedback": "clarification of the task explain it more but don't provide the answer."
-}
-
-⚠️ Do NOT include the answer to the task.
-⚠️ Do NOT rephrase or write the user’s response for them.
-
-Only respond with a valid JSON object.
-`;
+    this.isLoading = true;
+    this.resetEvaluation();
 
     try {
+      let userResponse = '';
+
+      // Determine which response to evaluate
+      switch (this.task.responseType) {
+        case 'code':
+          if (!this.userCode.trim()) {
+            throw new Error('Please write some code to evaluate');
+          }
+          userResponse = this.userCode;
+          break;
+        case 'text':
+        case 'pdf':
+          if (!this.userText.trim()) {
+            throw new Error('Please provide some text to evaluate');
+          }
+          userResponse = this.userText;
+          break;
+      }
+
+      const prompt = this.createEvaluationPrompt(userResponse);
       const result = await this.geminiService.generateText(prompt);
-      console.log('AI Response:', result);
-      const parsed = JSON.parse(result);
-      this.verdict = parsed.verdict;
-      this.feedback = parsed.feedback;
-      // Display the response in the text editor
+
+      // Parse the JSON response
+      try {
+        const parsed = JSON.parse(result.replace(/```json|```/g, ''));
+        this.verdict = parsed.verdict;
+        this.feedback = parsed.feedback;
+
+        // Check if verdict is "passed" and update task status
+        if (this.verdict === 'passed' && this.task) {
+          // Create updated task object with COMPLETED status
+          const updatedTask: Task = {
+            ...this.task,
+            status: 'COMPLETED', // Assuming your Task model has a status field
+          };
+
+          // Call the update endpoint
+          this.internshipAiService
+            .updateTask(this.task.id, updatedTask)
+            .subscribe({
+              next: (updatedTaskDto) => {
+                this.task = {
+                  id: updatedTaskDto.id,
+                  title: updatedTaskDto.title,
+                  description: updatedTaskDto.description,
+                  responseType: updatedTaskDto.responseType,
+                  status: updatedTaskDto.status,
+                };
+                console.log('Task status updated to COMPLETED');
+              },
+              error: (error) => {
+                console.error('Failed to update task status:', error);
+                this.errorMessage =
+                  'Evaluation passed but failed to update task status';
+              },
+            });
+        }
+      } catch (parseError) {
+        console.error('Error parsing AI response:', parseError);
+        throw new Error(
+          'The evaluation response was not in the expected format'
+        );
+      }
     } catch (error) {
-      console.error('Error generating AI response:', error);
+      console.error('Error generating evaluation:', error);
+      this.errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to generate evaluation';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private createEvaluationPrompt(userResponse: string): string {
+    return `
+You are an internship task evaluator AI.
+
+TASK DESCRIPTION:
+${this.task?.description}
+
+USER'S RESPONSE:
+${userResponse}
+
+EVALUATION INSTRUCTIONS:
+1. Analyze if the response correctly addresses the task requirements
+2. Return a JSON object with the following structure:
+{
+  "verdict": "passed" | "refused" | "info",
+  "feedback": "Your detailed feedback here"
+}
+
+RULES:
+- "passed": If the response fully meets task requirements
+- "refused": If the response is incomplete, incorrect, or off-topic
+- "info": If the user asks for clarification (without providing answer)
+- Feedback should be constructive but NEVER include the correct answer
+- For code: check functionality, not just syntax
+- For text: check content relevance and completeness
+- For files: evaluate the extracted content
+
+Respond ONLY with the JSON object. No additional text or explanations.
+`;
+  }
+
+  clearResponse(): void {
+    if (!this.task) return;
+
+    switch (this.task.responseType) {
+      case 'code':
+        this.userCode = '';
+        break;
+      case 'text':
+      case 'pdf':
+        this.userText = '';
+        this.extractedText = '';
+        this.fileToUpload = null;
+        break;
+    }
+    this.resetEvaluation();
+  }
+
+  // Helper method for template to determine if evaluate button should be disabled
+  isEvaluateDisabled(): boolean {
+    if (!this.task || this.task.status === 'COMPLETED') return true;
+
+    switch (this.task.responseType) {
+      case 'code':
+        return !this.userCode.trim();
+      case 'text':
+        return !this.userText.trim();
+      case 'pdf':
+        return !this.userText.trim() || !this.fileToUpload;
+      default:
+        return true;
     }
   }
 }

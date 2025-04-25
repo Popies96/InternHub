@@ -3,38 +3,42 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class PdfService {
-
-  constructor(){
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  constructor() {
+     pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
   }
-  async extractTextFromPdf(file: File): Promise<string> {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-    let fullText = '';
+  async extractText(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
+      fileReader.onload = async () => {
+        try {
+          const typedArray = new Uint8Array(fileReader.result as ArrayBuffer);
+          const pdf = await pdfjsLib.getDocument(typedArray).promise;
+          let extractedText = '';
 
-      const pageText = content.items
-        .map((item): string => {
-          if ('str' in item) {
-            return item.str;
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            extractedText +=
+              textContent.items.map((item: any) => item.str).join(' ') + '\n';
           }
-          return '';
-        })
-        .join(' ');
 
-      fullText += pageText + '\n';
-    }
+          resolve(extractedText);
+        } catch (error) {
+          reject(`Error extracting text from PDF: ${error}`);
+        }
+      };
 
-    return fullText.trim();
+      fileReader.onerror = () => {
+        reject('Error reading file');
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    });
   }
 }

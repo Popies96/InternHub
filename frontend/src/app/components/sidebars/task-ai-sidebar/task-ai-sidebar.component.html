@@ -34,21 +34,28 @@
               [class.justify-center]="isCompact"
               [class.border-l-4]="activeTaskId === task.id"
               [class.border-indigo-500]="activeTaskId === task.id">
-        <div [class]="'w-8 h-8 rounded-lg flex items-center justify-center ' + getStatusColor(task.status)">
-          <svg [ngSwitch]="task.status">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-white border" [ngClass]="{
+          'border-green-200 text-green-600': task.status === 'completed',
+          'border-blue-200 text-blue-600': task.status === 'in_progress',
+          'border-gray-200 text-gray-600': task.status === 'pending'
+        }">
+          <svg [ngSwitch]="task.status" class="h-5 w-5">
+            <!-- Completed Task Icon -->
             <ng-container *ngSwitchCase="'completed'">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </ng-container>
+            <!-- In Progress Task Icon -->
             <ng-container *ngSwitchCase="'in_progress'">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </ng-container>
+            <!-- Pending Task Icon -->
             <ng-container *ngSwitchDefault>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </ng-container>
           </svg>

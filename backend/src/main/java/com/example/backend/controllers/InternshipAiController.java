@@ -89,6 +89,19 @@ public class InternshipAiController {
         taskAiDto.setTitle(taskAi.getTitle());
         return ResponseEntity.ok(taskAiDto);
     }
+    @PutMapping("task/{id}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<TaskAiDto> updateTask(@PathVariable Long id,@RequestBody TaskAi taskAi) {
+        TaskAi task = taskAiService.updateTaskAi(taskAi,id);
+        TaskAiDto taskAiDto = new TaskAiDto();
+        taskAiDto.setId(task.getId());
+        taskAiDto.setDescription(task.getDescription());
+        taskAiDto.setResponseType(task.getResponseType());
+        taskAiDto.setStatus(task.getStatus().toString());
+        taskAiDto.setTitle(task.getTitle());
+        return ResponseEntity.ok(taskAiDto);
+    }
+
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('STUDENT')")

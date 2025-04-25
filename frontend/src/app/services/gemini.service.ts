@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, Part } from '@google/generative-ai';
 @Injectable({
   providedIn: 'root',
 })
@@ -62,5 +62,60 @@ export class GeminiService {
     console.log('Chat history:', this.chatHistory);
 
     return response;
+  }
+
+  private async fileToGenerativePart(file: File): Promise<Part> {
+    const base64EncodedDataPromise = new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result.split(',')[1]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    return {
+      inlineData: {
+        data: await base64EncodedDataPromise,
+        mimeType: file.type,
+      },
+    };
+  }
+
+  async generateTextFromPdf(prompt: string, pdfFile: File): Promise<string> {
+    const model = this.generativeAi.getGenerativeModel({
+      model: 'gemini-2.0-flash', // Consider using a model that supports file uploads
+    });
+
+    // Convert the PDF file to a GenerativeAI part
+    const pdfPart = await this.fileToGenerativePart(pdfFile);
+
+    // Add both the prompt and PDF to the user message
+    const userParts: Part[] = [{ text: prompt }, pdfPart];
+
+    
+
+    const generationConfig = {
+      temperature: 1,
+      topP: 0.95,
+      topK: 40,
+      maxOutputTokens: 8192,
+      responseMimeType: 'application/json',
+    };
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history:[],
+    });
+
+    try {
+      const result = await chatSession.sendMessage(userParts);
+      const response = await result.response.text();
+      return response;
+    } catch (error) {
+      console.error('Error generating text from PDF:', error);
+      throw error;
+    }
   }
 }

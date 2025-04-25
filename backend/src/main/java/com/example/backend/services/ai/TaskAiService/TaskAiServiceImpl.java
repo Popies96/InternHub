@@ -24,8 +24,15 @@ public class TaskAiServiceImpl implements TaskAiService{
     }
 
     @Override
-    public TaskAi updateTaskAi(TaskAi task) {
-        return null;
+    public TaskAi updateTaskAi(TaskAi task , Long id) {
+        TaskAi taskAi = taskAiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("TaskAi with ID " + id + " not found"));
+taskAi.setDescription(task.getDescription());
+taskAi.setStatus(task.getStatus());
+taskAi.setResponseType(task.getResponseType());
+taskAi.setTitle(task.getTitle());
+
+
+        return taskAiRepository.save(taskAi);
     }
 
     @Override
@@ -35,7 +42,7 @@ public class TaskAiServiceImpl implements TaskAiService{
 
     @Override
     public TaskAi retrieveTaskAi(long idTask) {
-        return  taskAiRepository.findById(idTask).orElseThrow(() -> new EntityNotFoundException("InternshipAi with ID " + idTask + " not found"));
+        return  taskAiRepository.findById(idTask).orElseThrow(() -> new EntityNotFoundException("TaskAi with ID " + idTask + " not found"));
     }
 
     @Override

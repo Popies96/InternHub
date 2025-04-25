@@ -99,4 +99,27 @@ public class JwtUtil {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public static boolean validateTokenStatic(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(new JwtUtil().getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    public static String extractUsernameStatic(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(new JwtUtil().getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
 }
