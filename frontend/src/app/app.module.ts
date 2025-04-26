@@ -50,6 +50,7 @@ import { ChatpopupComponent } from './components/chatpopup/chatpopup.component';
 import { ForumComponent } from './components/forum/forum.component';
 import { TopicComponent } from './components/topic/topic.component';
 import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
+import { CommentComponent } from './components/comment/comment.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -97,6 +98,7 @@ import { TopicDetailComponent } from './components/topic-detail/topic-detail.com
     ForumComponent,
     TopicComponent,
     TopicDetailComponent,
+    CommentComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +28,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Topic> topic;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Comment> comment;
 
 
 

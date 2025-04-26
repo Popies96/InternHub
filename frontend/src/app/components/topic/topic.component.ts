@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TopicReactionService } from 'src/app/services/topic-reaction.service';
 import { TopicService, Topic } from 'src/app/services/topic.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -17,6 +18,7 @@ export class TopicComponent implements OnInit {
   selectedFile: File | null = null;
   showNewTopicModal = false;
   showUpdateTopicModal = false;
+  reactions: { [key: number]: { likes: number, dislikes: number, userReaction: 'like' | 'dislike' | 'None' | null } } = {};
   topicToUpdate: Topic = {
     id: 0,
     title: '',
@@ -50,7 +52,8 @@ export class TopicComponent implements OnInit {
   constructor(
     private topicService: TopicService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private topicReactionService: TopicReactionService
   ) {}
 
   ngOnInit(): void {
@@ -85,12 +88,38 @@ export class TopicComponent implements OnInit {
         this.extractTags();
         this.updateCategoryCounts();
         this.applyFilters();
+        data.forEach(topic => {
+          if (topic.id) {
+            this.loadReactions(topic.id);
+          }
+        });
       },
       error: (err) => {
         console.error('Error loading topics:', err);
         this.error = 'Failed to load topics';
       }
     });
+  }
+
+  loadReactions(topicId: number): void {
+    if (!topicId) return;
+    
+    this.topicReactionService.countLikes(topicId).subscribe(count => {
+      if (!this.reactions[topicId]) this.reactions[topicId] = { likes: 0, dislikes: 0, userReaction: null };
+      this.reactions[topicId].likes = count;
+    });
+    
+    this.topicReactionService.countDislikes(topicId).subscribe(count => {
+      if (!this.reactions[topicId]) this.reactions[topicId] = { likes: 0, dislikes: 0, userReaction: null };
+      this.reactions[topicId].dislikes = count;
+    });
+    
+    if (this.currentUser) {
+      this.topicReactionService.getUserReaction(topicId, this.currentUser).subscribe(reaction => {
+        if (!this.reactions[topicId]) this.reactions[topicId] = { likes: 0, dislikes: 0, userReaction: null };
+        this.reactions[topicId].userReaction = reaction === 'LIKE' ? 'like' : reaction === 'DISLIKE' ? 'dislike' : reaction === 'NONE' ? 'None' : null;
+      });
+    }
   }
 
   extractTags(): void {
@@ -108,12 +137,10 @@ export class TopicComponent implements OnInit {
   applyFilters(): void {
     let result = [...this.topics];
 
-    // Apply category filter
     if (this.activeCategory) {
       result = result.filter(t => t.category === this.activeCategory);
     }
 
-    // Apply search filter
     if (this.searchKeyword.trim()) {
       const keyword = this.searchKeyword.toLowerCase();
       result = result.filter(t => 
@@ -123,10 +150,7 @@ export class TopicComponent implements OnInit {
       );
     }
 
-    // Apply sorting
 
-
-    // Update pagination
     this.totalPages = Math.ceil(result.length / this.pageSize);
     this.filteredTopics = result.slice(
       (this.currentPage - 1) * this.pageSize,
@@ -138,6 +162,17 @@ export class TopicComponent implements OnInit {
     this.router.navigate(['/student/topics', topicId]);
   }
 
+  react(reactionType: 'like' | 'dislike', topicId: number): void {
+    if (!topicId || this.currentUser === null) return;
+
+    this.topicReactionService.reactToTopic(topicId, this.currentUser, reactionType).subscribe({
+      next: () => this.loadReactions(topicId),
+      error: (err) => {
+        console.error('Reaction error:', err);
+        this.error = 'Failed to record your reaction';
+      }
+    });
+  }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -179,37 +214,6 @@ export class TopicComponent implements OnInit {
     this.showNewTopicModal = false;
     this.resetNewTopicForm();
   }
-submitUpdatedTopic(): void {
-  if (!this.currentUser || !this.topicToUpdate.id) return;
-
-  const topicPayload = {
-    ...this.topicToUpdate,
-    tags: Array.isArray(this.topicToUpdate.tags) 
-      ? this.topicToUpdate.tags 
-      : String(this.topicToUpdate.tags).split(',').map(tag => tag.trim())
-  };
-
-  console.log('Submitting updated topic:', topicPayload);
-  console.log('Selected file:', this.selectedFile);
-
-  // Pass the correct order of arguments (id, userId, topicPayload, file)
-  this.topicService.updateTopic(
-    this.topicToUpdate.id, // topic id first
-    this.currentUser,       // userId second
-    topicPayload,           // topic data
-    this.selectedFile || undefined  // file if present
-  ).subscribe({
-    next: () => {
-      this.closeUpdateTopicModal();
-      this.loadTopics();
-    },
-    error: (err) => {
-      console.error('Error updating topic:', err);
-      this.error = 'Failed to update topic';
-    }
-  });
-}
-
 
   submitTopic(): void {
     if (!this.currentUser) return;
@@ -242,20 +246,10 @@ submitUpdatedTopic(): void {
       category: '',
       content: '',
       tags: '',
-      prenom: this.newTopic.prenom // Keep the same user name
+      prenom: this.newTopic.prenom
     };
     this.selectedFile = null;
     this.previewUrl = null;
-  }
-
-  upvoteTopic(topicId: number): void {
-    console.log(`Upvoted topic ${topicId}`);
-    // Implement actual upvote logic here
-  }
-
-  downvoteTopic(topicId: number): void {
-    console.log(`Downvoted topic ${topicId}`);
-    // Implement actual downvote logic here
   }
 
   searchTopics(): void {
@@ -273,7 +267,32 @@ submitUpdatedTopic(): void {
     this.resetUpdateForm();
   }
 
+  submitUpdatedTopic(): void {
+    if (!this.currentUser || !this.topicToUpdate.id) return;
 
+    const topicPayload = {
+      ...this.topicToUpdate,
+      tags: Array.isArray(this.topicToUpdate.tags) 
+        ? this.topicToUpdate.tags 
+        : String(this.topicToUpdate.tags).split(',').map(tag => tag.trim())
+    };
+
+    this.topicService.updateTopic(
+      this.topicToUpdate.id,
+      this.currentUser,
+      topicPayload,
+      this.selectedFile || undefined
+    ).subscribe({
+      next: () => {
+        this.closeUpdateTopicModal();
+        this.loadTopics();
+      },
+      error: (err) => {
+        console.error('Error updating topic:', err);
+        this.error = 'Failed to update topic';
+      }
+    });
+  }
 
   resetUpdateForm(): void {
     this.topicToUpdate = {
@@ -295,20 +314,19 @@ submitUpdatedTopic(): void {
   openDeleteModal(topic: Topic): void {
     if (confirm('Are you sure you want to delete this topic?')) {
       if (topic.id !== undefined) {
-        this.deleteTopic(topic.id);  // Pass the topic ID to the delete method
+        this.deleteTopic(topic.id);
       } else {
         console.error('Topic ID is undefined');
       }
     }
   }
   
- deleteTopic(topicId: number): void {
+  deleteTopic(topicId: number): void {
     if (this.currentUser === null) return;
 
     this.topicService.deleteTopic(topicId, this.currentUser).subscribe({
       next: () => {
-        this.loadTopics();  // Reload topics after deletion
-        // No need to navigate, we want to stay on the forum page
+        this.loadTopics();
       },
       error: (err) => {
         console.error('Failed to delete topic:', err);
@@ -316,6 +334,7 @@ submitUpdatedTopic(): void {
       }
     });
   }
+
   isCreator(topicUserId: number): boolean {
     return this.currentUser !== null && topicUserId === this.currentUser;
   }

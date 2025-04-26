@@ -69,7 +69,22 @@
               <i class="fas fa-tags"></i>
               <span class="tag" *ngFor="let tag of topic.tags">{{tag}}</span>
             </div>
+            <div class="reactions">
+              <button 
+                (click)="react('like', topic.id ?? 0); $event.stopPropagation()" 
+                [disabled]="reactions[topic.id ?? 0]?.userReaction === 'like'"
+                class="like-btn">
+                👍 Like ({{ reactions[topic.id ?? 0]?.likes || 0 }})
+              </button>
+            
+              <button 
+                (click)="react('dislike', topic.id ?? 0); $event.stopPropagation()" 
+                [disabled]="reactions[topic.id ?? 0]?.userReaction === 'dislike'"
+                class="dislike-btn">
+                👎 Dislike ({{ reactions[topic.id ?? 0]?.dislikes || 0 }})
+              </button>
             </div>
+          </div>
           <div class="topic-actions">
             <button class="btn-edit" (click)="openUpdateTopicModal(topic); $event.stopPropagation()" *ngIf="isCreator(topic.userId)">
               <i class="fas fa-edit"></i> Edit

@@ -1,15 +1,20 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.TopicDTO;
+import com.example.backend.entity.Comment;
 import com.example.backend.entity.Topic;
 import com.example.backend.entity.TopicCategory;
 import com.example.backend.entity.User;
+import com.example.backend.repository.CommentRepository;
+import com.example.backend.services.TopicService.Comment.CommentService;
+import com.example.backend.services.TopicService.Comment.CommentServiceImpl;
 import com.example.backend.services.TopicService.FileStorageService;
 import com.example.backend.services.TopicService.TopicServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +34,12 @@ public class TopicController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private CommentServiceImpl commentService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     private TopicDTO convertToDTO(Topic topic) {
         TopicDTO dto = new TopicDTO();
@@ -194,4 +205,32 @@ public class TopicController {
         Topic updatedTopic = topicService.updateViews(topic);
         return ResponseEntity.ok(convertToDTO(updatedTopic));  // Return updated topic as DTO
     }
+
+
+    @PostMapping("/{topicId}/{userId}/addcomment")
+    public ResponseEntity<Comment> addComment(@PathVariable int topicId,
+                                              @RequestBody Comment comment,
+                                              @PathVariable int userId) {
+        System.err.println("topicId: " + topicId + " comment: " + comment);
+        System.err.println("WZEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        Comment savedComment = commentService.addComment(comment, topicId,userId);
+        return  ResponseEntity.ok(savedComment);
+    }
+    @GetMapping("/comments/{topicId}")
+    public List<Comment> getCommentsByTopic(@PathVariable int topicId) {
+        // Log to check what is being returned
+        System.err.println("\n Fetching comments for topicId: " + topicId);
+        List<Comment> comments = commentService.getCommentsByTopicId(topicId);
+
+        System.err.println("Comments: " + comments);
+        return comments;
+    }
+
+    @GetMapping("/comments/count/{topicId}")
+    public long countCommentsByTopic(@PathVariable int topicId) {
+        return commentRepository.countCommentsByTopicId(topicId);
+    }
+
+
+
 }

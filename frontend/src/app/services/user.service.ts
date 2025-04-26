@@ -35,6 +35,9 @@ export class UserService {
     return this.http.get<User[]>(baseUrl +"user/all");
   }
 
+  getUserById(userId: number): Observable<User> {
+    return this.http.get<User>(`${baseUrl}/user/${userId}`);
+  }
   getUserFromLocalStorage(): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {

@@ -17,6 +17,8 @@ public interface TopicService {
     boolean deleteTopic(int id, int userid);
     Topic updateTopic(int topicId, Topic updatedTopic,MultipartFile file) throws IOException;
      Topic updateViews(Topic topic);
+     Topic saveLikeOrDislike(Topic topic);
 
 
-}
+
+    }

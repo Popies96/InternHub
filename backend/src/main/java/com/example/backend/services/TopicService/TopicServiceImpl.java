@@ -102,4 +102,11 @@ public class TopicServiceImpl implements TopicService {
         // Save and return the updated topic
         return topicRepository.save(topic);
     }
+    @Override
+    public Topic saveLikeOrDislike(Topic topic) {
+
+        topic.setUpdatedAt(LocalDateTime.now());
+        return topicRepository.save(topic);
+    }
+
 }
