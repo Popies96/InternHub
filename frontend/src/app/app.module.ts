@@ -18,7 +18,6 @@ import { AdminSidebarComponent } from './components/sidebars/admin-sidebar/admin
 import { StudentSidebarComponent } from './components/sidebars/student-sidebar/student-sidebar.component';
 import { DashboardComponent } from './pages/Student/dashboard/dashboard.component';
 import { ApplicationComponent } from './pages/Student/application/application.component';
-import { CertificatesComponent } from './pages/Student/certificate/certificate.component';
 import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
 import { InterviewComponent } from './pages/Student/interview/interview.component';
@@ -40,6 +39,13 @@ import { TopicDetailComponent } from './components/topic-detail/topic-detail.com
 import { CompanydashboardComponent } from './pages/company/companydashboard/companydashboard.component';
 import { CompanyIndexComponent } from './pages/company/company-index/company-index.component';
 import { ForumComponent } from './components/forum/forum.component';
+import { StudentCertificatesComponent } from './pages/Student/student-certificates/student-certificates.component';
+import { StudentDetailsCertifComponent } from './pages/Student/student-details-certif/student-details-certif.component';
+import { AddCertificatesComponent } from './pages/company/certificate/add-certificates/add-certificates.component';
+import { AiCertificateAssistantComponent } from './components/ai-certificate-assistant/ai-certificate-assistant.component';
+import { DetailsCertificatesComponent } from './pages/company/certificate/details-certificates/details-certificates.component';
+import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
+import { CertificatesComponent } from './pages/company/certificate/certificates/certificates.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +64,6 @@ import { ForumComponent } from './components/forum/forum.component';
     StudentSidebarComponent,
     DashboardComponent,
     ApplicationComponent,
-    CertificatesComponent,
     IndexComponent,
     InternshipsComponent,
     InterviewComponent,
@@ -79,6 +84,13 @@ import { ForumComponent } from './components/forum/forum.component';
     CompanydashboardComponent,
     CompanyIndexComponent,
     ForumComponent,
+    StudentCertificatesComponent,
+    StudentDetailsCertifComponent,
+    AddCertificatesComponent,
+    AiCertificateAssistantComponent,
+    DetailsCertificatesComponent,
+    EditCertificatesComponent,
+    CertificatesComponent
   ],
   imports: [
     BrowserModule,

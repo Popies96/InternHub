@@ -1,0 +1,92 @@
+/* ai-certificate-assistant.component.css */
+.ai-assistant {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.ai-header {
+    background: #3f51b5;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-body {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+}
+
+.message-container {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+    max-width: 80%;
+}
+
+.message-content {
+    padding: 10px 15px;
+    border-radius: 18px;
+}
+
+.message.user {
+    margin-left: auto;
+}
+
+.message.user .message-content {
+    background: #e3f2fd;
+}
+
+.message.bot {
+    margin-right: auto;
+}
+
+.message.bot .message-content {
+    background: #f1f1f1;
+}
+
+.input-container {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: white;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.input-container button {
+    background: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.toggle-icon {
+    font-weight: bold;
+    font-size: 1.2em;
+}

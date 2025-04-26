@@ -11,7 +11,6 @@ import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
 import { ApplicationComponent } from './pages/Student/application/application.component';
 import { SettingsComponent } from './pages/Student/settings/settings.component';
-import { CertificatesComponent } from './pages/Student/certificate/certificate.component';
 import { InterviewComponent } from './pages/Student/interview/interview.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
@@ -25,6 +24,12 @@ import { CompanydashboardComponent } from './pages/company/companydashboard/comp
 import { CompanyIndexComponent } from './pages/company/company-index/company-index.component';
 import { TopicComponent } from './components/topic/topic.component';
 import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
+import { StudentCertificatesComponent } from './pages/Student/student-certificates/student-certificates.component';
+import { StudentDetailsCertifComponent } from './pages/Student/student-details-certif/student-details-certif.component';
+import { CertificatesComponent } from './pages/company/certificate/certificates/certificates.component';
+import { AddCertificatesComponent } from './pages/company/certificate/add-certificates/add-certificates.component';
+import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
+import { DetailsCertificatesComponent } from './pages/company/certificate/details-certificates/details-certificates.component';
 
 const routes: Routes = [
   {
@@ -85,20 +90,11 @@ const routes: Routes = [
         data: { breadcrumb: 'forum' },
       },
       { path: 'topics/:id', component: TopicDetailComponent },
+      { path: 'certifStudent', component: StudentCertificatesComponent },
+
       {
-        path: 'certif',
-        children: [
-          {
-            path: '',
-            component: CertificatesComponent,
-            data: { breadcrumb: 'Certificates' },
-          },
-          {
-            path: 'certif_detail',
-            component: CertificatesComponent,
-            data: { breadcrumb: 'Certificate' },
-          },
-        ],
+        path: 'certifStudent/details/:id',
+        component: StudentDetailsCertifComponent,
       },
       {
         path: 'interview',
@@ -123,6 +119,13 @@ const routes: Routes = [
         path: 'chatpopup',
         component: ChatpopupComponent,
         data: { breadcrumb: 'Chat' },
+      },
+      { path: 'certificates', component: CertificatesComponent },
+      { path: 'certificates/add', component: AddCertificatesComponent },
+      { path: 'certificates/edit/:id', component: EditCertificatesComponent },
+      {
+        path: 'certificates/details/:id',
+        component: DetailsCertificatesComponent,
       },
     ],
   },

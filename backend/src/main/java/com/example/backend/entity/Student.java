@@ -54,5 +54,8 @@ public class Student extends User {
     public void setInternshipAiList(List<InternshipAi> internshipAiList) {
         this.internshipAiList = internshipAiList;
     }
+
+    public Student() {
+    }
 }
 

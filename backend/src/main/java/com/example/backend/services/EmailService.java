@@ -32,5 +32,20 @@ public class EmailService {
         }
     }
 
+    public void sendEmail(String toEmail, String subject, String text, String fromEmail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+
+        try {
+            mailSender.send(message);
+        } catch (MailException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
 
 }

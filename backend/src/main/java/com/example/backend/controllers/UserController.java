@@ -4,6 +4,7 @@ import com.example.backend.dto.SignupRequest;
 import com.example.backend.dto.UserRequest;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.services.authSerivce.UserServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private  UserServiceImpl userService;
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable long userId) {
-        User user = userRepository.getReferenceById(userId);
+    @PostMapping("/get")
+    public ResponseEntity<User> getUser() {
+        User user = userService.getAuthenticatedUser();
         return ResponseEntity.ok(user);
     }
     @GetMapping("/all")
