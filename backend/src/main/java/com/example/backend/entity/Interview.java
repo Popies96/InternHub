@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
+
 @Entity
 public class Interview {
 
@@ -56,4 +56,36 @@ public class Interview {
     public void setMeetingLink(String meetingLink) {
         this.meetingLink = meetingLink;
     }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public LocalDateTime getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public InterviewMode getMode() {
+        return mode;
+    }
+
+    public InterviewStatus getStatus() {
+        return status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public String getMeetingLink() {
+        return meetingLink;
+    }
+
 }

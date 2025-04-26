@@ -1,0 +1,25 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8">
+  <div *ngFor="let interview of interviews" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300">
+    <div class="mb-4">
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Interview #{{ interview.id }}</h3>
+      <p class="text-gray-600 text-sm">Application ID: <span class="font-medium">{{ interview.applicationId }}</span></p>
+      <p class="text-gray-600 text-sm">Scheduled: <span class="font-medium">{{ interview.scheduledDate | date:'medium' }}</span></p>
+      <p class="text-gray-600 text-sm">Mode: <span class="font-medium">{{ interview.mode }}</span></p>
+      <p class="text-gray-600 text-sm">Location: <span class="font-medium">{{ interview.location ? interview.location : 'Online' }}</span></p>
+    </div>
+    <div class="border-t border-gray-200 pt-4">
+
+      <div *ngIf="interview.mode === 'ONLINE' && interview.meetingLink; else noMeeting">
+        <p class="text-blue-500 text-sm mb-2 break-words">{{ interview.meetingLink }}</p>
+        <button 
+          [routerLink]="['/company/meeting', extractMeetingId(interview.meetingLink)]"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors duration-300">Join Meeting</button>
+      </div>
+      <ng-template #noMeeting>
+        <div class="text-red-400 text-center text-sm">
+          Meeting link not available.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

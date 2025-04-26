@@ -39,6 +39,8 @@
     import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
 import { CalendarComponent } from './Student/calendar/calendar.component';
 import { InterviewSchedulerComponent } from './company/interview-scheduler/interview-scheduler.component';
+import { MeetingComponent } from './company/meeting/meeting.component';
+import { InterviewListComponent } from './company/interview-list/interview-list.component';
 
 
 
@@ -79,6 +81,8 @@ import { InterviewSchedulerComponent } from './company/interview-scheduler/inter
         InternshipsInfoComponent,
         CalendarComponent,
         InterviewSchedulerComponent,
+        MeetingComponent,
+        InterviewListComponent,
       ],
       imports: [
         BrowserModule,

@@ -162,7 +162,12 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <h2 class="text-gray-500 text-sm font-medium leading-snug transition-all duration-300" [class.opacity-0]="isCompanyCompact" [class.w-0]="isCompanyCompact">Interviews</h2>
+                                <h2 class="text-gray-500 text-sm font-medium leading-snug transition-all duration-300" 
+    [class.opacity-0]="isCompanyCompact" 
+    [class.w-0]="isCompanyCompact"
+    [routerLink]="['/company/interviews']">
+  Interviews
+</h2>
                             </div>
                         </div>
                     </div>

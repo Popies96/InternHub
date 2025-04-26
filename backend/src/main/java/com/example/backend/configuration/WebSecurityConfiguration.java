@@ -56,6 +56,9 @@ public class WebSecurityConfiguration {
                         .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/internship/**").permitAll()
                         .requestMatchers("/student/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/user/email/**").permitAll()
+
                         .anyRequest().permitAll()  // All other endpoints are also allowed
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

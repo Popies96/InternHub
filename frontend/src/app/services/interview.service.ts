@@ -12,4 +12,7 @@ export class InterviewService {
   createInterview(data: any) {
     return this.http.post(this.apiUrl, data);
   }
+  getAllInterviews() {
+    return this.http.get<any[]>(this.apiUrl);
+  }
 }

@@ -28,6 +28,8 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
 import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
 import { InterviewSchedulerComponent } from './company/interview-scheduler/interview-scheduler.component';
+import { MeetingComponent } from './company/meeting/meeting.component';
+import { InterviewListComponent } from './company/interview-list/interview-list.component';
 
 const routes: Routes = [
   {
@@ -63,6 +65,8 @@ const routes: Routes = [
     component: CompanydashboardComponent,
     children: [
       {path: '', component: CompanyIndexComponent },
+      {path: 'meeting/:meetingId', component: MeetingComponent },
+      {path: 'interviews', component: InterviewListComponent },
       {path: 'schedule-interview/:applicationId', component: InterviewSchedulerComponent },
       {path: 'tasks', component: CompanyTasksComponent  , data: { breadcrumb: 'Tasks Management' }},
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
