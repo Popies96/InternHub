@@ -10,7 +10,7 @@ import { DashboardComponent } from './pages/Student/dashboard/dashboard.componen
 import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
 import { ApplicationComponent } from './pages/Student/application/application.component';
-import { SettingsComponent } from './pages/Student/settings/settings.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 import { InterviewComponent } from './pages/Student/interview/interview.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
@@ -122,6 +122,11 @@ const routes: Routes = [
         data: { breadcrumb: 'Chat' },
       },
       {
+        path: 'profile',
+        component: ProfileComponent,
+        data: { breadcrumb: 'Profile' },
+      },
+      {
         path: 'chatpopup',
         component: ChatpopupComponent,
         data: { breadcrumb: 'Chat' },
@@ -132,6 +137,11 @@ const routes: Routes = [
       {
         path: 'certificates/details/:id',
         component: DetailsCertificatesComponent,
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent,
+        data: { breadcrumb: 'Settings' },
       },
     ],
   },

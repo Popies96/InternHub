@@ -97,7 +97,7 @@ public class UserController {
         user.setPhone(updateRequest.getPhone());
         user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
         userRepository.save(user);
-        // Handle role-specific updates
+        //  role-specific updates
         if (user instanceof Student student) {
             student.setSchool(updateRequest.getSchool());
             student.setCin(updateRequest.getCin());
@@ -110,8 +110,6 @@ public class UserController {
             enterpriseRepository.save((Enterprise) user);
         }
         UserRequest userRequest = new UserRequest();
-
-        // Set common fields for all user types
         userRequest.setId(user.getId());
         userRequest.setNom(user.getNom());
         userRequest.setPrenom(user.getPrenom());

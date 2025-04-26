@@ -21,7 +21,7 @@ import { ApplicationComponent } from './pages/Student/application/application.co
 import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
 import { InterviewComponent } from './pages/Student/interview/interview.component';
-import { SettingsComponent } from './pages/Student/settings/settings.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 import { InternshipAiListComponent } from './pages/Student/internshipAi/internship-ai-list/internship-ai-list.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { TaskAiWorkflowComponent } from './pages/Student/internshipAi/task-ai-workflow/task-ai-workflow.component';
@@ -92,7 +92,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     DetailsCertificatesComponent,
     EditCertificatesComponent,
     CertificatesComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,8 +100,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MonacoEditorModule
-
+    MonacoEditorModule,
   ],
   providers: [
     {
