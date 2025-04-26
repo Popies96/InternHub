@@ -46,6 +46,7 @@ import { AiCertificateAssistantComponent } from './components/ai-certificate-ass
 import { DetailsCertificatesComponent } from './pages/company/certificate/details-certificates/details-certificates.component';
 import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
 import { CertificatesComponent } from './pages/company/certificate/certificates/certificates.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { CertificatesComponent } from './pages/company/certificate/certificates/
     AiCertificateAssistantComponent,
     DetailsCertificatesComponent,
     EditCertificatesComponent,
-    CertificatesComponent
+    CertificatesComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
+  HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
@@ -99,15 +100,18 @@ export class CertificateService {
       })
       .pipe(catchError(this.handleError));
   }
+  
 
   sendCertificateByEmail(
     certificateId: number,
     email: string
   ): Observable<any> {
+    console.log(email);
+    
     return this.http
       .post(
-        `${API_URL}/${certificateId}/send-email`,
-        { recipientEmail: email },
+        `${API_URL}/${certificateId}/send-email?recipientEmail=${email}`,
+        {  },
         { headers: this.getHeaders() }
       )
       .pipe(catchError(this.handleError));

@@ -59,6 +59,8 @@ export class DetailsCertificatesComponent implements OnInit {
     );
 
     if (recipientEmail) {
+      console.log(recipientEmail);
+      
       this.certificateService
         .sendCertificateByEmail(this.certificate.id, recipientEmail)
         .subscribe({

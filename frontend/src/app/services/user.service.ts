@@ -55,6 +55,16 @@ export class UserService {
         })
       );
   }
+  updateUser(user: User): Observable<User> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      return throwError(
+        () => new Error('Authorization header creation failed')
+      );
+    }
+    return this.http
+      .put<User>(`${baseUrl}user/update`, user, { headers })
+  }
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');
     if (token) {

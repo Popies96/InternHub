@@ -102,6 +102,8 @@ export class AddCertificatesComponent implements OnInit {
     this.certificateService.getStudentsByInternship(internshipId).subscribe({
       next: (students) => {
         this.students = students;
+        console.log(students);
+        
         this.certificateForm.get('studentId')?.setValue('');
         this.updateFormContext();
       },

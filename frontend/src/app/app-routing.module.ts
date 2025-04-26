@@ -30,6 +30,7 @@ import { CertificatesComponent } from './pages/company/certificate/certificates/
 import { AddCertificatesComponent } from './pages/company/certificate/add-certificates/add-certificates.component';
 import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
 import { DetailsCertificatesComponent } from './pages/company/certificate/details-certificates/details-certificates.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -38,11 +39,11 @@ const routes: Routes = [
     data: { roles: ['ROLE_STUDENT'] },
     component: DashboardComponent,
     children: [
-      // {
-      //   path: 'profile',
-      //   component: ProfileComponent,
-      //   data: { breadcrumb: 'Profile' },
-      // },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        data: { breadcrumb: 'Profile' },
+      },
       { path: '', component: IndexComponent },
       {
         path: 'intern',
@@ -90,11 +91,16 @@ const routes: Routes = [
         data: { breadcrumb: 'forum' },
       },
       { path: 'topics/:id', component: TopicDetailComponent },
-      { path: 'certifStudent', component: StudentCertificatesComponent },
+      {
+        path: 'certifStudent',
+        component: StudentCertificatesComponent,
+        data: { breadcrumb: 'certificates' },
+      },
 
       {
         path: 'certifStudent/details/:id',
         component: StudentDetailsCertifComponent,
+        data: { breadcrumb: 'certificate details' },
       },
       {
         path: 'interview',

@@ -1,7 +1,11 @@
 package com.example.backend.services.authSerivce;
 
+import com.example.backend.dto.UserRequest;
+import com.example.backend.entity.Enterprise;
+import com.example.backend.entity.Student;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -21,9 +26,12 @@ import java.util.List;
 public class UserServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
+
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+
     }
 
     @Override
@@ -61,4 +69,6 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findAll().stream()
                 .toList();
     }
+
+
 }
