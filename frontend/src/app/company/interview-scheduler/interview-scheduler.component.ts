@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { InterviewService } from 'src/app/services/interview.service';
+import * as L from 'leaflet';
+
 
 @Component({
   selector: 'app-interview-scheduler',
@@ -26,6 +28,7 @@ export class InterviewSchedulerComponent implements OnInit {
       notes: ['']
     });
   }
+  
 
   ngOnInit(): void {
     // Extract the applicationId from the route
@@ -45,13 +48,14 @@ export class InterviewSchedulerComponent implements OnInit {
     this.mode = select.value;
   
     if (this.mode === 'ONLINE') {
-      this.form.get('location')?.setValue(''); // Clear location if ONLINE
-      this.form.get('location')?.clearValidators(); // Remove location validation
+      this.form.get('location')?.setValue('');
+      this.form.get('location')?.clearValidators();
     } else {
-      this.form.get('location')?.setValidators([Validators.required]); // Add location validation if ONSITE
+      this.form.get('location')?.setValidators([Validators.required]);
+      setTimeout(() => this.initMap(), 0); // Initialize map after view updates
     }
   
-    this.form.get('location')?.updateValueAndValidity(); // Update form validity
+    this.form.get('location')?.updateValueAndValidity();
   }
 
   onSubmit() {
@@ -62,4 +66,52 @@ export class InterviewSchedulerComponent implements OnInit {
       });
     }
   }
+  map: L.Map | undefined;
+
+initMap() {
+  if (this.map) {
+    this.map.remove(); // Remove previous map if exists
+  }
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'assets/marker-icon-2x.png',
+  iconUrl: 'assets/marker-icon.png',
+  shadowUrl: 'assets/marker-shadow.png',
+});
+
+  this.map = L.map('map').setView([36.8065, 10.1815], 13); // Default center (Tunis for example)
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(this.map);
+
+  const marker = L.marker([36.8065, 10.1815], { draggable: true }).addTo(this.map);
+
+  // When user clicks on map
+  this.map.on('click', (e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+    marker.setLatLng([lat, lng]);
+    this.reverseGeocode(lat, lng);
+  });
+  
+  marker.on('dragend', () => {
+    const { lat, lng } = marker.getLatLng();
+    this.reverseGeocode(lat, lng);
+  });
+}
+reverseGeocode(lat: number, lng: number) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const address = data.display_name || `${lat}, ${lng}`;
+      this.form.get('location')?.setValue(address);
+    })
+    .catch(error => {
+      console.error('Reverse geocoding error:', error);
+      this.form.get('location')?.setValue(`${lat}, ${lng}`);
+    });
+}
 }
