@@ -11,6 +11,7 @@ public interface TaskService {
         List<TaskResponse> getAllTasks();
         TaskResponse getTaskById(Long id);
         void deleteTask(Long id);
-
+        TaskResponse updateTaskStatus(Long id);
         List<TaskResponse> getTasksByStudent(Long studentId);
+         void sendTaskByEmail(Long taskId);
 }

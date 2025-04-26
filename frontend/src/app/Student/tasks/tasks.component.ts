@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TaskRepService } from 'src/app/services/task-rep.service';
 import { TasksService } from 'src/app/services/tasks.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -15,6 +16,7 @@ export class TasksComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
   searchQuery: string = '';
+  expandedTaskId: number | null = null;
   
   // Filter controls
   selectedType: string = 'ALL';
@@ -28,17 +30,17 @@ export class TasksComponent implements OnInit {
   taskTypes = {
     CODE: {
       display: 'CODING',
-      icon: '💻',
+      
       badgeClass: 'bg-blue-100 text-blue-800'
     },
     PDF: {
       display: 'DOCUMENT',
-      icon: '📄',
+      
       badgeClass: 'bg-purple-100 text-purple-800'
     },
     TEXT: {
       display: 'TEXT',
-      icon: '✏️',
+      
       badgeClass: 'bg-green-100 text-green-800'
     }
   };
@@ -65,7 +67,8 @@ export class TasksComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private tasksService: TasksService
+    private tasksService: TasksService , 
+    private taskRepService: TaskRepService
   ) {}
 
   ngOnInit(): void {
@@ -85,13 +88,15 @@ export class TasksComponent implements OnInit {
 
         this.tasksService.getTasksByStudent(user.id).subscribe({
           next: (tasks) => {
-            this.tasks = tasks.map((task: { type: string; status: string; }) => ({
+            this.tasks = tasks.map((task: any) => ({
               ...task,
               typeDisplay: this.getTaskTypeDisplay(task.type),
-              typeIcon: this.getTaskTypeIcon(task.type),
               typeClass: this.getTaskTypeClass(task.type),
               statusDisplay: this.getStatusDisplay(task.status),
-              statusClass: this.getStatusClass(task.status)
+              statusClass: this.getStatusClass(task.status),
+              submissionContent: '',
+              submissionFile: null,
+              isSubmitting: false
             }));
             this.filteredTasks = [...this.tasks];
             this.isLoading = false;
@@ -111,21 +116,93 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  // Filter tasks based on search query and selected filters
-  applyFilters(): void {
-    this.filteredTasks = this.tasks.filter(task => {
-      const matchesSearch = !this.searchQuery || 
-        task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        task.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-      
-      const matchesStatus = this.selectedStatus === 'ALL' || 
-        task.status === this.selectedStatus;
-      
-      const matchesType = this.selectedType === 'ALL' || 
-        task.type === this.selectedType;
-      
-      return matchesSearch && matchesStatus && matchesType;
+  toggleTaskExpand(taskId: number): void {
+    this.expandedTaskId = this.expandedTaskId === taskId ? null : taskId;
+  }
+
+  onFileSelected(event: any, task: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        this.error = 'Only PDF files are allowed';
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        this.error = 'File size must be less than 10MB';
+        return;
+      }
+      task.submissionFile = file;
+      this.error = null;
+    }
+  }
+
+  submitTask(task: any): void {
+    if (!this.currentUserId) {
+      this.error = 'User not identified';
+      return;
+    }
+
+    // Validate based on task type
+    if (task.type === 'CODE' || task.type === 'TEXT') {
+      if (!task.submissionContent || task.submissionContent.trim().length === 0) {
+        this.error = 'Submission content cannot be empty';
+        return;
+      }
+    } else if (task.type === 'PDF' && !task.submissionFile) {
+      this.error = 'Please select a PDF file to upload';
+      return;
+    }
+
+    task.isSubmitting = true;
+    this.error = null;
+
+    if (task.type === 'PDF') {
+      this.submitPdfTask(task);
+    } else {
+      this.submitRegularTask(task.id,task);
+    }
+  }
+
+  private submitPdfTask(task: any): void {
+    this.taskRepService.uploadPdfTaskRep(task.id, task.submissionFile).subscribe({
+      next: (response) => this.handleSubmissionSuccess(task, response),
+      error: (err) => this.handleSubmissionError(task, err)
     });
+  }
+
+  private submitRegularTask(taskId: number,task: any): void {
+    const submissionData = {
+        studentId: this.currentUserId, // will be null if undefined
+        content: task.submissionContent , 
+        
+    };
+
+    this.taskRepService.submitTaskRep(taskId , submissionData).subscribe({
+        next: (response) => this.handleSubmissionSuccess(task, response),
+    });
+}
+
+
+
+  private handleSubmissionSuccess(task: any, response: any): void {
+    // Update task status in UI
+    const updatedTask = {
+      ...task,
+      status: 'COMPLETED',
+      statusDisplay: this.getStatusDisplay('COMPLETED'),
+      statusClass: this.getStatusClass('COMPLETED'),
+      isSubmitting: false
+    };
+    
+    this.tasks = this.tasks.map(t => t.id === task.id ? updatedTask : t);
+    this.filteredTasks = this.filteredTasks.map(t => t.id === task.id ? updatedTask : t);
+    this.expandedTaskId = null;
+  }
+
+  private handleSubmissionError(task: any, err: any): void {
+    this.error = err.error?.message || 'Failed to submit task';
+    task.isSubmitting = false;
+    console.error('Error submitting task:', err);
   }
 
   // Task type helpers
@@ -133,9 +210,6 @@ export class TasksComponent implements OnInit {
     return this.taskTypes[type as keyof typeof this.taskTypes]?.display || 'UNKNOWN';
   }
 
-  getTaskTypeIcon(type: string): string {
-    return this.taskTypes[type as keyof typeof this.taskTypes]?.icon || '❓';
-  }
 
   getTaskTypeClass(type: string): string {
     return this.taskTypes[type as keyof typeof this.taskTypes]?.badgeClass || 'bg-gray-100 text-gray-800';
@@ -184,4 +258,61 @@ export class TasksComponent implements OnInit {
     this.selectedStatusDisplay = 'All Statuses';
     this.applyFilters();
   }
+
+  // Filter tasks based on search query and selected filters
+  applyFilters(): void {
+    this.filteredTasks = this.tasks.filter(task => {
+      const matchesSearch = !this.searchQuery || 
+        task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        task.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+      
+      const matchesStatus = this.selectedStatus === 'ALL' || 
+        task.status === this.selectedStatus;
+      
+      const matchesType = this.selectedType === 'ALL' || 
+        task.type === this.selectedType;
+      
+      return matchesSearch && matchesStatus && matchesType;
+    });
+  }
+
+
+  // In your component class
+isChatOpen: boolean = false;
+
+toggleChat() {
+  this.isChatOpen = !this.isChatOpen;
+}
+
+
+
+
+isDragOver = false;
+
+onDragOver(event: DragEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+  this.isDragOver = true;
+}
+
+onDragLeave(event: DragEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+  this.isDragOver = false;
+}
+
+onDrop(event: DragEvent, task: any) {
+  event.preventDefault();
+  event.stopPropagation();
+  this.isDragOver = false;
+  
+  if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+    const fileInputEvent = {
+      target: {
+        files: event.dataTransfer.files
+      }
+    };
+    this.onFileSelected(fileInputEvent as any, task);
+  }
+}
 }

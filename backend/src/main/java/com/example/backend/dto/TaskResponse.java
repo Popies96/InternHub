@@ -18,11 +18,11 @@ public class TaskResponse {
     private TaskStatus status;
     private String type;
     private TaskPriority priority;
-    private LocalDateTime createdAt ;
-    private LocalDateTime updatedAt ;
-    private Long internshipId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Long studentId;
     private String studentName;
+    private Long internshipId;
     @Getter(AccessLevel.NONE)
     private Boolean overdue;
 
@@ -50,7 +50,6 @@ public class TaskResponse {
         return LocalDateTime.now().isAfter(deadline) &&
                 status != TaskStatus.COMPLETED;
     }
-
 
     public Long getId() {
         return id;
@@ -131,11 +130,24 @@ public class TaskResponse {
     public void setStudentName(String studentName) {
         this.studentName = studentName;
     }
+
     public Boolean getOverdue() {
         return overdue;
     }
 
     public void setOverdue(Boolean overdue) {
         this.overdue = overdue;
+    }
+
+    public UserRequest getAssignedTo() {
+        UserRequest userRequest = new UserRequest();
+        userRequest.setId(this.studentId);
+
+        // Handle name splitting safely
+        String[] names = this.studentName != null ? this.studentName.split(" ") : new String[]{"", ""};
+        userRequest.setNom(names.length > 0 ? names[0] : "");
+        userRequest.setPrenom(names.length > 1 ? names[1] : "");
+
+        return userRequest;
     }
 }

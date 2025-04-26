@@ -51,11 +51,11 @@ public class WebSecurityConfiguration {
                         new StaticHeadersWriter("Access-Control-Allow-Origin", "http://localhost:4200")
                 ).and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/signup","/forgotPassword/**","/user/**").permitAll()
+                        .requestMatchers("/login","/signup","/forgotPassword/**","/ws","/user/**","/messages/**","/last/**","/seen/**","/topic/**" ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/tasks/enterprise/**").permitAll() // Will check for ROLE_ENTERPRISE
+                        .requestMatchers("/tasks/enterprise/**").hasRole("ENTERPRISE") // Will check for ROLE_ENTERPRISE
                         .requestMatchers("/tasks/student/**").hasRole("STUDENT")
-                        .requestMatchers("/internship/**").hasAnyRole("ENTERPRISE", "STUDENT")
+                        .requestMatchers("/internship/**" , "/api/**").hasAnyRole("ENTERPRISE", "STUDENT")
                         .requestMatchers("/student/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
 

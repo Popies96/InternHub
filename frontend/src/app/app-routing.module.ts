@@ -27,6 +27,8 @@ import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
 import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
+import { CompanyTasksrepComponent } from './company/company-tasksrep/company-tasksrep.component';
+import { CalendarComponent } from './Student/calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -45,6 +47,7 @@ const routes: Routes = [
       {path :'tasks' , component:TasksComponent , data: { breadcrumb: 'Tasks' }},
       {path : 'rendu' , component:RenduComponent , data: { breadcrumb: 'Report' }},
       {path : 'intern-info' , component:InternshipsInfoComponent , data: { breadcrumb: 'Internship Information' }},
+      {path : 'calendar' , component:CalendarComponent , data: { breadcrumb: 'calendar' }},
       {path : 'certif' , 
         children: [
           {path: '', component: CertificatesComponent, data: { breadcrumb: 'Certificates' }},
@@ -67,7 +70,9 @@ const routes: Routes = [
       {path: 'intern', component: CompanyInternshipsComponent , data: { breadcrumb: 'Internships' }},
       {path: 'add_intern', component: AddInternshipComponent , data: { breadcrumb: 'Add Internship' }},
       {path: 'p', component: InternsComponent , data: { breadcrumb: 'Add Internship' }},
-      {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }}
+      {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }},
+      {path: 'taskrep', component: CompanyTasksrepComponent , data: { breadcrumb: 'task Rep' }}
+
     ],
   },
   {path: 'msg', component: MsgPopupComponent  , data: { roles: [] }},

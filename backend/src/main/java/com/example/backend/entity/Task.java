@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,6 +48,7 @@ public class Task {
     private Student student;
 
     private LocalDateTime updatedAt;
+
 
 
     @PrePersist
@@ -150,4 +152,20 @@ public class Task {
         }
         this.type = type != null ? type.toUpperCase() : "TEXT";
     }
+
+    @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private TaskRep taskRep;
+
+    public TaskRep getTaskRep() {
+        return taskRep;
+    }
+
+    public void setTaskRep(TaskRep taskRep) {
+        this.taskRep = taskRep;
+    }
+// Helper method to set the appropriate data
+
+    // Helper to get the active data
+
 }

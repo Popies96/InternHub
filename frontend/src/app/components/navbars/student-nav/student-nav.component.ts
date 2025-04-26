@@ -1,29 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt.service';
 import { filter } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
+import { TaskNotificationService } from 'src/app/services/task-notif.service';
 
 @Component({
   selector: 'app-student-nav',
   templateUrl: './student-nav.component.html',
   styleUrls: ['./student-nav.component.css']
 })
-export class StudentNavComponent {
+export class StudentNavComponent implements OnInit {
+  // Notification properties
+  taskNotifications: string[] = [];
+  unreadTaskNotifications = 0;
+  isNotificationDropdownOpen = false;
+
+  // User properties
   breadcrumbs: Array<{label: string, url: string}> = [];
-  currentUserPic: string = ''; 
-  email: string = '';
-  UserName: string = '';
-  index: number | null = null;
+  currentUserPic = ''; 
+  email = '';
+  UserName = '';
   profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
-  
+
+  // Dropdown states
+  isDropdownOpen = false;
+  isMessagesDropdownOpen = false;
+
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private taskNotificationService: TaskNotificationService,
+    private jwtService: JwtService,
+    private userService: UserService
+  ) {
+    this.setupRouterEvents();
+  }
+
   ngOnInit(): void {
+    this.loadUserData();
+    this.taskNotificationService.connect(this.userId || 0);
+  }
+
+  userId: number | null = null;
+
+  private loadUserData(): void {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
+        console.log('User:', user);
         this.UserName = user.nom;
         this.email = user.email;
+        this.userId = user.id;
         this.currentUserPic = this.getUserProfilePic(user.id);
         localStorage.setItem('pfp', this.currentUserPic);
+        this.listenForNotif();
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -31,14 +61,37 @@ export class StudentNavComponent {
       }
     });
   }
+  listenForNotif(): void {
+    this.taskNotificationService.onMessage().subscribe((msg) => {
+      console.log('Received message:ddddddddddddddddddd', msg);
   
-  getUserProfilePic(userId: number): string {
-    if (!userId) return ''; 
-    const index = Math.abs(userId) % this.profilePics.length;
-    return this.profilePics[index];
+      msg.timestamp = new Date(msg.timestamp);
+        this.taskNotifications.push(msg)
+     
+      
+    });
+  }
+  
+  private playNotificationSound() {
+    const audio = new Audio();
+    audio.src = '/assets/sounds/notification.mp3'; // Add a notification sound file
+    audio.load();
+    audio.play().catch(e => console.error('Error playing sound:', e));
   }
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute , private jwtService: JwtService , private userService: UserService) {
+  viewTask(taskId: number) {
+    // Navigate to the task view
+    this.router.navigate(['/student/tasks', taskId]);
+  }
+
+  clearNotification(notification: string) {
+    this.taskNotifications = this.taskNotifications.filter(n => n !== notification);
+    if (this.unreadTaskNotifications > 0) {
+      this.unreadTaskNotifications--;
+    }
+  }
+
+  private setupRouterEvents(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -46,24 +99,29 @@ export class StudentNavComponent {
     });
   }
 
+  // UI Interaction Methods
+  toggleNotificationDropdown(): void {
+    this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+    if (this.isNotificationDropdownOpen) {
+      this.markNotificationsAsRead();
+      setTimeout(() => {
+        document.addEventListener('click', this.closeNotificationOutside);
+      });
+    }
+  }
 
- 
+  markNotificationsAsRead(): void {
+    this.unreadTaskNotifications = 0;
+  }
 
+  // Existing methods (keep the same implementation)
+  getUserProfilePic(userId: number): string {
+    if (!userId) return ''; 
+    const index = Math.abs(userId) % this.profilePics.length;
+    return this.profilePics[index];
+  }
 
-  
-
-
- 
-
-
-
-
-
-  private createBreadcrumbs(
-    route: ActivatedRoute,
-    url: string = '',
-    breadcrumbs: Array<{label: string, url: string}> = []
-  ): Array<{label: string, url: string}> {
+  private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Array<{label: string, url: string}> = []): Array<{label: string, url: string}> {
     const children: ActivatedRoute[] = route.children;
   
     if (children.length === 0) {
@@ -100,116 +158,59 @@ export class StudentNavComponent {
   }
 
   private formatLabel(label: string): string {
-    if (!label) return '';
-    return label.charAt(0).toUpperCase() + label.slice(1);
+    return label ? label.charAt(0).toUpperCase() + label.slice(1) : '';
   }
 
- // In your component class
-isDropdownOpen = false;
-
-toggleDropdown() {
-  this.isDropdownOpen = !this.isDropdownOpen;
-  
-  if (this.isDropdownOpen) {
-    // Add click listener when opening dropdown
-    setTimeout(() => {
-      document.addEventListener('click', this.closeDropdownOutside);
-    });
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    if (this.isDropdownOpen) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeDropdownOutside);
+      });
+    }
   }
-}
 
-private closeDropdownOutside = (event: MouseEvent) => {
-  const dropdown = document.getElementById('dropdownDivider');
-  const trigger = document.querySelector('[data-dropdown-trigger]');
-  
-  const clickedInside = dropdown?.contains(event.target as Node) || 
-                       trigger?.contains(event.target as Node);
+  private closeDropdownOutside = (event: MouseEvent): void => {
+    const dropdown = document.getElementById('dropdownDivider');
+    const trigger = document.querySelector('[data-dropdown-trigger]');
+    
+    if (!dropdown?.contains(event.target as Node) && !trigger?.contains(event.target as Node)) {
+      this.isDropdownOpen = false;
+      document.removeEventListener('click', this.closeDropdownOutside);
+    }
+  };
 
-  if (!clickedInside) {
-    this.isDropdownOpen = false;
-    dropdown?.classList.add('hidden');
-    document.removeEventListener('click', this.closeDropdownOutside);
+  private closeNotificationOutside = (event: MouseEvent): void => {
+    const dropdown = document.getElementById('notificationDropdown');
+    const trigger = document.querySelector('[data-notification-trigger]');
+    
+    if (!dropdown?.contains(event.target as Node) && !trigger?.contains(event.target as Node)) {
+      this.isNotificationDropdownOpen = false;
+      document.removeEventListener('click', this.closeNotificationOutside);
+    }
+  };
+
+  toggleMessagesDropdown(): void {
+    this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
+    if (this.isMessagesDropdownOpen) {
+      setTimeout(() => {
+        document.addEventListener('click', this.closeMessagesOutside);
+      });
+    }
   }
-};
 
-  // Add this state variable
-isNotificationDropdownOpen = false;
+  private closeMessagesOutside = (event: MouseEvent): void => {
+    const dropdown = document.getElementById('messagesDropdown');
+    const trigger = document.querySelector('[data-messages-trigger]');
+    
+    if (!dropdown?.contains(event.target as Node) && !trigger?.contains(event.target as Node)) {
+      this.isMessagesDropdownOpen = false;
+      document.removeEventListener('click', this.closeMessagesOutside);
+    }
+  };
 
-// Modified notification toggle function
-toggleNotificationDropdown() {
-  this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
-  
-  if (this.isNotificationDropdownOpen) {
-    setTimeout(() => {
-      document.addEventListener('click', this.closeNotificationOutside);
-    });
-  }
-}
-
-// Private handler for outside clicks
-private closeNotificationOutside = (event: MouseEvent) => {
-  const dropdown = document.getElementById('notificationDropdown');
-  const trigger = document.querySelector('[data-notification-trigger]');
-  
-  const clickedInside = dropdown?.contains(event.target as Node) || 
-                       trigger?.contains(event.target as Node);
-
-  if (!clickedInside) {
-    this.isNotificationDropdownOpen = false;
-    dropdown?.classList.add('hidden');
-    document.removeEventListener('click', this.closeNotificationOutside);
-  }
-};
-
-
-
-
-
-
-
-toggleLogout() {
-   this.jwtService.logout();
-   this.router.navigate(['/login']);
-}
-
-
-
-
-// Add to your component class
-isMessagesDropdownOpen = false;
-
-toggleMessagesDropdown() {
-  this.isMessagesDropdownOpen = !this.isMessagesDropdownOpen;
-  
-  if (this.isMessagesDropdownOpen) {
-    setTimeout(() => {
-      document.addEventListener('click', this.closeMessagesOutside);
-    });
+  toggleLogout(): void {
+    this.jwtService.logout();
+    this.router.navigate(['/login']);
   }
 }
-
-private closeMessagesOutside = (event: MouseEvent) => {
-  const dropdown = document.getElementById('messagesDropdown');
-  const trigger = document.querySelector('[data-messages-trigger]');
-  
-  const clickedInside = dropdown?.contains(event.target as Node) || 
-                       trigger?.contains(event.target as Node);
-
-  if (!clickedInside) {
-    this.isMessagesDropdownOpen = false;
-    dropdown?.classList.add('hidden');
-    document.removeEventListener('click', this.closeMessagesOutside);
-  }
-};
-
-
-
-
-
-
-
-
-
-}
-
-

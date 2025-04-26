@@ -25,10 +25,6 @@ constructor(private userService: UserService) {}
     });
   }
   profilePics: string[] = Array.from({length: 17}, (_, i) => `/assets/pfp/p${i+1}.png`);
-  
-
- 
-
   toggleSidebar() {
     this.isCompact = !this.isCompact;
     this.sidebarToggled.emit(this.isCompact);
@@ -38,9 +34,7 @@ constructor(private userService: UserService) {}
   currentUser: number| null = null;; 
   UserName: string = '';
   email: string = '';
-  
- 
-  
- 
 
+
+  
 }

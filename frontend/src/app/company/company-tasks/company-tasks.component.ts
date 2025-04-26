@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TasksService } from 'src/app/services/tasks.service';
 import { UserService } from 'src/app/services/user.service';
 import { InternshipService } from 'src/app/services/internship.service';
+import { TaskNotificationService } from 'src/app/services/task-notif.service';
 
 @Component({
   selector: 'app-company-tasks',
@@ -31,13 +32,20 @@ export class CompanyTasksComponent implements OnInit {
     private fb: FormBuilder,
     private tasksService: TasksService,
     private userService: UserService,
-    private internshipService: InternshipService
+    private internshipService: InternshipService,
+    private notificationService: TaskNotificationService 
   ) {
     this.createForm();
   }
 
   ngOnInit(): void {
     this.fetchInitialData();
+
+    this.userService.getUserFromLocalStorage().subscribe(user => {
+      if (user && user.id) {
+        this.notificationService.connect(user.id);
+      }
+    });
   }
 
 
@@ -234,7 +242,7 @@ clearFilters() {
       this.taskForm.markAllAsTouched();
       return;
     }
-
+  
     const taskRequest = {
       title: this.taskForm.value.title,
       description: this.taskForm.value.description,
@@ -245,11 +253,25 @@ clearFilters() {
       type: this.taskForm.value.type,
       priority: this.taskForm.value.priority
     };
-
+  
     this.tasksService.addTask(taskRequest).subscribe({
-      next: () => {
+      next: (savedTask) => {
         this.closeAddModal();
         this.fetchTasks();
+        
+        // Send WebSocket notification
+        this.notificationService.sendNotification(
+
+          {
+            type: 'TASK_ASSIGNED',
+            taskId: savedTask.id,
+            studentId: savedTask.studentId,
+            title: savedTask.title,
+            message: `New task assigned: ${savedTask.title}`,
+            timestamp: new Date().toISOString()
+          }
+        );
+        
         alert('Task added successfully!');
       },
       error: (error) => {
@@ -260,7 +282,9 @@ clearFilters() {
       }
     });
   }
-
+  ngOnDestroy() {
+    this.notificationService.disconnect();
+  }
   updateTask() {
     if (this.taskForm.invalid || !this.currentTaskId) {
       this.taskForm.markAllAsTouched();

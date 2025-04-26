@@ -20,6 +20,19 @@ public class TaskRequest {
     private Long internshipId;
     private Long studentId;
 
+    private UserRequest assignedTo;
+
+    // Add this method
+    public UserRequest getAssignedTo() {
+        return this.assignedTo;
+    }
+
+    // Add setter if needed
+    public void setAssignedTo(UserRequest assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+
     public String getType() {
         return type;
     }

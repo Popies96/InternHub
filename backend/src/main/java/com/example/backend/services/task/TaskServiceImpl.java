@@ -6,6 +6,7 @@ import com.example.backend.entity.*;
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.StudentRepository;
 import com.example.backend.repository.TaskRepository;
+import com.example.backend.services.EmailService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,11 +20,13 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final StudentRepository studentRepository;
     private final InternshipRepository internshipRepository;
+    private final EmailService emailService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, StudentRepository studentRepository, InternshipRepository internshipRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, StudentRepository studentRepository, InternshipRepository internshipRepository, EmailService emailService) {
         this.taskRepository = taskRepository;
         this.studentRepository = studentRepository;
         this.internshipRepository = internshipRepository;
+        this.emailService = emailService;
     }
     @Override
     public TaskResponse createTask(TaskRequest taskRequest) {
@@ -46,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
 
         // Save and return the response
         Task savedTask = taskRepository.save(task);
-
+         sendTaskByEmail(savedTask.getId());
         return toTaskResponse(savedTask);
     }
 
@@ -109,6 +112,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskResponse updateTaskStatus(Long id) {
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
+
+        existingTask.setStatus(TaskStatus.COMPLETED);
+        return toTaskResponse(taskRepository.save(existingTask));
+    }
+
+
+    @Override
     public List<TaskResponse> getTasksByStudent(Long studentId) {
         // Add existence check for student
         if (!studentRepository.existsById(studentId)) {
@@ -119,6 +132,62 @@ public class TaskServiceImpl implements TaskService {
                 .map(this::toTaskResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void sendTaskByEmail(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + taskId));
+
+        Student student = task.getStudent();
+        if (student == null) {
+            throw new IllegalStateException("Task is not assigned to any student");
+        }
+
+        if (student.getEmail() == null || student.getEmail().isEmpty()) {
+            throw new IllegalStateException("Student email is not set");
+        }
+        String subject = "New Task Assigned: " + task.getTitle();
+        String content = buildTaskEmailContent(task);
+
+        emailService.sendHtmlEmail(student.getEmail(), subject, content );
+    }
+
+    private String buildTaskEmailContent(Task task) {
+        String formattedDeadline = task.getDeadline() != null
+                ? task.getDeadline().toString()
+                : "No deadline specified";
+
+        return String.format(
+                "<html>" +
+                        "<body>" +
+                        "<p>Dear %s %s,</p>" +
+                        "<p>You have been assigned a new task for your internship at <strong>%s</strong>.</p>" +
+                        "<h3>Task Details:</h3>" +
+                        "<ul>" +
+                        "<li><strong>Title:</strong> %s</li>" +
+                        "<li><strong>Description:</strong> %s</li>" +
+                        "<li><strong>Deadline:</strong> %s</li>" +
+                        "<li><strong>Priority:</strong> %s</li>" +
+                        "<li><strong>Status:</strong> %s</li>" +
+                        "</ul>" +
+                        "<p>Please log in to your InternHub account to view and complete this task.</p>" +
+                        "<p>Best regards,<br/>" +
+                        "InternHub Team</p>" +
+                        "</body>" +
+                        "</html>",
+                task.getStudent().getPrenom(),
+                task.getStudent().getNom(),
+                task.getInternship().getEnterprise().getNom(),
+                task.getTitle(),
+                task.getDescription(),
+                formattedDeadline,
+                task.getPriority().toString(),
+                task.getStatus().toString()
+        );
+    }
+
+
+
 
     private TaskResponse toTaskResponse(Task task) {
         TaskResponse response = new TaskResponse();

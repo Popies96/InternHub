@@ -45,6 +45,16 @@ export class TasksService {
     return this.http.put(`${baseUrl}/enterprise/${id}`, taskRequest, { headers});
   }
 
+
+  updateTaskStatus(id: number): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.put(`${baseUrl}/enterprise/update/${id}`, { headers});
+  }
+
+
   // Delete a task (enterprise only)
   deleteTask(id: number): Observable<any> {
     const headers = this.createAuthorizedHeader();
