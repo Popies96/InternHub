@@ -33,13 +33,15 @@ export class ReviewService {
     return this.http.get<Review>(`${this.baseUrl}/${id}`, { headers });
   }
 
-  create(review: Review): Observable<Review> {
+  create(reviewData: { internshipId: number, comment: string, scores: Array<{ criteria: string, score: number }> }): Observable<Review> {
     const headers = this.createAuthorizedHeader();
-    return this.http.post<Review>(this.baseUrl, review, { headers });
+    return this.http.post<Review>(this.baseUrl, reviewData, { headers });
   }
+
 
   update(id: number, review: Review): Observable<Review> {
     const headers = this.createAuthorizedHeader();
+    console.log(headers)
     return this.http.put<Review>(`${this.baseUrl}/${id}`, review, { headers });
   }
 
@@ -48,18 +50,11 @@ export class ReviewService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers });
   }
 
-  getByReviewee(id: number): Observable<Review[]> {
+
+  generateRecommendation(internshipId: number, regenerate: boolean = false): Observable<string> {
     const headers = this.createAuthorizedHeader();
-    return this.http.get<Review[]>(`${this.baseUrl}/reviewee/${id}`, { headers });
+    const url = `${this.baseUrl}/recommendation/${internshipId}?regenerate=${regenerate}`;
+    return this.http.post(url, {}, { headers, responseType: 'text' });
   }
 
-  getByReviewer(id: number): Observable<Review[]> {
-    const headers = this.createAuthorizedHeader();
-    return this.http.get<Review[]>(`${this.baseUrl}/reviewer/${id}`, { headers });
-  }
-
-  getAIRecommendation(): Observable<any> {
-    const headers = this.createAuthorizedHeader();
-    return this.http.get(`${this.baseUrl}/ai-recommendation`, { headers, responseType: 'text' });
-  }
 }

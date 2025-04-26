@@ -24,7 +24,12 @@ export interface ReviewScore {
 
 export interface Review {
   id?: number;
-  reviewer: any;
+  reviewer: {
+    id: number;
+    username?: string;
+    fullName?: string;
+    // Add other user properties you might need
+  };
   reviewee: any;
   internship: any;
   comment: string;

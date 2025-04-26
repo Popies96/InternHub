@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,8 @@ public class Review {
     @Column(nullable = false, updatable = false)
     private LocalDateTime reviewDate = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ReviewScore> reviewScores = new ArrayList<>();
 
     @ManyToOne

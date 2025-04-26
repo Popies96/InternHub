@@ -1,0 +1,11 @@
+<div class="recommendation-container">
+  <h3>AI Recommendation</h3>
+
+  <button (click)="fetchRecommendation(true)" [disabled]="loading">
+    🔁 Regenerate Recommendation
+  </button>
+
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <p *ngIf="recommendation">{{ recommendation }}</p>
+</div>

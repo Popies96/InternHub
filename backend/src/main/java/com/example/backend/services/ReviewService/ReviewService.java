@@ -2,53 +2,76 @@ package com.example.backend.services.ReviewService;
 
 import com.example.backend.dto.ReviewDTO;
 import com.example.backend.dto.ReviewScoreDTO;
-import com.example.backend.entity.Review;
-import com.example.backend.entity.ReviewScore;
-import com.example.backend.repository.EnterpriseRepository;
-import com.example.backend.repository.ReviewRepository;
-import com.example.backend.repository.ReviewScoreRepository;
+import com.example.backend.entity.*;
+import com.example.backend.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewScoreRepository reviewScoreRepository;
     private final EnterpriseRepository enterpriseRepository;
+    private final UserRepository userRepository;
+    private final InternshipRepository internshipRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewScoreRepository reviewScoreRepository, EnterpriseRepository enterpriseRepository) {
-        this.reviewRepository = reviewRepository;
-        this.reviewScoreRepository = reviewScoreRepository;
-        this.enterpriseRepository = enterpriseRepository;
+
+
+
+
+    public ReviewDTO createReviewFromDTO(ReviewDTO dto, User reviewer) {
+        // Fetch internship based on provided internshipId
+        Internship internship = internshipRepository.findById(dto.getInternshipId())
+                .orElseThrow(() -> new IllegalArgumentException("Internship not found"));
+
+        // Get the Enterprise object from the internship
+        Enterprise reviewee = (Enterprise) internship.getEnterprise();  // reviewee is now of type Enterprise, not Student
+
+        // Create a new Review instance
+        Review review = new Review();
+        review.setComment(dto.getComment());
+        review.setReviewDate(LocalDateTime.now());
+        review.setReviewer(reviewer);
+
+        // Set the reviewee as Enterprise (reviewee is expected to be an Enterprise, not Student)
+        review.setReviewee(reviewee);  // Setting reviewee as Enterprise correctly
+
+        // Set the internship
+        review.setInternship(internship);
+
+        // Set the enterprise from internship (internship already has the Enterprise object)
+        review.setEnterprise(reviewee); // Setting Enterprise correctly
+
+        // Map ReviewScores from DTO to Review
+        List<ReviewScore> scores = dto.getScores().stream().map(scoreDTO -> {
+            ReviewScore score = new ReviewScore();
+            score.setCriteria(scoreDTO.getCriteria());
+            score.setScore(scoreDTO.getScore());
+            score.setReview(review);
+            return score;
+        }).collect(Collectors.toList());
+
+        // Set review scores and save the review
+        review.setReviewScores(scores);
+
+        // Save the review and convert to DTO
+        return convertToDTO(reviewRepository.save(review));
     }
 
-    public Review createReview(Review review) {
-        // Optional: validate that enterprise exists if needed
-    /*
-    if (review.getEnterprise() == null || !enterpriseRepository.existsById(review.getEnterprise().getId())) {
-        throw new IllegalArgumentException("Enterprise with ID " +
-            (review.getEnterprise() != null ? review.getEnterprise().getId() : "null") +
-            " does not exist.");
-    }
-    */
 
-        // Ensure each ReviewScore has the review reference set
-        for (ReviewScore reviewScore : review.getReviewScores()) {
-            reviewScore.setReview(review);
-        }
-
-        // Saving review will also save reviewScores because of CascadeType.ALL
-        return reviewRepository.save(review);
-    }
 
 
 
@@ -121,6 +144,7 @@ public class ReviewService {
                 review.getReviewDate(),
                 review.getReviewer().getId(),
                 review.getReviewee().getId(),
+
                 review.getInternship().getId(),
                 scoreDTOs
         );
@@ -133,46 +157,6 @@ public class ReviewService {
 
 
 
-
-
-//AI
-
-    public String generateRecommendationSummary() {
-        List<Review> allReviews = reviewRepository.findAll();
-        String fullText = allReviews.stream()
-                .map(Review::getComment)
-                .collect(Collectors.joining(". "));
-
-        return callHuggingFaceAPI(fullText);
-    }
-    private String callHuggingFaceAPI(String inputText) {
-        try {
-            String apiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
-            String apiToken = "Bearer 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";
-
-            HttpClient client = HttpClient.newHttpClient();
-            String requestBody = "{\"inputs\": \"" + inputText.replace("\"", "\\\"") + "\"}";
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl))
-                    .header("Authorization", apiToken)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                return response.body();
-            } else {
-                return "Error: " + response.statusCode() + " - " + response.body();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error calling AI service: " + e.getMessage();
-        }
-    }
 
 
 

@@ -18,4 +18,5 @@ public class ReviewDTO {
     private Long revieweeId;
     private Long internshipId;
     private List<ReviewScoreDTO> scores;
+
 }

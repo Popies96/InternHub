@@ -1,0 +1,15 @@
+.recommendation-container {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  background: #f9f9f9;
+}
+
+button {
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: red;
+}

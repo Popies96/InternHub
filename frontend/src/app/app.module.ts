@@ -47,6 +47,8 @@ import { CompanyTasksComponent } from './company/company-tasks/company-tasks.com
 import { ApplicationsComponent } from './company/applications/applications.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { EditReviewComponent } from './edit-review/edit-review.component';
+import { RecommendationComponent } from './recommendation/recommendation.component';
+import { EnterpriseReviewComponent } from './enterprise-review/enterprise-review.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,8 @@ import { EditReviewComponent } from './edit-review/edit-review.component';
     ApplicationsComponent,
     UnauthorizedComponent,
     EditReviewComponent,
+    RecommendationComponent,
+    EnterpriseReviewComponent,
 
   ],
   imports: [

@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,10 @@ public class ReviewScore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+
+    @ManyToOne
     @JoinColumn(name = "review_id")
+    @JsonBackReference
     private Review review;
 
 

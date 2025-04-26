@@ -19,6 +19,7 @@ public class Enterprise extends User {
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Internship> createdInternships; // Internships created by enterprise
 
+    
     public String getCompanyName() {
         return companyName;
     }

@@ -31,6 +31,7 @@ import { ApplicationsComponent } from './company/applications/applications.compo
 import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import {EditReviewComponent} from "./edit-review/edit-review.component";
+import {EnterpriseReviewComponent} from "./enterprise-review/enterprise-review.component";
 
 
 const routes: Routes = [
@@ -75,7 +76,8 @@ const routes: Routes = [
       {path: 'intern', component: CompanyInternshipsComponent , data: { breadcrumb: 'Internships' }},
       {path: 'add_intern', component: AddInternshipComponent , data: { breadcrumb: 'Add Internship' }},
       {path: 'p', component: InternsComponent , data: { breadcrumb: 'Add Internship' }},
-      {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }}
+      {path: 'app', component: ApplicationsComponent , data: { breadcrumb: 'Applications' }},
+      { path: 'reviews', component: EnterpriseReviewComponent },
     ],
   },
 

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ReviewService } from '../services/review.service';
 import { Router } from '@angular/router';
-import {RatingCriteria, Review} from "../models/Review.model";
+import { RatingCriteria } from "../models/Review.model";
+import { JwtService } from '../services/jwt.service';
 
 @Component({
   selector: 'app-review-form',
@@ -10,32 +11,28 @@ import {RatingCriteria, Review} from "../models/Review.model";
   styleUrls: ['./review-form.component.css']
 })
 export class ReviewFormComponent implements OnInit {
-
   reviewForm!: FormGroup;
-  ratingCriteria = Object.values(RatingCriteria); // Now using the enum
+  ratingCriteria = Object.values(RatingCriteria);
 
   constructor(
     private fb: FormBuilder,
     private reviewService: ReviewService,
-    private router: Router
+    private router: Router,
+    private jwtService: JwtService
   ) {
     this.initializeForm();
   }
 
-  ngOnInit(): void {
-    // Load any initial data if needed
-  }
+  ngOnInit(): void {}
+
   setRating(index: number, rating: number): void {
     const scores = this.scores.at(index);
-    scores.get('score')?.setValue(rating); // Set the selected rating
+    scores.get('score')?.setValue(rating);
   }
 
   initializeForm(): void {
     this.reviewForm = this.fb.group({
-      reviewerId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
-      revieweeId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
       internshipId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
-      enterpriseId: ['', Validators.pattern(/^[1-9]\d*$/)],
       comment: ['', [Validators.required, Validators.maxLength(1000)]],
       scores: this.fb.array([this.createScoreGroup()])
     });
@@ -69,18 +66,22 @@ export class ReviewFormComponent implements OnInit {
     }
 
     const formValue = this.reviewForm.value;
-    const reviewData: Review = {
-      reviewer: { id: +formValue.reviewerId },
-      reviewee: { id: +formValue.revieweeId },
-      internship: { id: +formValue.internshipId },
+    const reviewerId = this.jwtService.getUserId();
+
+    if (!reviewerId) {
+      console.error('Reviewer ID is missing');
+      return;
+    }
+
+    const reviewData = {
+      internshipId: +formValue.internshipId,
       comment: formValue.comment,
-      reviewScores: formValue.scores.map((score: any) => ({
-        criteria: score.criteria as RatingCriteria, // Cast to enum type
+      scores: formValue.scores.map((score: any) => ({
+        criteria: score.criteria,
         score: +score.score
-      })),
-      ...(formValue.enterpriseId && { enterprise: { id: +formValue.enterpriseId } })
+      }))
     };
-    console.log('Review payload:', JSON.stringify(reviewData, null, 2));
+
     this.reviewService.create(reviewData).subscribe({
       next: () => {
         this.router.navigate(['/student/reviews']);

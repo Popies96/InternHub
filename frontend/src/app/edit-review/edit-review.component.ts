@@ -12,8 +12,9 @@ import { RatingCriteria, Review } from '../models/Review.model';
 export class EditReviewComponent implements OnInit {
 
   reviewForm!: FormGroup;
-  ratingCriteria = Object.values(RatingCriteria); // Now using the enum
+  ratingCriteria = Object.values(RatingCriteria);
   reviewId!: number;
+  reviewee! : number;
 
   constructor(
     private fb: FormBuilder,
@@ -25,36 +26,30 @@ export class EditReviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get the review ID from the URL
     this.route.params.subscribe(params => {
       this.reviewId = +params['id'];
       this.loadReview();
     });
   }
 
+
   initializeForm(): void {
     this.reviewForm = this.fb.group({
-      reviewerId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
-      revieweeId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
-      internshipId: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
-      enterpriseId: ['', Validators.pattern(/^[1-9]\d*$/)],
       comment: ['', [Validators.required, Validators.maxLength(1000)]],
-      scores: this.fb.array([this.createScoreGroup()])
+      scores: this.fb.array([])
     });
   }
 
+
+
   loadReview(): void {
     this.reviewService.getById(this.reviewId).subscribe((review: Review) => {
-      // Populate the form with review data
+
       this.reviewForm.patchValue({
-        reviewerId: review.reviewer.id,
-        revieweeId: review.reviewee.id,
-        internshipId: review.internship.id,
-        enterpriseId: review.enterprise?.id || '',
-        comment: review.comment
+        comment: review.comment,
+         // <-- safely access it
       });
 
-      // Populate scores array
       const scoresArray = this.reviewForm.get('scores') as FormArray;
       review.scores.forEach(score => {
         scoresArray.push(this.fb.group({
@@ -65,12 +60,7 @@ export class EditReviewComponent implements OnInit {
     });
   }
 
-  createScoreGroup(): FormGroup {
-    return this.fb.group({
-      criteria: ['', Validators.required],
-      score: [3, [Validators.required, Validators.min(1), Validators.max(5)]]
-    });
-  }
+
 
   get scores(): FormArray {
     return this.reviewForm.get('scores') as FormArray;
@@ -86,6 +76,13 @@ export class EditReviewComponent implements OnInit {
     }
   }
 
+  createScoreGroup(): FormGroup {
+    return this.fb.group({
+      criteria: ['', Validators.required],
+      score: [3, [Validators.required, Validators.min(1), Validators.max(5)]]
+    });
+  }
+
   onSubmit(): void {
     if (this.reviewForm.invalid) {
       this.markAllAsTouched();
@@ -93,25 +90,21 @@ export class EditReviewComponent implements OnInit {
     }
 
     const formValue = this.reviewForm.value;
-    const reviewData: Review = {
-      reviewer: { id: +formValue.reviewerId },
-      reviewee: { id: +formValue.revieweeId },
-      internship: { id: +formValue.internshipId },
+
+    const updatedReview: Partial<Review> = {
       comment: formValue.comment,
-      reviewScores: formValue.scores.map((score: any) => ({
-        criteria: score.criteria as RatingCriteria, // Cast to enum type
+      reviewer: { id: 1 },
+      reviewee:{id:2},
+      scores: formValue.scores.map((score: any) => ({
+        criteria: score.criteria as RatingCriteria,
         score: +score.score
-      })),
-      ...(formValue.enterpriseId && { enterprise: { id: +formValue.enterpriseId } })
+      }))
     };
 
-    this.reviewService.update(this.reviewId, reviewData).subscribe({
-      next: () => {
-        this.router.navigate(['/student/reviews']);
-      },
-      error: (error) => {
-        console.error('Error updating review:', error);
-      }
+
+    this.reviewService.update(this.reviewId, updatedReview as Review).subscribe({
+      next: () => this.router.navigate(['/student/reviews']),
+      error: error => console.error('Error updating review:', error)
     });
   }
 

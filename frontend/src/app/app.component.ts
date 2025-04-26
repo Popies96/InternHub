@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-root',
@@ -8,3 +9,6 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'frontend';
 }
+
+
+Chart.register(...registerables);

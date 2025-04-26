@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ReviewScoreRepository extends JpaRepository<ReviewScore, Long> {
+
 }
