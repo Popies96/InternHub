@@ -60,7 +60,9 @@ export class InterviewSchedulerComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.interviewService.createInterview(this.form.value).subscribe({
+      const formData = { ...this.form.getRawValue() };
+  
+      this.interviewService.createInterview(formData).subscribe({
         next: () => alert('Interview scheduled successfully'),
         error: err => alert('Error: ' + err.message)
       });

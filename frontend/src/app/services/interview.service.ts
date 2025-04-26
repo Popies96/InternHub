@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class InterviewService {
-  private apiUrl = 'http://localhost:8088/Internhub/api/interviews';
+  private apiUrl = 'http://localhost:8088/internhub/api/interviews';
 
   constructor(private http: HttpClient) {}
 
