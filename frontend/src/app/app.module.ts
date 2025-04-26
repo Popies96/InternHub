@@ -38,6 +38,7 @@
     import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
     import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
 import { CalendarComponent } from './Student/calendar/calendar.component';
+import { InterviewSchedulerComponent } from './company/interview-scheduler/interview-scheduler.component';
 
 
 
@@ -77,6 +78,7 @@ import { CalendarComponent } from './Student/calendar/calendar.component';
         MsgPopupComponent,
         InternshipsInfoComponent,
         CalendarComponent,
+        InterviewSchedulerComponent,
       ],
       imports: [
         BrowserModule,

@@ -27,11 +27,12 @@ import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { MsgPopupComponent } from './components/msg-popup/msg-popup.component';
 import { InternshipsInfoComponent } from './Student/internships-info/internships-info.component';
+import { InterviewSchedulerComponent } from './company/interview-scheduler/interview-scheduler.component';
 
 const routes: Routes = [
   {
     path: "student",
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     data: { roles: ['ROLE_STUDENT'] },
     component: DashboardComponent,
     children: [
@@ -57,11 +58,12 @@ const routes: Routes = [
 
   {
     path: "company",
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     data: { roles: ['ROLE_ENTERPRISE'] },
     component: CompanydashboardComponent,
     children: [
       {path: '', component: CompanyIndexComponent },
+      {path: 'schedule-interview/:applicationId', component: InterviewSchedulerComponent },
       {path: 'tasks', component: CompanyTasksComponent  , data: { breadcrumb: 'Tasks Management' }},
       {path: 'chat', component: ConversationComponent  , data: { breadcrumb: 'Chat' }},
       {path: 'intern', component: CompanyInternshipsComponent , data: { breadcrumb: 'Internships' }},
