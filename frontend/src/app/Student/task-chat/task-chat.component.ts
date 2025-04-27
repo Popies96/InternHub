@@ -65,13 +65,12 @@ export class TaskChatComponent implements AfterViewChecked {
     this.errorMessage = '';
 
     try {
-      // Use the imagePrompt if provided, otherwise use a default
+   
       const prompt = this.imagePrompt.trim() || 
                    "Analyze this image and provide relevant information. Focus on technical aspects if it's a diagram or screenshot.";
       
       const result = await this.geminiService.generateFromImage(prompt, this.selectedFile);
-      
-      // Clean the response by removing "Response:" if present
+    
       const cleanedResponse = result.replace(/^Response:\s*/i, '');
       
       this.chatMessages.push({
@@ -98,24 +97,19 @@ export class TaskChatComponent implements AfterViewChecked {
       this.errorMessage = 'Please enter a message or upload a file';
       return;
     }
-
-    // Handle image with optional prompt
     if (this.selectedFile) {
       await this.sendImageWithPrompt();
       if (this.prompt.trim()) {
-        // If there's also a text prompt, send it separately
         const textPrompt = this.prompt;
         this.prompt = '';
         await this.sendTextPrompt(textPrompt);
       }
     } else {
-      // Just text prompt
-      await this.sendTextPrompt(this.prompt);
+    await this.sendTextPrompt(this.prompt);
     }
   }
 
   private async sendTextPrompt(promptText: string) {
-    // Add user message to chat
     this.chatMessages.push({
       text: promptText,
       isUser: true,
@@ -141,19 +135,17 @@ export class TaskChatComponent implements AfterViewChecked {
       Current query: ${promptText}
       `;
 
-      const result = await this.geminiService.generateText(enhancedPrompt);
+      const result = await this.geminiService.generateTextTask(enhancedPrompt);
       
-      // Clean the response by removing "Response:" if present
-      let responseText = typeof result === 'string' ? 
-                        result.replace(/^Response:\s*/i, '') : 
-                        JSON.stringify(result);
+    
+      let responseText = ""
       
-      // Try to format if it's JSON
+   
       try {
         const jsonData = JSON.parse(responseText);
-        responseText = this.formatJsonToText(jsonData);
+        responseText = this.formatJsonToText(Object.values(jsonData));
       } catch (e) {
-        // Not JSON, use as-is
+
       }
       
       this.chatMessages.push({
@@ -193,7 +185,6 @@ export class TaskChatComponent implements AfterViewChecked {
     return String(data);
   }
 
-  closeChat() {
-    // Implement chat close logic if needed
-  }
+
+
 }

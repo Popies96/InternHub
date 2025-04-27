@@ -166,11 +166,11 @@ clearFilters() {
         position: this.getStudentPosition(student.id),
         status: 'ACTIVE',
         internshipProgram: this.getStudentInternship(student.id),
-        tasks: [] // Start with empty task array
+        tasks: [] 
       });
     });
   
-    // Then, assign tasks to students who have them
+    
     this.tasks.forEach(task => {
       if (internsMap.has(task.studentId)) {
         internsMap.get(task.studentId).tasks.push(task);
@@ -178,12 +178,12 @@ clearFilters() {
     });
   
     this.interns = Array.from(internsMap.values());
-    this.filteredInterns = [...this.interns]; // Initialize filtered interns
+    this.filteredInterns = [...this.interns]; 
     this.interns.forEach(intern => {
       this.expandedInterns[intern.id] = false;
     });
   }
-  // Helper method to get student's position/internship title
+  
   private getStudentPosition(studentId: number): string {
     const internship = this.internships.find(i => i.studentId === studentId);
     return internship ? internship.title : 'Intern';
@@ -259,8 +259,7 @@ clearFilters() {
         this.closeAddModal();
         this.fetchTasks();
         
-        // Send WebSocket notification
-        this.notificationService.sendNotification(
+           this.notificationService.sendNotification(
 
           {
             type: 'TASK_ASSIGNED',

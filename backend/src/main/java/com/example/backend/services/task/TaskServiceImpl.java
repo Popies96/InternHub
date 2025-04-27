@@ -115,7 +115,6 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse updateTaskStatus(Long id) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
-
         existingTask.setStatus(TaskStatus.COMPLETED);
         return toTaskResponse(taskRepository.save(existingTask));
     }

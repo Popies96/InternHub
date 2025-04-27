@@ -35,7 +35,7 @@ export class GeminiService {
   }
 
   // Existing text generation method
-  async generateText(prompt: string) {
+  async generateTextTask(prompt: string) {
     const model = this.generativeAi.getGenerativeModel({
       model: 'gemini-1.5-flash',
     });

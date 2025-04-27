@@ -64,7 +64,6 @@ public class TaskRepController {
         return ResponseEntity.created(URI.create("/api/task-reps/" + savedTaskRep.getId()))
                 .body(savedTaskRep);
     }
-
     // PDF Download
     @GetMapping("/{taskRepId}/pdf")
     @PreAuthorize("hasRole('ENTERPRISE')")
@@ -85,7 +84,6 @@ public class TaskRepController {
         TaskRepResponse taskRep = taskRepService.getTaskRepByTaskId(taskId);
         return ResponseEntity.ok(taskRep);
     }
-
     // Approve task response
     @PatchMapping("/{taskRepId}/approve")
     @PreAuthorize("hasRole('ENTERPRISE')")
@@ -95,7 +93,6 @@ public class TaskRepController {
         return ResponseEntity.ok(approvedTaskRep);
     }
 
-    // Reject task response
     @PatchMapping("/{taskRepId}/reject")
     @PreAuthorize("hasRole('ENTERPRISE')")
     public ResponseEntity<TaskRepResponse> rejectTaskRep(

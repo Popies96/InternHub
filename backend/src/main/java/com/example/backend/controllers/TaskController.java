@@ -3,6 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.dto.TaskRequest;
 import com.example.backend.dto.TaskResponse;
 import com.example.backend.entity.Task;
+import com.example.backend.entity.TaskStatus;
 import com.example.backend.services.task.TaskService;
 import com.example.backend.services.TaskNotificationService.TaskNotifService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,15 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTask(id, taskRequest));
     }
 
-    @PutMapping("/student/update/{id}")
+    @PatchMapping("/student/update/{id}")
     public ResponseEntity<TaskResponse> updateTaskStatus(
             @PathVariable Long id
             ) {
-        return ResponseEntity.ok(taskService.updateTaskStatus(id));
+
+        TaskResponse savedTask = taskService.updateTaskStatus(id);
+
+        savedTask.setStatus(TaskStatus.COMPLETED);
+        return ResponseEntity.ok(savedTask);
     }
 
     @GetMapping

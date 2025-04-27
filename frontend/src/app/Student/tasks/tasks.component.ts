@@ -141,8 +141,6 @@ export class TasksComponent implements OnInit {
       this.error = 'User not identified';
       return;
     }
-
-    // Validate based on task type
     if (task.type === 'CODE' || task.type === 'TEXT') {
       if (!task.submissionContent || task.submissionContent.trim().length === 0) {
         this.error = 'Submission content cannot be empty';
@@ -158,10 +156,22 @@ export class TasksComponent implements OnInit {
 
     if (task.type === 'PDF') {
       this.submitPdfTask(task);
+      this.updateTaskStatus(task.id);
     } else {
       this.submitRegularTask(task.id,task);
+      this.updateTaskStatus(task.id);
     }
   }
+
+
+  updateTaskStatus(id: number): void {
+    this.tasksService.updateTaskStatus(id).subscribe({
+      error: (err: any) => {
+        console.error('Error updateing:', err);
+      }
+    });
+  }
+
 
   private submitPdfTask(task: any): void {
     this.taskRepService.uploadPdfTaskRep(task.id, task.submissionFile).subscribe({

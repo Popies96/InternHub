@@ -3,6 +3,7 @@ import { TaskRepService } from '../../../app/services/task-rep.service';
 import { TasksService } from '../../../app/services/tasks.service';
 import { UserService } from 'src/app/services/user.service';
 import { InternshipService } from 'src/app/services/internship.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface Student {
   id: number;
@@ -57,9 +58,15 @@ export class CompanyTasksrepComponent implements OnInit {
     private taskRepService: TaskRepService,
     private taskService: TasksService,
     private userService: UserService,
-    private internshipService: InternshipService
+    private internshipService: InternshipService , 
+    private sanitizer: DomSanitizer
   ) {}
 
+  getSafePdfUrl(content: string): SafeResourceUrl {
+   
+    console.log(content);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(content);
+  }
   ngOnInit(): void {
     this.fetchInitialData();
   }
@@ -67,21 +74,19 @@ export class CompanyTasksrepComponent implements OnInit {
   private fetchInitialData() {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
-        // Get internships for this enterprise
+        
         this.internshipService.getInternshipByEnterprise().subscribe({
           next: (internships: any) => {
             this.internships = internships;
-            console.log('Internships:', this.internships);
+           
             
             const studentIds = new Set<number>();
             this.internships.forEach(internship => {
               if (internship.studentId) {
-                console.log('Student ID:', internship.studentId);
                 studentIds.add(internship.studentId);
               }
             });
 
-            // Load student details
             studentIds.forEach(id => {
               this.userService.getUserById(id).subscribe({
                 next: (student) => {
@@ -92,7 +97,7 @@ export class CompanyTasksrepComponent implements OnInit {
                     email: student.email,
                     profileImage: student.profileImage
                   });
-                  console.log('Student:', student);
+                 
                   
                   // When we have all students, load task reps
                   if (this.students.length === studentIds.size) {
@@ -122,7 +127,7 @@ export class CompanyTasksrepComponent implements OnInit {
   loadTaskRepsWithStudents(): void {
     this.taskRepService.getAllTaskReps().subscribe({
         next: (taskReps: TaskRep[]) => {
-            console.log('Raw task reps from backend:', JSON.stringify(taskReps, null, 2));
+         
             
             this.taskReps = taskReps.map(taskRep => {
                 const task = taskRep.task || {};
@@ -156,7 +161,7 @@ export class CompanyTasksrepComponent implements OnInit {
                 };
             });
 
-            console.log('Final processed task reps:', JSON.stringify(this.taskReps, null, 2));
+           
             this.filteredTaskReps = [...this.taskReps];
             this.isLoading = false;
         },
@@ -193,6 +198,7 @@ export class CompanyTasksrepComponent implements OnInit {
     this.taskRepService.getTaskRepById(taskRep.id).subscribe({
       next: (detailedTaskRep: TaskRep | null) => {
         this.selectedTaskRep = detailedTaskRep;
+        console.log('Selected task rep:', this.selectedTaskRep);
       },
       error: (err: any) => {
         console.error('Error loading task rep details:', err);
@@ -207,6 +213,7 @@ export class CompanyTasksrepComponent implements OnInit {
         taskRep.status = 'APPROVED';
         this.applyFilters();
       },
+
       error: (err: any) => {
         console.error('Error approving task rep:', err);
         this.handleError('Error approving submission', err);

@@ -181,6 +181,11 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Content</label>
                   <div class="mt-1 p-3 bg-gray-50 rounded-md">
+                    <iframe 
+                      [src]="getSafePdfUrl(selectedTaskRep.content)" 
+                       class="w-full h-auto border border-gray-200"
+                        type="application/pdf">
+                        </iframe>
                     <pre *ngIf="!selectedTaskRep.fileName?.endsWith('.pdf')" class="text-sm text-gray-900 whitespace-pre-wrap">{{ selectedTaskRep.content }}</pre>
                     <div *ngIf="selectedTaskRep.fileName?.endsWith('.pdf')" class="text-center py-4">
                       <p class="text-sm text-gray-500">PDF file submitted</p>

@@ -1,317 +1,176 @@
 <section class="relative bg-stone-50 rounded-2xl  overflow-hidden">
-    <div class="bg-sky-400 w-full sm:w-40 h-40 rounded-full absolute top-1 opacity-20 max-sm:right-0 sm:left-56 z-0"></div>
-    <div class="bg-emerald-500 w-full sm:w-40 h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
-    <div class="bg-purple-600 w-full sm:w-40 h-24 absolute top-40 -left-0 opacity-20 z-0"></div>
-    <div class="w-full py-24 relative z-10 backdrop-blur-3xl">
-      <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
-        <div class="grid grid-cols-12 gap-8 max-w-4xl mx-auto xl:max-w-full">
-          <div class="col-span-12 xl:col-span-5">
-            <h2 class="font-manrope text-3xl leading-tight text-gray-900 mb-1.5">Your Tasks</h2>
-            <p class="text-lg font-normal text-gray-600 mb-8">Don’t fall behind</p>
-            <div class="flex gap-5 flex-col ">
-                <h5 class="text-xl leading-8 font-semibold text-gray-900">To do</h5>
-              <div class="p-6 rounded-xl bg-white cursor-pointer">
-                <div class="flex items-center justify-between mb-3 ">
-                  <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
-                    <p class="text-base font-medium text-gray-900"> Due to : Jan 10,2025 - 10:00</p>
+  <div class="bg-sky-400 w-full sm:w-40 h-40 rounded-full absolute top-1 opacity-20 max-sm:right-0 sm:left-56 z-0"></div>
+  <div class="bg-emerald-500 w-full sm:w-40 h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
+  <div class="bg-purple-600 w-full sm:w-40 h-24 absolute top-40 -left-0 opacity-20 z-0"></div>
+  <div class="w-full py-24 relative z-10 backdrop-blur-3xl">
+    <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
+      <div class="grid grid-cols-12 gap-8 max-w-4xl mx-auto xl:max-w-full">
+      
+        <div class="col-span-12 xl:col-span-5">
+          <h2 class="font-manrope text-3xl leading-tight text-gray-900 mb-1.5">Your Tasks</h2>
+          <p class="text-lg font-normal text-gray-600 mb-4">Don't fall behind</p>
+          
+          
+          <div class="flex space-x-2 mb-4">
+            <button (click)="filterTasks('all')" 
+                    [class.bg-indigo-600]="currentFilter === 'all'"
+                    [class.text-white]="currentFilter === 'all'"
+                    [class.bg-indigo-50]="currentFilter !== 'all'"
+                    [class.text-indigo-600]="currentFilter !== 'all'"
+                    class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              All
+            </button>
+            <button (click)="filterTasks('completed')" 
+                    [class.bg-emerald-600]="currentFilter === 'completed'"
+                    [class.text-white]="currentFilter === 'completed'"
+                    [class.bg-emerald-50]="currentFilter !== 'completed'"
+                    [class.text-emerald-600]="currentFilter !== 'completed'"
+                    class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Completed
+            </button>
+            <button (click)="filterTasks('in_progress')" 
+                    [class.bg-sky-600]="currentFilter === 'in_progress'"
+                    [class.text-white]="currentFilter === 'in_progress'"
+                    [class.bg-sky-50]="currentFilter !== 'in_progress'"
+                    [class.text-sky-600]="currentFilter !== 'in_progress'"
+                    class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              In Progress
+            </button>
+            <button (click)="filterTasks('pending')" 
+                    [class.bg-purple-600]="currentFilter === 'pending'"
+                    [class.text-white]="currentFilter === 'pending'"
+                    [class.bg-purple-50]="currentFilter !== 'pending'"
+                    [class.text-purple-600]="currentFilter !== 'pending'"
+                    class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Pending
+            </button>
+          </div>
+          
+          
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="max-h-[500px] overflow-y-auto" routerLink="/student/tasks">
+              <div *ngIf="filteredTasks.length === 0" class="p-4 text-center text-gray-500">
+                No tasks found
+              </div>
+              <div *ngFor="let task of filteredTasks" 
+                   class="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                   (click)="selectTask(task)">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-medium text-gray-900">{{ task.title }}</h3>
+                    <p class="text-sm text-gray-500 mt-1 line-clamp-2">{{ task.description }}</p>
                   </div>
-                  <div class="dropdown relative inline-flex">
-                    <button type="button" data-target="dropdown-default" class="dropdown-toggle inline-flex justify-center py-2.5 px-1 items-center gap-2 text-sm text-black rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:text-purple-600  ">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4" viewBox="0 0 12 4" fill="none">
-                        <path d="M1.85624 2.00085H1.81458M6.0343 2.00085H5.99263M10.2124 2.00085H10.1707" stroke="currentcolor" stroke-width="2.5" stroke-linecap="round"></path>
-                      </svg>
-                      
-                    </button>
-                    <div id="dropdown-default" class="dropdown-menu rounded-xl shadow-lg bg-white absolute top-full -left-10 w-max mt-2 hidden" aria-labelledby="dropdown-default">
-                      <ul class="py-2">
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                            Edit
-                          </a>
-                        </li>
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                           Remove
-                          </a>
-                        </li>
-                       
-                      </ul>
-                    </div>
+                  <span [ngClass]="getTaskStatusClass(task.status)" class="px-2 py-1 rounded-full text-xs font-medium">
+                    {{ task.status }}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex items-center text-xs text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {{ formatDeadline(task.deadline) }}
+                  </div>
+                  <div class="flex items-center text-xs text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    {{ task.type }}
                   </div>
                 </div>
-
-
-
-                <h6 class="text-xl leading-8 font-semibold text-black mb-1">Meeting with a friends</h6>
-                <p class="text-base font-normal text-gray-600">Meet-Up for Travel Destination Discussion</p>
               </div>
-
-              <div class="p-6 rounded-xl bg-white cursor-pointer">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-                    <p class="text-base font-medium text-gray-900"> Due to : Jan 10,2025 - 13:00</p>
-                  </div>
-                  <div class="dropdown relative inline-flex">
-                    <button type="button" data-target="dropdown-a" class="dropdown-toggle inline-flex justify-center py-2.5 px-1 items-center gap-2 text-sm text-black rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:text-sky-400  ">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4" viewBox="0 0 12 4" fill="none">
-                        <path d="M1.85624 2.00085H1.81458M6.0343 2.00085H5.99263M10.2124 2.00085H10.1707" stroke="currentcolor" stroke-width="2.5" stroke-linecap="round"></path>
-                      </svg>
-                      
-                    </button>
-                    <div id="dropdown-a" class="dropdown-menu rounded-xl shadow-lg bg-white absolute -left-10 top-full w-max mt-2 hidden" aria-labelledby="dropdown-a">
-                      <ul class="py-2">
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                            Edit
-                          </a>
-                        </li>
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                           Remove
-                          </a>
-                        </li>
-                       
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="text-xl leading-8 font-semibold text-black mb-1">Online course</h6>
-                <p class="text-base font-normal text-gray-600">Checks updates for design course</p>
-              </div>
-
-
-              <h5 class="text-xl leading-8 font-semibold text-gray-900">In progress</h5>
-              <div class="p-6 rounded-xl bg-white cursor-pointer">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-                    <p class="text-base font-medium text-gray-900"> Due to : Jan 14,2025 - 11:00</p>
-                  </div>
-                  <div class="dropdown relative inline-flex">
-                    <button type="button" data-target="dropdown-b" class="dropdown-toggle inline-flex justify-center py-2.5 px-1 items-center gap-2 text-sm text-black rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:text-emerald-600  ">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4" viewBox="0 0 12 4" fill="none">
-                        <path d="M1.85624 2.00085H1.81458M6.0343 2.00085H5.99263M10.2124 2.00085H10.1707" stroke="currentcolor" stroke-width="2.5" stroke-linecap="round"></path>
-                      </svg>
-                      
-                    </button>
-                    <div id="dropdown-b" class="dropdown-menu rounded-xl shadow-lg bg-white absolute -left-10 top-full w-max mt-2 hidden" aria-labelledby="dropdown-b">
-                      <ul class="py-2">
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                            Edit
-                          </a>
-                        </li>
-                        <li>
-                          <a class="block px-6 py-2 text-xs hover:bg-gray-100 text-gray-600 font-medium" href="javascript:;">
-                           Remove
-                          </a>
-                        </li>
-                       
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="text-xl leading-8 font-semibold text-black mb-1">Landing Page Development</h6>
-                <p class="text-base font-normal text-gray-600">Develop responsive landing page</p>
-              </div>
-
-
-
-              <h5 class="text-xl leading-8 font-semibold text-gray-900">Done</h5>
-              
-
-
-
-
-
-
-
-
-
-
             </div>
           </div>
-          <div class="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white rounded-2xl max-xl:row-start-1">
-            <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-5">
-              <div class="flex items-center gap-4">
-                <h5 class="text-xl leading-8 font-semibold text-gray-900">January 2025</h5>
-                <div class="flex items-center">
-                  <button class="text-indigo-600 p-1 rounded transition-all duration-300 hover:text-white hover:bg-indigo-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M10.0002 11.9999L6 7.99971L10.0025 3.99719" stroke="currentcolor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
-                  <button class="text-indigo-600 p-1 rounded transition-all duration-300 hover:text-white hover:bg-indigo-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M6.00236 3.99707L10.0025 7.99723L6 11.9998" stroke="currentcolor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
-                </div>
+        </div>
+        
+        
+        <div class="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white rounded-2xl max-xl:row-start-1">
+          <div class="bg-white rounded-lg shadow p-4">
+            
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <button (click)="previousMonth()" class="p-2 hover:bg-gray-100 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <h2 class="text-lg font-semibold">{{ getMonthName() }} {{ currentMonth.getFullYear() }}</h2>
+                <button (click)="nextMonth()" class="p-2 hover:bg-gray-100 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
-              <div class="flex items-center rounded-md p-1 bg-indigo-50 gap-px">
-                <button class="py-2.5 px-5 rounded-lg bg-indigo-50 text-indigo-600 text-sm font-medium transition-all duration-300 hover:bg-indigo-600 hover:text-white">Day</button>
-                <button class="py-2.5 px-5 rounded-lg bg-indigo-600 text-white text-sm font-medium transition-all duration-300 hover:bg-indigo-600 hover:text-white">Week</button>
-                <button class="py-2.5 px-5 rounded-lg bg-indigo-50 text-indigo-600 text-sm font-medium transition-all duration-300 hover:bg-indigo-600 hover:text-white">Month</button>
+              <div class="flex space-x-2">
+                <button (click)="setViewMode('day')" 
+                        [class.bg-blue-100]="viewMode === 'day'"
+                        class="px-3 py-1 rounded-md text-sm font-medium">
+                  Day
+                </button>
+                <button (click)="setViewMode('week')"
+                        [class.bg-blue-100]="viewMode === 'week'"
+                        class="px-3 py-1 rounded-md text-sm font-medium">
+                  Week
+                </button>
+                <button (click)="setViewMode('month')"
+                        [class.bg-blue-100]="viewMode === 'month'"
+                        class="px-3 py-1 rounded-md text-sm font-medium">
+                  Month
+                </button>
               </div>
             </div>
-            <div class="border border-indigo-200 rounded-xl">
-              <div class="grid grid-cols-7 rounded-t-3xl border-b border-indigo-200">
-                <div class="py-3.5 border-r rounded-tl-xl border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Sun</div>
-                <div class="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Mon</div>
-                <div class="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Tue</div>
-                <div class="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Wed</div>
-                <div class="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Thu</div>
-                <div class="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Fri</div>
-                <div class="py-3.5 rounded-tr-xl bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">Sat</div>
+
+            <!-- Task Summary -->
+            <div class="grid grid-cols-4 gap-4 mb-4">
+              <div class="bg-emerald-50 p-3 rounded-lg">
+                <div class="text-sm font-medium text-emerald-600">Completed</div>
+                <div class="text-2xl font-semibold text-emerald-700">{{ getTasksByStatus('completed').length }}</div>
               </div>
-              <div class="grid grid-cols-7 rounded-b-xl">
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50">
-                  <span class="text-xs font-semibold text-gray-400">27</span>
+              <div class="bg-sky-50 p-3 rounded-lg">
+                <div class="text-sm font-medium text-sky-600">In Progress</div>
+                <div class="text-2xl font-semibold text-sky-700">{{ getTasksByStatus('in_progress').length }}</div>
+              </div>
+              <div class="bg-purple-50 p-3 rounded-lg">
+                <div class="text-sm font-medium text-purple-600">Pending</div>
+                <div class="text-2xl font-semibold text-purple-700">{{ getTasksByStatus('pending').length }}</div>
+              </div>
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <div class="text-sm font-medium text-gray-600">Total</div>
+                <div class="text-2xl font-semibold text-gray-700">{{ tasks.length }}</div>
+              </div>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
+              <!-- Weekday Headers -->
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Sun</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Mon</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Tue</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Wed</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Thu</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Fri</div>
+              <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">Sat</div>
+
+              <!-- Calendar Days -->
+              <div *ngFor="let day of calendarDays" 
+                   class="bg-white min-h-[120px] p-2 relative"
+                   [class.text-gray-400]="!isCurrentMonth(day)"
+                   [class.bg-blue-50]="isToday(day)">
+                <div class="flex justify-between items-start">
+                  <span class="text-sm font-medium" [class.text-blue-600]="isToday(day)">
+                    {{ day.getDate() }}
+                  </span>
                 </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">28</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">29</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">30</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">31</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">1</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">2</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 relative bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">3</span>
-                  <div class="absolute top-9 bottom-1 left-3.5 p-1.5 xl:px-2.5 h-max rounded bg-purple-50 ">
-                    <p class="hidden xl:block text-xs font-medium text-purple-600 mb-px">Meeting</p>
-                    <span class="hidden xl:block text-xs font-normal text-purple-600 whitespace-nowrap">10:00 - 11:00</span>
-                    <p class="xl:hidden w-2 h-2 rounded-full bg-purple-600"></p>
+                
+                <!-- Tasks for the day -->
+                <div class="mt-1 space-y-1">
+                  <div *ngFor="let task of getTasksForDay(day)" 
+                       class="text-xs p-1.5 rounded-md truncate cursor-pointer hover:opacity-90 transition-opacity"
+                       [ngClass]="getTaskStatusClass(task.status)"
+                       [title]="task.title + ' - ' + formatDeadline(task.deadline)"
+                       (click)="selectTask(task)">
+                    {{ task.title }}
                   </div>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">4</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">5</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">6</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white relative border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">7</span>
-                  <div class="absolute top-9 bottom-1 left-3.5 p-1.5 xl:px-2.5 h-max rounded bg-emerald-50 ">
-                    <p class="hidden xl:block text-xs font-medium text-emerald-600 mb-px whitespace-nowrap">Developer Meetup</p>
-                    <span class="hidden xl:block text-xs font-normal text-emerald-600 whitespace-nowrap">10:00 - 11:00</span>
-                    <p class="xl:hidden w-2 h-2 rounded-full bg-emerald-600"></p>
-                  </div>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">8</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-indigo-600 sm:text-white sm:w-6 sm:h-6 rounded-full sm:flex items-center justify-center sm:bg-indigo-600">9</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">10</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">11</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">12</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">13</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">14</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">15</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">16</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">17</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">18</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 relative bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">19</span>
-                  <div class="absolute top-9 bottom-1 left-3.5 p-1.5 xl:px-2.5 h-max rounded bg-sky-50 ">
-                    <p class="hidden xl:block text-xs font-medium text-sky-600 mb-px whitespace-nowrap">Developer Meetup</p>
-                    <span class="hidden xl:block text-xs font-normal text-sky-600 whitespace-nowrap">10:00 - 11:00</span>
-                    <p class="xl:hidden w-2 h-2 rounded-full bg-sky-600"></p>
-                  </div>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">20</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">21</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">22</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">23</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">24</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">25</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">26</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">27</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">28</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">29</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">30</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-white border-r border-indigo-200 rounded-bl-xl transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-900">31</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">1</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">2</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">3</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 relative bg-gray-50 border-r border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">4</span>
-                  <div class="absolute top-9 bottom-1 left-3.5 p-1.5 xl:px-2.5 h-max rounded bg-purple-50 ">
-                    <p class="hidden xl:block text-xs font-medium text-purple-600 mb-px whitespace-nowrap">Friends Meet</p>
-                    <span class="hidden xl:block text-xs font-normal text-purple-600 whitespace-nowrap">09:00 - 13:42</span>
-                    <p class="xl:hidden w-2 h-2 rounded-full bg-purple-600"></p>
-                  </div>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-r border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">5</span>
-                </div>
-                <div class="flex xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-gray-50 border-indigo-200 rounded-br-xl transition-all duration-300 hover:bg-indigo-50 cursor-pointer">
-                  <span class="text-xs font-semibold text-gray-400">6</span>
                 </div>
               </div>
             </div>
@@ -319,5 +178,5 @@
         </div>
       </div>
     </div>
-  </section>
-                                        
+  </div>
+</section>

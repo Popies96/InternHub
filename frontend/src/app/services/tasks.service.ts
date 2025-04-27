@@ -10,7 +10,7 @@ const baseUrl = 'http://localhost:8088/internhub/tasks';
 export class TasksService {
   constructor(private http: HttpClient) {}
 
-  // Get all tasks
+ 
   getAllTasks(): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {
@@ -19,7 +19,7 @@ export class TasksService {
     return this.http.get(baseUrl, {headers});
   }
 
-  // Get tasks by student ID
+
   getTasksByStudent(studentId: number): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {
@@ -36,7 +36,7 @@ export class TasksService {
     return this.http.post(`${baseUrl}/enterprise`, taskRequest, { headers });
   }
 
-  // Update a task (enterprise only)
+ 
   updateTask(id: number, taskRequest: any): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {
@@ -55,7 +55,7 @@ export class TasksService {
   }
 
 
-  // Delete a task (enterprise only)
+
   deleteTask(id: number): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (!headers) {
