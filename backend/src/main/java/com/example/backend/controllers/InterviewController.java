@@ -43,4 +43,13 @@ public class InterviewController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Test endpoint is working!");
     }
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelInterview(@PathVariable Long id) {
+        boolean canceled = interviewService.cancelInterview(id);
+        if (canceled) {
+            return ResponseEntity.ok("Interview canceled successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

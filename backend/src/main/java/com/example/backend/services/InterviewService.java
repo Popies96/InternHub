@@ -4,6 +4,7 @@ import com.example.backend.dto.InterviewDto;
 import com.example.backend.entity.Application;
 import com.example.backend.entity.Interview;
 import com.example.backend.entity.InterviewMode;
+import com.example.backend.entity.InterviewStatus;
 import com.example.backend.repository.ApplicationRepository;
 import com.example.backend.repository.InterviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,15 @@ public class InterviewService {
 
     public List<Interview> getByApplicationId(Long appId) {
         return interviewRepository.findByApplicationId(appId);
+    }
+    public boolean cancelInterview(Long id) {
+        Optional<Interview> optionalInterview = interviewRepository.findById(id);
+        if (optionalInterview.isPresent()) {
+            Interview interview = optionalInterview.get();
+            interview.setStatus(InterviewStatus.valueOf("CANCELED"));
+            interviewRepository.save(interview);
+            return true;
+        }
+        return false;
     }
 }
