@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommentService, Comment as TopicComment } from 'src/app/services/comment.service';
 import { TopicService } from 'src/app/services/topic.service';
-import { UserService } from 'src/app/services/user.service';
+import { User, UserService } from 'src/app/services/user.service';
 import { TopicReactionService } from 'src/app/services/topic-reaction.service';
 
 @Component({
@@ -23,6 +23,8 @@ export class TopicDetailComponent implements OnInit {
   dislikes: number = 0;
   userReaction: 'like' | 'dislike' | 'none' |null = null;
   name: string | null = null;
+  Current!:User ;
+  TopicUser!:User;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,6 +56,7 @@ export class TopicDetailComponent implements OnInit {
     this.userService.getUserFromLocalStorage().subscribe({
       next: (user) => {
         this.currentUser = user.id;
+        this.Current=user;
       },
       error: (err) => {
         console.error('Error loading user:', err);
@@ -120,28 +123,8 @@ export class TopicDetailComponent implements OnInit {
   loadComments(topicId?: number): void {
     if (topicId) {
       this.commentService.getCommentsByTopic(topicId).subscribe({
-        
         next: (comments) => {
-          console.log('Comments loaded:', this.comments);
-
           this.comments = comments as TopicComment[];
-  
-          // For each comment, load the username
-          this.comments.forEach(comment => {
-            if (comment.userId) {
-              this.userService.getUserById(comment.userId).subscribe({
-                next: (user) => {
-                  comment.username = user.prenom; // Assuming `nom` is the username
-                  console.log('User loaded for comment:', comment.username);
-                  this.cdr.detectChanges(); // <-- force Angular to refresh
-
-                },
-                error: (err) => {   
-                  console.error('Error loading user for comment', err);
-                }
-              });
-            }
-          });
         },
         error: (err) => {
           console.error('Error loading comments', err);
@@ -155,11 +138,11 @@ export class TopicDetailComponent implements OnInit {
 
     const comment: TopicComment = {
       comment: this.newCommentContent,
-      userId: this.currentUser,
+      user: this.Current,
       topicId: this.topic.id
     };
 
-    this.commentService.addComment(comment, comment.topicId, comment.userId).subscribe({
+    this.commentService.addComment(comment, comment.topicId, comment.user.id).subscribe({
       next: (createdComment) => {
         this.comments.push(createdComment);
         this.newCommentContent = '';
@@ -180,5 +163,29 @@ export class TopicDetailComponent implements OnInit {
         console.error('Error loading comment count', err);
       }
     });
+  }
+
+  deleteComment(commentId: number) {
+    if (confirm('Are you sure you want to delete this comment?')) {
+      if (this.currentUser === null) return console.error('Current user is null');
+      this.commentService.deleteComment(commentId, this.currentUser).subscribe(() => {
+        this.comments = this.comments.filter(c => c.id !== commentId);
+      }, error => {
+        console.error('Delete failed', error);
+      });
+    }
+  }
+  
+  editComment(comment: any) {
+    const updatedContent = prompt('Edit your comment:', comment.comment);
+    if (updatedContent !== null && updatedContent.trim() !== '') {
+      if (this.currentUser === null) return console.error('Current user is null');
+
+      this.commentService.updateComment(comment.id, updatedContent,this.currentUser).subscribe(updated => {
+        comment.comment = updated.comment; // update in UI
+      }, error => {
+        console.error('Update failed', error);
+      });
+    }
   }
 }

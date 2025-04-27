@@ -10,4 +10,10 @@ public interface CommentService {
 
      List<Comment> getCommentsByTopicId(int topicId);
 
+    Comment findById(Long id);
+
+    void delete(Long id);
+
+    Comment save(Comment comment);
+
     }

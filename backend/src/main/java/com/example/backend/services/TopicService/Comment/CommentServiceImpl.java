@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -41,6 +42,8 @@ public class CommentServiceImpl implements CommentService {
 
         comment.setTopic(topic);
         comment.setUser(user);
+        comment.setDateCreated(LocalDateTime.now());
+
 
         return commentRepository.save(comment);
     }
@@ -48,5 +51,20 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getCommentsByTopicId(int topicId) {
         return commentRepository.findByTopicId(topicId);
+    }
+
+    @Override
+    public Comment findById(Long id) {
+        Optional<Comment> commentOptional = commentRepository.findById(id);
+        return commentOptional.orElseThrow(() -> new RuntimeException("Comment not found with id " + id));
+    }
+    @Override
+    public void delete(Long id) {
+        commentRepository.deleteById(id);
+    }
+
+    @Override
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 }

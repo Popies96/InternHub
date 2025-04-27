@@ -35,6 +35,7 @@ public class Topic {
     private String imagePath;
     private int views;
 
+
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Comment> comments;

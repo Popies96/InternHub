@@ -34,7 +34,9 @@
       <h1 class="topic-title">{{ topic.title }}</h1>
       <div class="topic-author">
         <div class="author-avatar">
-          <img src="assets/default-avatar.png" alt="Author Avatar">
+          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + topic.prenom.charAt(0)"
+          alt="Selected User Avatar"
+          class="w-10 h-10 rounded-full mr-4 shadow-sm">
         </div>
         <div class="author-info">
           <span class="author-name">{{ topic.prenom }}</span>
@@ -102,15 +104,23 @@
         <div *ngFor="let comment of comments" class="comment-card">
           <div class="comment-author">
             <div class="comment-avatar">
-              <img src="assets/default-avatar.png" alt="Commenter Avatar">
+              <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + comment.user?.nom?.charAt(0)"
+              alt="Selected User Avatar"
+              class="w-10 h-10 rounded-full mr-4 shadow-sm">
             </div>
             <div class="comment-meta">
-              <span class="commenter-name">{{comment.username}}</span>
+              <span class="commenter-name">{{comment.user?.nom}} {{comment.user?.prenom}}  </span>
               <!-- <span class="comment-date">{{comment.dateCreated | date:'shortDate'}}</span> -->
+            </div>
+            <div *ngIf="comment.user?.id === Current?.id" class="comment-actions">
+              <button (click)="editComment(comment)" class="edit-btn"> ✏️ </button>
+              <button *ngIf="comment.id !== undefined" (click)="deleteComment(comment.id)" class="delete-btn">🗑️ </button>
             </div>
           </div>
           <div class="comment-content">
             <p>{{ comment.comment }}</p>
+            <span class="comment-date">{{ comment.dateCreated | date:'mediumDate' }}</span>
+
           </div>
          
         </div>
@@ -125,7 +135,9 @@
         <h4>Add Your Comment</h4>
         <div class="comment-form">
           <div class="user-avatar">
-            <img src="assets/default-avatar.png" alt="Your Avatar">
+            <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + Current?.nom?.charAt(0)"
+            alt="Selected User Avatar"
+            class="w-10 h-10 rounded-full mr-4 shadow-sm">
           </div>
           <div class="form-content">
             <textarea [(ngModel)]="newCommentContent" placeholder="Write your thoughtful response..." rows="4"></textarea>

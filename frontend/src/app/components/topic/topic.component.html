@@ -74,14 +74,14 @@
                 (click)="react('like', topic.id ?? 0); $event.stopPropagation()" 
                 [disabled]="reactions[topic.id ?? 0]?.userReaction === 'like'"
                 class="like-btn">
-                👍 Like ({{ reactions[topic.id ?? 0]?.likes || 0 }})
+                👍 Like ({{ reactions[topic.id ?? 0]?.likes }})
               </button>
             
               <button 
                 (click)="react('dislike', topic.id ?? 0); $event.stopPropagation()" 
                 [disabled]="reactions[topic.id ?? 0]?.userReaction === 'dislike'"
                 class="dislike-btn">
-                👎 Dislike ({{ reactions[topic.id ?? 0]?.dislikes || 0 }})
+                👎 Dislike ({{ reactions[topic.id ?? 0]?.dislikes }})
               </button>
             </div>
           </div>

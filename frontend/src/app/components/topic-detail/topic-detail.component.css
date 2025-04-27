@@ -242,15 +242,15 @@ h1, h2, h3, h4, h5, h6 {
 .topic-image {
   position: relative;
   margin: 0;
-  max-height: 500px;
+  height: auto; /* Ensure the height is determined by the image */
   overflow: hidden;
 }
+
 
 .topic-image img {
   width: 100%;
   height: auto;
-  display: block;
-  transition: transform 0.5s ease;
+  object-fit: cover; /* Ensures the image maintains its aspect ratio */
 }
 
 .topic-image:hover img {
@@ -644,6 +644,7 @@ textarea:focus {
   .forum-header {
     flex-direction: column;
     align-items: flex-start;
+    
   }
   
   .back-btn-wrapper {
@@ -683,6 +684,10 @@ textarea:focus {
   .formatting-tools {
     align-self: flex-start;
   }
+  .topic-image {
+    width: 100%;
+    height: auto;
+  }
 }
 
 @media (max-width: 576px) {
@@ -699,4 +704,14 @@ textarea:focus {
     flex-direction: column;
     gap: 10px;
   }
+}
+
+ .comment-date {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5); /* lighter gray with transparency */
+  font-style: italic;
+  text-align: right;
+
 }

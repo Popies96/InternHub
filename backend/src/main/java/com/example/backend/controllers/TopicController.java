@@ -222,7 +222,7 @@ public class TopicController {
         System.err.println("\n Fetching comments for topicId: " + topicId);
         List<Comment> comments = commentService.getCommentsByTopicId(topicId);
 
-        System.err.println("Comments: " + comments);
+
         return comments;
     }
 
@@ -230,6 +230,31 @@ public class TopicController {
     public long countCommentsByTopic(@PathVariable int topicId) {
         return commentRepository.countCommentsByTopicId(topicId);
     }
+    @DeleteMapping("/comment/delete/{commentId}/{userId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @PathVariable Long userId) {
+        Comment comment = commentService.findById(commentId);
+
+        if (comment.getUser().getId().equals(userId)) {
+            commentService.delete(commentId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // User not authorized to delete
+        }
+    }
+
+    @PutMapping("/comment/update/{id}/{currentUser}")
+    public ResponseEntity<?> updateComment(@PathVariable Long id,
+                                           @RequestBody Comment updatedComment,
+                                           @PathVariable User currentUser) {
+        Comment comment = commentService.findById(id);
+        if (!comment.getUser().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only update your own comments.");
+        }
+        comment.setComment(updatedComment.getComment());
+        commentService.save(comment);
+        return ResponseEntity.ok(comment);
+    }
+
 
 
 

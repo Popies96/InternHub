@@ -1,6 +1,7 @@
 package com.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({"comment","topic" })  // This will exclude topic and user fields from the JSON response
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
