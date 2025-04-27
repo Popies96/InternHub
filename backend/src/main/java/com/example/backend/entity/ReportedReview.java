@@ -1,8 +1,12 @@
 package com.example.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
+@Getter
+@Setter
 @Entity
 public class ReportedReview {
     @Id
@@ -17,15 +21,20 @@ public class ReportedReview {
     @JoinColumn(name = "reported_by", nullable = false)
     private User reportedBy;
 
-    private String reason;  // Reason for reporting
+    @Enumerated(EnumType.STRING)
+    private ReportReason reason; // Changed this to enum
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private String adminAction;  // Notes from the admin
+    private String adminAction;
 
-    // Getters & Setters
     public enum Status {
         PENDING, REVIEWED, RESOLVED
     }
+
+    public enum ReportReason {
+        FALSE_INFORMATION, BAD_LANGUAGE, SPAM, OFFENSIVE_CONTENT
+    }
+
 }

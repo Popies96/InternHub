@@ -30,18 +30,13 @@ public class ReviewScore {
 
 
     @Column(nullable = false)
-    private int score; // Value between 1 and 5
+    private int score;
 
     public ReviewScore(Review review, RatingCriteria criteria, int score) {
         this.review = review;
         this.criteria = criteria;
         this.score = score;
     }
- /* @PrePersist
-    public void setDefaultCriteriaIfNull() {
-        if (this.criteria == null) {
-            this.criteria = "Default Criteria";  // Default value
-        }
-    }*/
+
 
 }

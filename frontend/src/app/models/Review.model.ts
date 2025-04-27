@@ -1,21 +1,4 @@
-/*import { Enterprise } from "./Entreprise";
 
-import { User } from "./User"; // Ensure this model exists
-import { Internship } from "./Internship"; // Ensure this model exists
-import { ReviewScore } from "./ReviewScore"; // Ensure this model exists
-
-export interface Review {
-  id?: number;
-  revieweeId: number;
-  reviewerId: number;
-  comment: string;
-  rating: number;
-  reviewDate: string;
-  reviewer?: User;
-  enterprise?: Enterprise;
-  scores: ReviewScore[];
-}
-*/
 
 export interface ReviewScore {
   criteria: string;
@@ -28,7 +11,6 @@ export interface Review {
     id: number;
     username?: string;
     fullName?: string;
-    // Add other user properties you might need
   };
   reviewee: any;
   internship: any;

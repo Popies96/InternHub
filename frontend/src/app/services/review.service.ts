@@ -57,4 +57,19 @@ export class ReviewService {
     return this.http.post(url, {}, { headers, responseType: 'text' });
   }
 
+
+  reportReview(reviewId: string, reason: string) {
+    const headers = this.createAuthorizedHeader();
+
+    return this.http.post(
+      `${this.baseUrl}/report`,
+      {
+        reviewId: reviewId,
+        reason: reason
+      },
+      { headers }
+    );
+  }
+
+
 }

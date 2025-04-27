@@ -1,9 +1,11 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dto.ReportReviewRequest;
 import com.example.backend.dto.ReviewDTO;
 import com.example.backend.entity.*;
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.RecommandationRepository;
+import com.example.backend.repository.ReportedReviewRepository;
 import com.example.backend.repository.ReviewRepository;
 import com.example.backend.services.ReviewService.GeminiService;
 import com.example.backend.services.ReviewService.ReviewService;
@@ -12,12 +14,14 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -41,15 +45,10 @@ public class ReviewController {
         this.geminiService = geminiService;
     }
 
-    //ok
- /*  @PostMapping
-   public Review createReview(@RequestBody Review review) {
-        return reviewService.createReview(review);
-    }*/
 
 @Autowired
     private  UserServiceImpl userServiceImpl; // <-- inject this
-
+    @PreAuthorize(" hasRole('STUDENT')")
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
         User reviewer = userServiceImpl.getAuthenticatedUser(); // <-- get the logged-in user
@@ -70,11 +69,15 @@ public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
 
 
 //ok
-    @DeleteMapping("/{id}")
+@PreAuthorize(" hasRole('STUDENT') or hasRole('ADMIN')")
+
+@DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
     }
     //ok
+    @PreAuthorize(" hasRole('STUDENT')")
+
     @PutMapping("/{id}")
     public Review updateReview(@PathVariable Long id, @RequestBody @P("review") Review review) {
         return reviewService.updateReview(id, review);
@@ -90,7 +93,7 @@ public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
 //Ai
 
 @PostMapping("/recommendation/{internshipId}")
-@PreAuthorize("hasRole('STUDENT') or hasRole('ENTERPRISE') or hasRole('ADMIN')")
+@PreAuthorize(" hasRole('ENTERPRISE')")
 
 public ResponseEntity<String> getRecommendation(
         @PathVariable Long internshipId,
@@ -101,14 +104,13 @@ public ResponseEntity<String> getRecommendation(
 
     Optional<Recommendation> existing = recommendationRepository.findByInternship(internship);
 
-    // Return existing recommendation unless regenerate is requested
+
     if (existing.isPresent() && !regenerate) {
         return ResponseEntity.ok(existing.get().getContent());
     }
 
     List<Review> reviews = reviewRepository.findByInternshipId(internshipId);
 
-    // Get only non-empty comments
     List<String> reviewComments = reviews.stream()
             .map(Review::getComment)
             .filter(comment -> comment != null && !comment.trim().isEmpty())
@@ -116,7 +118,6 @@ public ResponseEntity<String> getRecommendation(
 
     String enterpriseName = internship.getEnterprise().getNom();
 
-    // Simple and direct prompt
     StringBuilder prompt = new StringBuilder();
     prompt.append("Only consider comprehensible and useful comments to generate a recommendation like a report for the enterprise and make it neat without special caracters like * or # ");
     prompt.append(enterpriseName).append(".\n");
@@ -127,7 +128,6 @@ public ResponseEntity<String> getRecommendation(
 
     String result = geminiService.generateRecommendation(prompt.toString());
 
-    // Save new or update existing recommendation
     Recommendation recommendation = existing.orElse(
             Recommendation.builder()
                     .internship(internship)
@@ -141,6 +141,35 @@ public ResponseEntity<String> getRecommendation(
     return ResponseEntity.ok(result);
 }
 
+//report a review
+@PostMapping("/report")
+@PreAuthorize("hasRole('ENTERPRISE')")
+public ReportedReview reportReview(@RequestBody ReportReviewRequest request) {
+    // Get the currently authenticated user (reporter)
+    User reporter = (User) SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getPrincipal();
 
+    // Call service with review ID, authenticated user, and reason
+    return reviewService.reportReview(
+            request.getReviewId(), reporter, request.getReason()
+    );
+}
+    @GetMapping("/status/{status}")
+    public List<ReportedReview> getReportedReviewsByStatus(@PathVariable ReportedReview.Status status) {
+        return reviewService.getAllReportedReviews(status);
+    }
+
+    @PutMapping("/action/{reportId}")
+    public ReportedReview takeActionOnReport(@PathVariable UUID reportId,
+                                             @RequestParam ReportedReview.Status status,
+                                             @RequestParam String adminAction) {
+        return reviewService.takeAction(reportId, status, adminAction);
+    }
+
+    @DeleteMapping("/{reportId}")
+    public void deleteReportedReview(@PathVariable UUID reportId) {
+        reviewService.deleteReportedReview(reportId);
+    }
 
 }

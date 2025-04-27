@@ -1,55 +1,90 @@
-<div class="review-form-container">
-  <h2>Edit Review</h2>
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Review</h2>
 
-  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
-
-    <!-- Hidden Reviewer ID -->
-
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="space-y-6">
     <!-- Comment Field -->
-    <div class="form-group">
-      <label for="comment">Comment*</label>
+    <div class="space-y-2">
+      <label for="comment" class="block text-sm font-medium text-gray-700">Comment*</label>
       <textarea
         id="comment"
         formControlName="comment"
         rows="5"
-        class="form-control"
+        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
         placeholder="Edit your comment..."></textarea>
-      <div *ngIf="reviewForm.get('comment')?.touched && reviewForm.get('comment')?.invalid" class="error-message">
+      <div *ngIf="reviewForm.get('comment')?.touched && reviewForm.get('comment')?.invalid" class="text-sm text-red-600">
         <span *ngIf="reviewForm.get('comment')?.errors?.['required']">Comment is required</span>
         <span *ngIf="reviewForm.get('comment')?.errors?.['maxlength']">Max 1000 characters allowed</span>
       </div>
     </div>
 
     <!-- Scores Section -->
-    <div formArrayName="scores">
-      <div
-        *ngFor="let scoreGroup of scores.controls; let i = index"
-        [formGroupName]="i"
-        class="score-group">
+    <div formArrayName="scores" class="space-y-4">
+      <div *ngFor="let scoreGroup of scores.controls; let i = index" [formGroupName]="i" class="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4 relative group">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Criteria Field -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Criteria*</label>
+            <select
+              formControlName="criteria"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            >
+              <option value="" disabled>Select criteria</option>
+              <option *ngFor="let criteria of ratingCriteria" [value]="criteria">{{ criteria }}</option>
+            </select>
+            <div *ngIf="scoreGroup.get('criteria')?.invalid && scoreGroup.get('criteria')?.touched" class="text-sm text-red-600">
+              Criteria is required
+            </div>
+          </div>
 
-        <div class="form-group">
-          <label>Criteria*</label>
-          <select formControlName="criteria" class="form-control">
-            <option value="" disabled>Select criteria</option>
-            <option *ngFor="let criteria of ratingCriteria" [value]="criteria">{{ criteria }}</option>
-          </select>
+          <!-- Score Field -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Score (1-5)*</label>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              formControlName="score"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            />
+            <div *ngIf="scoreGroup.get('score')?.invalid && scoreGroup.get('score')?.touched" class="text-sm text-red-600">
+              <span *ngIf="scoreGroup.get('score')?.errors?.['required']">Score is required</span>
+              <span *ngIf="scoreGroup.get('score')?.errors?.['min'] || scoreGroup.get('score')?.errors?.['max']">
+                Must be between 1 and 5
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Score (1–5)*</label>
-          <input type="number" min="1" max="5" class="form-control" formControlName="score" />
-        </div>
-
-        <button type="button" class="btn btn-remove" (click)="removeScore(i)" *ngIf="scores.length > 1">Remove</button>
+        <!-- Remove Button -->
+        <button
+          type="button"
+          (click)="removeScore(i)"
+          *ngIf="scores.length > 1"
+          class="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+          title="Remove this score">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
     </div>
 
-    <button type="button" class="btn btn-secondary" (click)="addScore()">Add Score</button>
+    <!-- Add Score Button -->
+    <button
+      type="button"
+      (click)="addScore()"
+      class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors flex items-center justify-center gap-2">
+      <i class="fas fa-plus-circle"></i>
+      Add Score
+    </button>
 
-    <!-- Submit -->
-    <div class="form-actions">
-      <button type="submit" class="btn btn-submit" [disabled]="reviewForm.invalid">Update Review</button>
+    <!-- Submit Button -->
+    <div class="flex justify-end pt-4">
+      <button
+        type="submit"
+        [disabled]="reviewForm.invalid"
+        class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+        <i class="fas fa-save"></i>
+        Update Review
+      </button>
     </div>
-
   </form>
 </div>

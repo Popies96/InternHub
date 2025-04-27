@@ -47,7 +47,6 @@ export class EditReviewComponent implements OnInit {
 
       this.reviewForm.patchValue({
         comment: review.comment,
-         // <-- safely access it
       });
 
       const scoresArray = this.reviewForm.get('scores') as FormArray;
