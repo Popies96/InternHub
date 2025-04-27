@@ -76,6 +76,7 @@ export class EditCertificatesComponent implements OnInit {
       }
     });
   }
+  
 
   loadStudentsForInternship(internshipId: number): void {
     this.certificateService.getStudentsByInternship(internshipId).subscribe({

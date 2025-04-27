@@ -73,11 +73,18 @@ export class CertificateService {
       .pipe(catchError(this.handleError));
   }
 
-  sendCertificateByEmail(certificateId: number, email: string): Observable<any> {
-    return this.http.post(
-      `${API_URL}/${certificateId}/send-email`,
-      { recipientEmail: email },
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+  sendCertificateByEmail(
+    certificateId: number,
+    email: string
+  ): Observable<any> {
+    console.log(email);
+    
+    return this.http
+      .post(
+        `${API_URL}/${certificateId}/send-email?recipientEmail=${email}`,
+        {  },
+        { headers: this.getHeaders() }
+      )
+      .pipe(catchError(this.handleError));
   }
 }

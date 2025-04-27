@@ -36,7 +36,6 @@ public class Certificate {
     @JoinColumn(name = "issuer_id")
     private User issuer;
 
-    //@OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<SkillBadge> skillBadges = new ArrayList<>();
+   
 
 }

@@ -11,7 +11,6 @@ import java.util.List;
 public interface CertificateService {
     CertificateResponse createCertificate(CertificateRequest request);
     CertificateResponse getCertificateById(Long id);
-
     CertificateResponse updateCertificate(Long id, CertificateRequest request);
 
     void deleteCertificate(Long id);

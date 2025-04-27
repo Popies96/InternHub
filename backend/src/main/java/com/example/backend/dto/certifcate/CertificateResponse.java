@@ -17,7 +17,7 @@ public class CertificateResponse {
     private CertificateStatus status;
     private String certificateContent;
     private Long studentId;
-    private String studentFirstName; // Nouveau champ
+    private String studentFirstName;
     private String studentLastName;
     private String issuerFirstName;
     private String issuerLastName;

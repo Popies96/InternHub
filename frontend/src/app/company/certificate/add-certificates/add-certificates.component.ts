@@ -77,8 +77,8 @@ export class AddCertificatesComponent implements OnInit {
   loadInternships(): void {
     this.certificateService.getAllInternships().subscribe({
       next: (internships) => {
-        this.internships = internships.filter(i => new Date(i.endDate) <= new Date());
-
+        this.internships = internships;
+        console.log('All completed internships:', this.internships);
       },
       error: (err) => {
         console.error('Error loading internships', err);

@@ -48,15 +48,15 @@ export class StudentDetailsCertifComponent implements OnInit {
   }
 
   printCertificate(): void {
-    // Créer un clone du contenu du certificat
+  
     const printContent = document.querySelector('.certificate-page-container .mx-auto')?.cloneNode(true) as HTMLElement;
     
     if (printContent) {
-      // Créer une nouvelle fenêtre pour l'impression
+     
       const printWindow = window.open('', '', 'width=800,height=600');
       
       if (printWindow) {
-        // Ajouter le style et le contenu à la nouvelle fenêtre
+        
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>
@@ -172,6 +172,7 @@ export class StudentDetailsCertifComponent implements OnInit {
       }
     }
   }
-
   
-}
+  
+  
+  }

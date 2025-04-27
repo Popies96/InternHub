@@ -50,35 +50,43 @@ export class DetailsCertificatesComponent implements OnInit {
 
   sendCertificateByEmail(): void {
     if (!this.certificate || !this.certificate.id) {
-        console.error('No certificate loaded or missing ID');
-        return;
+      console.error('No certificate loaded or missing ID');
+      return;
     }
-    
-    const defaultEmail = ''; // Ou this.certificate.studentEmail si vous l'ajoutez au modèle
-    const recipientEmail = prompt("Enter recipient email address:", defaultEmail);
-    
+
+    const defaultEmail = ''; 
+    const recipientEmail = prompt(
+      'Enter recipient email address:',
+      defaultEmail
+    );
+
     if (recipientEmail) {
-        this.certificateService.sendCertificateByEmail(this.certificate.id, recipientEmail).subscribe({
-            next: () => {
-                console.log('Certificate sent successfully!');
-                // Ou utilisez une autre méthode de notification
-            },
-            error: (err) => {
-                console.error('Error sending certificate', err);
-            }
+      console.log(recipientEmail);
+      
+      this.certificateService
+        .sendCertificateByEmail(this.certificate.id, recipientEmail)
+        .subscribe({
+          next: () => {
+            console.log('Certificate sent successfully!');
+        
+          },
+          error: (err) => {
+            console.error('Error sending certificate', err);
+          },
         });
     }
-}
+  }
+
 printCertificate(): void {
-  // Créer un clone du contenu du certificat
+  
   const printContent = document.querySelector('.certificate-page-container .mx-auto')?.cloneNode(true) as HTMLElement;
   
   if (printContent) {
-    // Créer une nouvelle fenêtre pour l'impression
+   
     const printWindow = window.open('', '', 'width=800,height=600');
     
     if (printWindow) {
-      // Ajouter le style et le contenu à la nouvelle fenêtre
+      
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>

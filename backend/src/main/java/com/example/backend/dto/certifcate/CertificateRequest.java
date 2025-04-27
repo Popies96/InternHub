@@ -21,7 +21,7 @@ public class CertificateRequest {
     private LocalDate issueDate;
     private String verificationID;
     private Long internshipId;
-  //  private Long issuerId;
+    private Long issuerId;
     private String certificateContent;
 
 }

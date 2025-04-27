@@ -33,9 +33,9 @@ public class CertificateServiceImpl  implements CertificateService {
     private StudentRepository studentRepository;
     @Autowired
     private EmailService emailService;
-
-
-    private final InternshipRepository internshipRepository;
+    @Autowired
+    private  InternshipRepository internshipRepository;
+    @Autowired
     private UserServiceImpl userService;
 
     @Autowired
@@ -120,7 +120,7 @@ public class CertificateServiceImpl  implements CertificateService {
         response.setDurationInMonths(internship.getDurationInMonths());
         response.setStartDate(internship.getStartDate());
         response.setEndDate(internship.getEndDate());
-        response.setStatus("COMPLETED"); // Forcé à COMPLETED
+        response.setStatus("COMPLETED");
 
         if (internship.getEnterprise() != null) {
             EnterpriseDto enterpriseDto = new EnterpriseDto();
@@ -137,12 +137,20 @@ public class CertificateServiceImpl  implements CertificateService {
     public CertificateResponse updateCertificate(Long id, CertificateRequest request) {
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() ->  new NoSuchElementException("Certificate not found"));
+        Student student = studentRepository.findById(request.getStudentId())
+                .orElseThrow(() -> new NoSuchElementException("Student not found"));
+
+        Internship internship = internshipRepository.findById(request.getInternshipId())
+                .orElseThrow(() ->  new NoSuchElementException("Internship not found"));
 
         certificate.setTitle(request.getTitle());
         certificate.setCertificateContent(request.getCertificateContent());
         certificate.setStatus(request.getStatus());
         certificate.setIssueDate(request.getIssueDate());
         certificate.setVerifactionID(request.getVerificationID());
+        certificate.setStudent(student);
+        certificate.setInternship(internship);
+
 
 
         Certificate updatedCertificate = certificateRepository.save(certificate);
