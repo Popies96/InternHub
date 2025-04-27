@@ -47,6 +47,15 @@ public class UserController {
             req.setPrenom(user.getPrenom());
             req.setEmail(user.getEmail());
             req.setPassword(user.getPassword());
+            req.setRole(user.getRole().toString());
+            // Set role-specific fields
+            if (user instanceof Student student) {
+                req.setSchool(student.getSchool());
+                req.setCin(student.getCin());
+            } else if (user instanceof Enterprise enterprise) {
+                req.setCompanyName(enterprise.getCompanyName());
+                req.setCompanyAddress(enterprise.getCompanyAddress());
+            }
             return req;
         }).collect(Collectors.toList());
 

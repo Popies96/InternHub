@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,10 @@ public class TaskAi {
     @ManyToOne
     @JoinColumn(name = "internshipAi_id", nullable = false)
     private InternshipAi internshipAi;
+
+    @OneToOne(mappedBy = "taskAi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private TaskAiRep taskRep;
 
     public Long getId() {
         return id;
@@ -69,5 +74,13 @@ public class TaskAi {
 
     public void setInternshipAi(InternshipAi internshipAi) {
         this.internshipAi = internshipAi;
+    }
+
+    public TaskAiRep getTaskRep() {
+        return taskRep;
+    }
+
+    public void setTaskRep(TaskAiRep taskRep) {
+        this.taskRep = taskRep;
     }
 }

@@ -12,11 +12,10 @@ public class SmsService {
 
 
 
-    public boolean sendValidationCode(String phoneNumber) {
-        String validationCode = generateValidationCode();
+    public boolean sendValidationCode(String phoneNumber,String verificationCode) {
 
         // Use an SMS API provider to send the SMS (e.g., Twilio, Nexmo)
-        String smsApiUrl = "https://api.smsprovider.com/sendMessage?to=" + phoneNumber + "&message=Your reset code: " + validationCode;
+        String smsApiUrl = "https://api.smsprovider.com/sendMessage?to=" + phoneNumber + "&message=Your reset code: " + verificationCode;
 
         try {
 
@@ -27,8 +26,5 @@ public class SmsService {
         }
     }
 
-    private String generateValidationCode() {
-        // Example: Generate a 4-digit code
-        return String.valueOf((int) (Math.random() * 10000));
-    }
+
 }

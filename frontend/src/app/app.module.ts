@@ -47,6 +47,9 @@ import { DetailsCertificatesComponent } from './pages/company/certificate/detail
 import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
 import { CertificatesComponent } from './pages/company/certificate/certificates/certificates.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { SignLanguageDetectorComponent } from './components/sign-language-detector/sign-language-detector.component';
+import { InterviewTestComponent } from './components/interview-test/interview-test.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +96,9 @@ import { ProfileComponent } from './pages/profile/profile.component';
     EditCertificatesComponent,
     CertificatesComponent,
     ProfileComponent,
+    AdminDashboardComponent,
+    SignLanguageDetectorComponent,
+    InterviewTestComponent,
   ],
   imports: [
     BrowserModule,

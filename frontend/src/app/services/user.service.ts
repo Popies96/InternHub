@@ -14,6 +14,8 @@ interface TokenPayload {
     role: string;
     school: string;
     cin: number;
+    companyName: string;
+    companyAddress: string;
     internships: any[]; 
     internshipAiList: InternshipAi[];
   }
@@ -63,7 +65,7 @@ export class UserService {
       );
     }
     return this.http
-      .put<User>(`${baseUrl}user/update`, user, { headers })
+      .put<User>(`${baseUrl}user/update/`, user, { headers })
   }
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');

@@ -31,6 +31,8 @@ import { AddCertificatesComponent } from './pages/company/certificate/add-certif
 import { EditCertificatesComponent } from './pages/company/certificate/edit-certificates/edit-certificates.component';
 import { DetailsCertificatesComponent } from './pages/company/certificate/details-certificates/details-certificates.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { InterviewTestComponent } from './components/interview-test/interview-test.component';
 
 const routes: Routes = [
   {
@@ -147,10 +149,11 @@ const routes: Routes = [
   },
 
   { path: '', component: LandingComponent },
+  { path: 'test', component: InterviewTestComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
   { path: 'onboard', component: OnboardComponent },
-  { path: 'dashboard', component: HomeComponent },
+  { path: 'dashboard', component: AdminDashboardComponent },
   {
     path: 'workflow/:id',
     component: TaskAiWorkflowComponent,

@@ -1,0 +1,27 @@
+<!-- sign-language-detector.component.html -->
+<div class="sign-language-detector">
+  <div class="camera-container">
+    <video #videoElement autoplay playsinline class="camera-feed"></video>
+    <div class="detection-overlay" *ngIf="detectionActive"></div>
+  </div>
+  
+  <div class="controls">
+    <button (click)="startCamera()" [disabled]="isCameraActive">Start Camera</button>
+    <button (click)="startDetection()" [disabled]="!isCameraActive || detectionActive">Start Detection</button>
+    <button (click)="stopDetection()" [disabled]="!detectionActive">Stop Detection</button>
+    <button (click)="stopCamera()" [disabled]="!isCameraActive">Stop Camera</button>
+    <button (click)="clearSentence()">Clear Sentence</button>
+  </div>
+  
+  <div class="detection-results">
+    <div class="current-sign">
+      <h3>Current Sign:</h3>
+      <p>{{ signDetected }}</p>
+    </div>
+    
+    <div class="current-sentence">
+      <h3>Current Sentence:</h3>
+      <p>{{ currentSentence }}</p>
+    </div>
+  </div>
+</div>

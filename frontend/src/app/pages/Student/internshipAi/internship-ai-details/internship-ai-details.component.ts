@@ -11,7 +11,9 @@ import { InternshipAiService } from 'src/app/services/internship-ai.service';
 export class InternshipAiDetailsComponent implements OnInit {
   internshipId: number | null = null;
   internship!: InternshipAi;
-
+  completionPercentage: number = 0;
+  completedTasksCount: number = 0;
+  totalTasksCount: number = 0;
   constructor(
     private router: Router,
     private internshipAiService: InternshipAiService,
@@ -30,11 +32,28 @@ export class InternshipAiDetailsComponent implements OnInit {
           this.internship = data;
           console.log('Internship data:', this.internship);
           this.checkAndUpdateInternshipStatus();
+          this.calculateCompletionProgress();
         },
         (error) => {
           console.error('Error fetching internshipAi:', error);
         }
       );
+    }
+  }
+
+  private calculateCompletionProgress(): void {
+    if (this.internship?.taskAiList?.length) {
+      this.totalTasksCount = this.internship.taskAiList.length;
+      this.completedTasksCount = this.internship.taskAiList.filter(
+        (task) => task.status === 'COMPLETED'
+      ).length;
+      this.completionPercentage = Math.round(
+        (this.completedTasksCount / this.totalTasksCount) * 100
+      );
+    } else {
+      this.completionPercentage = 0;
+      this.completedTasksCount = 0;
+      this.totalTasksCount = 0;
     }
   }
 

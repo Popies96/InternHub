@@ -7,8 +7,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "students")
 @PrimaryKeyJoinColumn(name = "id") // Links with User table
 public class Student extends User {
