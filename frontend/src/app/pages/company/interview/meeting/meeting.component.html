@@ -1,0 +1,22 @@
+<div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] overflow-hidden flex flex-col">
+    <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-4 px-6 text-2xl font-bold">
+      Interview Meeting Room
+    </div>
+
+    <div class="flex-1 relative">
+      <iframe
+        *ngIf="meetingUrl"
+        [src]="meetingUrl"
+        class="absolute inset-0 w-full h-full rounded-b-2xl"
+        allow="camera; microphone; fullscreen; display-capture"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div class="bg-gray-100 py-3 px-6 flex justify-between items-center text-gray-700 text-sm">
+      <div>Powered by InternHub</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8">
+  <div
+    *ngFor="let interview of interviews"
+    class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300"
+  >
+    <div class="mb-4">
+      <h3 class="text-xl font-bold text-gray-800 mb-2">
+        Interview #{{ interview.id }}
+        <span
+          class="ml-2 text-sm font-semibold px-2 py-1 rounded-full"
+          [ngClass]="{
+            'bg-green-100 text-green-800': interview.status === 'SCHEDULED',
+            'bg-yellow-100 text-yellow-800': interview.status === 'PENDING',
+            'bg-red-100 text-red-800': interview.status === 'CANCELED'
+          }"
+        >
+          {{ interview.status }}
+        </span>
+      </h3>
+      <p class="text-gray-600 text-sm">
+        Application ID:
+        <span class="font-medium">{{ interview.applicationId }}</span>
+      </p>
+      <p class="text-gray-600 text-sm">
+        Scheduled:
+        <span class="font-medium">{{
+          interview.scheduledDate | date : "medium"
+        }}</span>
+      </p>
+      <p class="text-gray-600 text-sm">
+        Mode: <span class="font-medium">{{ interview.mode }}</span>
+      </p>
+      <p class="text-gray-600 text-sm">
+        Location:
+        <span class="font-medium">{{
+          interview.location ? interview.location : "Online"
+        }}</span>
+      </p>
+    </div>
+    <div class="border-t border-gray-200 pt-4">
+      <div
+        *ngIf="
+          interview.mode === 'ONLINE' && interview.meetingLink;
+          else noMeeting
+        "
+      >
+        <p class="text-blue-500 text-sm mb-2 break-words">
+          {{ interview.meetingLink }}
+        </p>
+        <button
+          [routerLink]="[
+            '/company/meeting',
+            extractMeetingId(interview.meetingLink)
+          ]"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors duration-300"
+        >
+          Join Meeting
+        </button>
+      </div>
+      <ng-template #noMeeting>
+        <div class="text-red-400 text-center text-sm">
+          Meeting link not available.
+        </div>
+      </ng-template>
+
+      <button
+        (click)="deleteInterview(interview.id)"
+        class="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-md transition-colors duration-300"
+      >
+        Delete Interview
+      </button>
+      <div
+        *ngIf="interview.status === 'CANCELED'"
+        class="text-red-500 text-center mt-4"
+      >
+        This interview is already canceled.
+      </div>
+
+      <button
+        *ngIf="interview.status !== 'CANCELED'"
+        (click)="cancelInterview(interview.id)"
+        class="mt-4 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-md transition-colors duration-300"
+      >
+        Cancel Interview
+      </button>
+    </div>
+  </div>
+</div>
+<hr class="my-10 border-gray-300" />
+
+<div class="bg-white rounded-xl shadow-lg p-6">
+  <h2 class="text-2xl font-bold mb-6 text-indigo-600">
+    Scheduled Interviews Calendar
+  </h2>
+
+  <full-calendar [options]="calendarOptions"></full-calendar>
+</div>

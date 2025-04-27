@@ -20,7 +20,6 @@ import { DashboardComponent } from './pages/Student/dashboard/dashboard.componen
 import { ApplicationComponent } from './pages/Student/application/application.component';
 import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
-import { InterviewComponent } from './pages/Student/interview/interview.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { InternshipAiListComponent } from './pages/Student/internshipAi/internship-ai-list/internship-ai-list.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
@@ -50,7 +49,15 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 import { SignLanguageDetectorComponent } from './components/sign-language-detector/sign-language-detector.component';
 import { InterviewTestComponent } from './components/interview-test/interview-test.component';
-
+import { InterviewListComponent } from './pages/company/interview/interview-list/interview-list.component';
+import { InterviewSchedulerComponent } from './pages/company/interview/interview-scheduler/interview-scheduler.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { MeetingComponent } from './pages/company/interview/meeting/meeting.component';
+import { ApplicationsComponent } from './pages/company/applications/applications.component';
+import { EditReviewComponent } from './pages/Student/reviews/edit-review/edit-review.component';
+import { ReviewFormComponent } from './pages/Student/reviews/review-form/review-form.component';
+import { ReviewComponent } from './pages/Student/reviews/review/review.component';
+import { EnterpriseReviewComponent } from './pages/company/enterprise-review/enterprise-review.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +77,6 @@ import { InterviewTestComponent } from './components/interview-test/interview-te
     ApplicationComponent,
     IndexComponent,
     InternshipsComponent,
-    InterviewComponent,
     SettingsComponent,
     InternshipAiListComponent,
     UnauthorizedComponent,
@@ -99,6 +105,15 @@ import { InterviewTestComponent } from './components/interview-test/interview-te
     AdminDashboardComponent,
     SignLanguageDetectorComponent,
     InterviewTestComponent,
+    InterviewListComponent,
+    InterviewSchedulerComponent,
+    MeetingComponent,
+    ApplicationsComponent,
+    EditReviewComponent,
+    ReviewFormComponent,
+    ReviewComponent,
+    EnterpriseReviewComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -107,6 +122,7 @@ import { InterviewTestComponent } from './components/interview-test/interview-te
     FormsModule,
     ReactiveFormsModule,
     MonacoEditorModule,
+    FullCalendarModule,
   ],
   providers: [
     {

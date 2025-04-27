@@ -11,7 +11,6 @@ import { IndexComponent } from './pages/Student/index/index.component';
 import { InternshipsComponent } from './pages/Student/internships/internships.component';
 import { ApplicationComponent } from './pages/Student/application/application.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { InterviewComponent } from './pages/Student/interview/interview.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { InternshipAiListComponent } from './pages/Student/internshipAi/internship-ai-list/internship-ai-list.component';
@@ -33,6 +32,14 @@ import { DetailsCertificatesComponent } from './pages/company/certificate/detail
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 import { InterviewTestComponent } from './components/interview-test/interview-test.component';
+import { MeetingComponent } from './pages/company/interview/meeting/meeting.component';
+import { InterviewListComponent } from './pages/company/interview/interview-list/interview-list.component';
+import { InterviewSchedulerComponent } from './pages/company/interview/interview-scheduler/interview-scheduler.component';
+import { ApplicationsComponent } from './pages/company/applications/applications.component';
+import { ReviewFormComponent } from './pages/Student/reviews/review-form/review-form.component';
+import { EditReviewComponent } from './pages/Student/reviews/edit-review/edit-review.component';
+import { ReviewComponent } from './pages/Student/reviews/review/review.component';
+import { EnterpriseReviewComponent } from './pages/company/enterprise-review/enterprise-review.component';
 
 const routes: Routes = [
   {
@@ -52,6 +59,9 @@ const routes: Routes = [
         component: InternshipsComponent,
         data: { breadcrumb: 'Internships' },
       },
+      { path: 'add-review', component: ReviewFormComponent },
+      { path: 'edit-review/:id', component: EditReviewComponent },
+      { path: 'reviews', component: ReviewComponent },
       {
         path: 'internshipAi',
         children: [
@@ -104,11 +114,6 @@ const routes: Routes = [
         component: StudentDetailsCertifComponent,
         data: { breadcrumb: 'certificate details' },
       },
-      {
-        path: 'interview',
-        component: InterviewComponent,
-        data: { breadcrumb: 'Interviews' },
-      },
     ],
   },
   {
@@ -122,6 +127,18 @@ const routes: Routes = [
         path: 'chat',
         component: ConversationComponent,
         data: { breadcrumb: 'Chat' },
+      },
+      { path: 'meeting/:meetingId', component: MeetingComponent },
+      { path: 'interviews', component: InterviewListComponent },
+      {
+        path: 'schedule-interview/:applicationId',
+        component: InterviewSchedulerComponent,
+      },
+      { path: 'reviews', component: EnterpriseReviewComponent },
+      {
+        path: 'app',
+        component: ApplicationsComponent,
+        data: { breadcrumb: 'Applications' },
       },
       {
         path: 'profile',

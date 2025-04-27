@@ -92,4 +92,11 @@ export class JwtService {
       return null;
     }
   }
+  getUserId(): string | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    const decoded = this.decodeToken(token);
+    return decoded?.sub || null; // Assuming the userId is stored in the 'sub' field
+  }
 }
