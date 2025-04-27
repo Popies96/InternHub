@@ -32,7 +32,6 @@ export class InterviewSchedulerComponent implements OnInit {
   
 
   ngOnInit(): void {
-    // Extract the applicationId from the route
     this.route.paramMap.subscribe(params => {
       const id = params.get('applicationId');
       if (id !== null) {
@@ -53,7 +52,7 @@ export class InterviewSchedulerComponent implements OnInit {
       this.form.get('location')?.clearValidators();
     } else {
       this.form.get('location')?.setValidators([Validators.required]);
-      setTimeout(() => this.initMap(), 0); // Initialize map after view updates
+      setTimeout(() => this.initMap(), 0);
     }
   
     this.form.get('location')?.updateValueAndValidity();
@@ -73,7 +72,7 @@ export class InterviewSchedulerComponent implements OnInit {
 
 initMap() {
   if (this.map) {
-    this.map.remove(); // Remove previous map if exists
+    this.map.remove();
   }
   delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -83,7 +82,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'assets/marker-shadow.png',
 });
 
-  this.map = L.map('map').setView([36.8065, 10.1815], 13); // Default center (Tunis for example)
+  this.map = L.map('map').setView([36.8065, 10.1815], 13); 
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
@@ -91,7 +90,7 @@ L.Icon.Default.mergeOptions({
 
   const marker = L.marker([36.8065, 10.1815], { draggable: true }).addTo(this.map);
 
-  // When user clicks on map
+  
   this.map.on('click', (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng;
     marker.setLatLng([lat, lng]);

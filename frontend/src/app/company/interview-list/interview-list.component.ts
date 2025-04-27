@@ -54,4 +54,29 @@ export class InterviewListComponent implements OnInit {
     const parts = link.split('/');
     return parts[parts.length - 1];
   }
+  cancelInterview(id: number) {
+    if (confirm('Are you sure you want to cancel this interview?')) {
+      this.interviewService.cancelInterview(id).subscribe({
+        next: () => {
+          alert('Interview cancelled successfully.');
+          this.loadInterviews(); 
+        }
+      });
+    }
+  }
+  
+  deleteInterview(id: number) {
+    if (confirm('Are you sure you want to delete this interview?')) {
+      this.interviewService.deleteInterview(id).subscribe({
+        next: () => {
+          alert('Interview deleted successfully.');
+          this.loadInterviews();
+        },
+        error: (err) => {
+          console.error('Failed to delete interview', err);
+          alert('Failed to delete interview.');
+        }
+      });
+    }
+  }
 }

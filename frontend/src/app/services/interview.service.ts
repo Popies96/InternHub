@@ -15,4 +15,10 @@ export class InterviewService {
   getAllInterviews() {
     return this.http.get<any[]>(this.apiUrl);
   }
+  deleteInterview(id: number) {
+    return this.http.delete(this.apiUrl + '/' + id);
+  }
+  cancelInterview(id: number) {
+    return this.http.patch(this.apiUrl + '/' + id + '/cancel' , {}); 
+  }
 }
