@@ -25,7 +25,8 @@ export class InterviewSchedulerComponent implements OnInit {
       scheduledDate: ['', Validators.required],
       mode: ['ONLINE', Validators.required],
       location: [''],
-      notes: ['']
+      notes: [''],
+      status: ['SCHEDULED']
     });
   }
   

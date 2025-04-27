@@ -41,6 +41,7 @@ import { CalendarComponent } from './Student/calendar/calendar.component';
 import { InterviewSchedulerComponent } from './company/interview-scheduler/interview-scheduler.component';
 import { MeetingComponent } from './company/meeting/meeting.component';
 import { InterviewListComponent } from './company/interview-list/interview-list.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 
@@ -85,6 +86,7 @@ import { InterviewListComponent } from './company/interview-list/interview-list.
         InterviewListComponent,
       ],
       imports: [
+        FullCalendarModule,
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
