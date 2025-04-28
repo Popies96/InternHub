@@ -25,6 +25,7 @@ export class TopicDetailComponent implements OnInit {
   name: string | null = null;
   Current!:User ;
   TopicUser!:User;
+  
 
   constructor(
     private route: ActivatedRoute,

@@ -67,10 +67,10 @@
     </svg>
   
     <!-- Message Counter Badge -->
-    <!-- <span *ngIf="getUnseenTotal() > 0" 
-          class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
-      {{ getUnseenTotal() }}
-    </span> -->
+    <span *ngIf="unseenCount > 0" 
+      class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+  {{ unseenCount }}
+</span>
   </button>
   
   <!-- Messages Dropdown -->
@@ -81,6 +81,7 @@
     
     <ul class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
       <li *ngFor="let user of users"
+      
           class="flex items-center gap-3 p-4 cursor-pointer hover:bg-blue-50 transition-all relative"
           [class.bg-blue-100]="user === selectedUser"
           (click)="openChat(user)">
@@ -106,6 +107,11 @@
           <p class="text-xs text-gray-500 truncate mt-0.5">
             <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
               <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
+              <span *ngIf="lastMsg.audioUrl" class="inline-flex items-center text-indigo-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </span>
               {{ (lastMsg.content | slice:0:25) + (lastMsg.content.length > 25 ? '...' : '') }}
             </ng-container>
             <ng-template #noMsg>No messages</ng-template>

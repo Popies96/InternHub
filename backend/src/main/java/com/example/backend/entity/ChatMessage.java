@@ -24,6 +24,9 @@ public class ChatMessage {
     private String content;
     private Date timestamp;
     private Boolean seen=false;
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
+    private String audioUrl;
 
 
 }

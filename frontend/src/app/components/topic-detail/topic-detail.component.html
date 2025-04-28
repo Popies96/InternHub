@@ -140,7 +140,8 @@
             class="w-10 h-10 rounded-full mr-4 shadow-sm">
           </div>
           <div class="form-content">
-            <textarea [(ngModel)]="newCommentContent" placeholder="Write your thoughtful response..." rows="4"></textarea>
+            <textarea [(ngModel)]="newCommentContent" placeholder="Write your thoughtful response..." rows="4"
+            (keydown.enter)="addComment()"></textarea>
             <div class="form-actions">
               <div class="formatting-tools">
                 <button class="format-btn"><i class="fas fa-bold"></i></button>
@@ -149,6 +150,8 @@
                 <button class="format-btn"><i class="fas fa-image"></i></button>
               </div>
               <button class="submit-btn" (click)="addComment()">Post Comment</button>
+
+              
             </div>
           </div>
         </div>

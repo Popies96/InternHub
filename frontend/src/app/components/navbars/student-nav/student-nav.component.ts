@@ -23,6 +23,8 @@ export class StudentNavComponent  implements OnInit {
     user!: User;
     UserName = '';
     lastMessages: { [userId: string]: ChatMessage } = {};
+    unseenCount: number = 0;
+
   
   breadcrumbs: Array<{label: string, url: string}> = [];
 
@@ -55,6 +57,7 @@ openChat(user: any): void {
         this.currentUser = String(user.id); // Assuming the user object has an 'id' property
         this.UserName = user.nom; // Assuming you need the username as well
         console.log('UserName:', this.UserName);
+        this.getUnseenMessagesCount(this.currentUser);
 
         // ✅ Connect WebSocket only after user is loaded
   
@@ -223,8 +226,10 @@ selectUser(user: any): void {
   console.log(`Selecting user ${user.id}, current user is ${this.currentUser}`);
 
   this.WebService.connect(this.currentUser); // OK to call multiple times, internally it should avoid reconnecting
-  
+
   this.unseenMessages[user.id] = true;
+  this.updateUnseenCount(); // Call to update the unseen count
+
 
 }  
 loadUsersAndLastMessages(): void {
@@ -261,5 +266,25 @@ loadUsersAndLastMessages(): void {
   });
 }
 
+getUnseenMessagesCount(userId: string): void {
+  this.messageService.getUnseenMessagesCount(userId).subscribe(
+    (count) => {
+      this.unseenCount = count;
+    },
+    (error) => {
+      console.error('Error fetching unseen messages count:', error);
+    }
+  );
+
+  console.log('Unseen messages count:', this.unseenCount);
+}
+updateUnseenCount() {
+  // You would likely need to fetch the unseen count again after marking as seen
+  this.messageService.getUnseenMessagesCount(this.currentUser)
+    .subscribe((count: number) => {
+      // Update the count in your UI
+      console.log(`Unseen messages count: ${count}`);
+    });
+}
 
 }
