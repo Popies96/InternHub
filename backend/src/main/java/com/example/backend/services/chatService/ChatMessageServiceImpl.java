@@ -11,15 +11,10 @@ import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 
 @Service
-
+@RequiredArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageRepository repository;
     private final ChatRoomService chatRoomService;
-
-    public ChatMessageServiceImpl(ChatMessageRepository repository, ChatRoomService chatRoomService) {
-        this.repository = repository;
-        this.chatRoomService = chatRoomService;
-    }
 
     @Override
     public ChatMessage save(ChatMessage chatMessage)

@@ -1,33 +1,42 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entity.ChatMessage;
-import com.example.backend.entity.ChatNotification;
-import com.example.backend.entity.ChatRoom;
-import com.example.backend.entity.User;
+import com.example.backend.entity.*;
 import com.example.backend.repository.ChatMessageRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.services.chatService.ChatMessageService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
-
+@RequiredArgsConstructor
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
@@ -35,14 +44,7 @@ public class ChatController {
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserServiceImpl userService;
-
-    public ChatController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService, UserRepository userRepository, ChatMessageRepository chatMessageRepository, UserServiceImpl userService) {
-        this.messagingTemplate = messagingTemplate;
-        this.chatMessageService = chatMessageService;
-        this.userRepository = userRepository;
-        this.chatMessageRepository = chatMessageRepository;
-        this.userService = userService;
-    }
+    private final String audioUploadDir = "uploads/audio/"; // relative path
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
@@ -60,7 +62,8 @@ public class ChatController {
                         savedMsg.getId(),
                         savedMsg.getSenderId(),
                         savedMsg.getRecipientId(),
-                        savedMsg.getContent()
+                        savedMsg.getContent(),
+                        ""
                 )
         );
         System.out.println("Message forwarding attempted");
@@ -78,6 +81,13 @@ public class ChatController {
     public ResponseEntity<User> getUser(@PathVariable long userId) {
         User user = userRepository.getReferenceById(userId);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/unseen-count/{userId}")
+    public ResponseEntity<Integer> getUnseenMessagesCount(@PathVariable String userId) {
+        int unseenCount = chatMessageRepository.countByRecipientIdAndSeen(userId, false);
+        System.err.println(unseenCount);
+        return ResponseEntity.ok(unseenCount);
     }
 
     @GetMapping("/seen/{senderId}/{recipientId}")
@@ -123,5 +133,77 @@ public class ChatController {
         return ResponseEntity.ok(lastMessages);
     }
 
+    @PostMapping("/upload-audio")
+    public ResponseEntity<?> uploadAudio(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("senderId") String senderId,
+            @RequestParam("recipientId") String recipientId) throws IOException {
 
+        // Validate file
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("No file provided");
+        }
+
+        // Ensure directory exists
+        File uploadDir = new File(audioUploadDir);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        // Generate unique filename
+        String filename = UUID.randomUUID() + ".webm";
+        Path filePath = Paths.get(audioUploadDir, filename);
+
+        // Save the file to the server
+        Files.copy(file.getInputStream(), filePath);
+
+        // Create and save message with only filename in the database
+        ChatMessage audioMessage = ChatMessage.builder()
+                .senderId(senderId)
+                .recipientId(recipientId)
+                .messageType(MessageType.AUDIO)
+                .audioUrl(filename)  // Save only the filename in the database
+                .timestamp(new Date())
+                .seen(false)
+                .build();
+
+        ChatMessage savedMsg = chatMessageRepository.save(audioMessage);
+
+        // Notify recipient
+        messagingTemplate.convertAndSendToUser(
+                recipientId,
+                "/queue/messages",
+                new ChatNotification(
+                        savedMsg.getId(),
+                        savedMsg.getSenderId(),
+                        savedMsg.getRecipientId(),
+                        "",
+                        savedMsg.getAudioUrl() // Send only the filename (not the full URL)
+                )
+        );
+
+        return ResponseEntity.ok(savedMsg);
+    }
+
+
+
+    @GetMapping("/audio/{filename:.+}")
+    public ResponseEntity<Resource> getAudio(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(audioUploadDir).resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.valueOf("audio/webm"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }
+

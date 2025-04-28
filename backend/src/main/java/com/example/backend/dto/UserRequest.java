@@ -13,7 +13,7 @@ public class UserRequest {
     private String email;
     private int phone;
     private String role;
-    private String school;  // Only needed for Student
+    private String school;  //
     private Long cin;  // Only needed for Student
     private String companyName;  // Only needed for Enterprise
     private String companyAddress;

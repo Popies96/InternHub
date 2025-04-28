@@ -268,4 +268,27 @@ export class StudentNavComponent {
       },
     });
   }
+  unseenCount: number = 0;
+
+  getUnseenMessagesCount(userId: string): void {
+    this.messageService.getUnseenMessagesCount(userId).subscribe(
+      (count) => {
+        this.unseenCount = count;
+      },
+      (error) => {
+        console.error('Error fetching unseen messages count:', error);
+      }
+    );
+
+    console.log('Unseen messages count:', this.unseenCount);
+  }
+  updateUnseenCount() {
+    // You would likely need to fetch the unseen count again after marking as seen
+    this.messageService
+      .getUnseenMessagesCount(this.currentUser)
+      .subscribe((count: number) => {
+        // Update the count in your UI
+        console.log(`Unseen messages count: ${count}`);
+      });
+  }
 }

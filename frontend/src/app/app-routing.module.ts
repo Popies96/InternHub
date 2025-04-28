@@ -174,6 +174,12 @@ const routes: Routes = [
         component: ChatpopupComponent,
         data: { breadcrumb: 'Chat' },
       },
+      {
+        path: 'topic',
+        component: TopicComponent,
+        data: { breadcrumb: 'forum' },
+      },
+      { path: 'topics/:id', component: TopicDetailComponent },
       { path: 'certificates', component: CertificatesComponent },
       { path: 'certificates/add', component: AddCertificatesComponent },
       { path: 'certificates/edit/:id', component: EditCertificatesComponent },
@@ -189,12 +195,13 @@ const routes: Routes = [
     ],
   },
 
-   {
+  {
     path: 'admin',
     canActivate: [AuthGuardService],
     data: { roles: ['ROLE_ADMIN'] },
     component: AdminDashboardComponent,
-    children: []},
+    children: [],
+  },
 
   { path: '', component: LandingComponent },
   { path: 'test', component: InterviewTestComponent },

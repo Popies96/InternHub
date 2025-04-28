@@ -1,15 +1,27 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dto.CommentDTO;
+import com.example.backend.dto.TaskAiDto;
 import com.example.backend.dto.TopicDTO;
+import com.example.backend.dto.UserRequest;
+import com.example.backend.entity.Comment;
 import com.example.backend.entity.Topic;
 import com.example.backend.entity.TopicCategory;
 import com.example.backend.entity.User;
+import com.example.backend.repository.CommentRepository;
+import com.example.backend.repository.UserRepository;
+import com.example.backend.services.TopicService.Comment.CommentService;
+import com.example.backend.services.TopicService.Comment.CommentServiceImpl;
 import com.example.backend.services.TopicService.FileStorageService;
 import com.example.backend.services.TopicService.TopicServiceImpl;
+import com.example.backend.services.authSerivce.UserServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,6 +42,15 @@ public class TopicController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private CommentServiceImpl commentService;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private TopicDTO convertToDTO(Topic topic) {
         TopicDTO dto = new TopicDTO();
@@ -194,4 +216,82 @@ public class TopicController {
         Topic updatedTopic = topicService.updateViews(topic);
         return ResponseEntity.ok(convertToDTO(updatedTopic));  // Return updated topic as DTO
     }
+
+
+    @PostMapping("/{topicId}/{userId}/addcomment")
+    public ResponseEntity<CommentDTO> addComment(@PathVariable int topicId,
+                                              @RequestBody Comment comment,
+                                              @PathVariable int userId) {
+        System.err.println("topicId: " + topicId + " comment: " + comment);
+        System.err.println("WZEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        Comment savedComment = commentService.addComment(comment, topicId,userId);
+        CommentDTO CommentDTO=new CommentDTO();
+        BeanUtils.copyProperties(CommentDTO, savedComment);
+        CommentDTO.setComment(savedComment.getComment());
+        CommentDTO.setDateCreated(savedComment.getDateCreated());
+        CommentDTO.setTopicId(savedComment.getTopic().getId());
+        CommentDTO.setUserId(savedComment.getUser().getId());
+
+        return  ResponseEntity.ok(CommentDTO);
+    }
+    @GetMapping("/comments/{topicId}")
+    public List<CommentDTO> getCommentsByTopic(@PathVariable int topicId) {
+        // Log to check what is being returned
+
+        System.err.println("\n Fetching comments for topicId: " + topicId);
+        List<Comment> comments = commentService.getCommentsByTopicId(topicId);
+
+
+        return comments.stream().map(comment -> {
+            CommentDTO CommentDTO=new CommentDTO();
+            CommentDTO.setComment(comment.getComment());
+            CommentDTO.setId(comment.getId());
+            CommentDTO.setNom((userRepository.getById(comment.getUser().getId())).getNom());
+            CommentDTO.setPrenom((userRepository.getById(comment.getUser().getId())).getPrenom());
+            CommentDTO.setDateCreated(comment.getDateCreated());
+            CommentDTO.setTopicId(comment.getTopic().getId());
+            CommentDTO.setUserId(comment.getUser().getId());
+            return CommentDTO;
+        }).toList();
+    }
+
+    @GetMapping("/comments/count/{topicId}")
+    public long countCommentsByTopic(@PathVariable int topicId) {
+        return commentRepository.countCommentsByTopicId(topicId);
+    }
+    @DeleteMapping("/comment/delete/{commentId}/{userId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @PathVariable Long userId) {
+        Comment comment = commentService.findById(commentId);
+
+        if (comment.getUser().getId().equals(userId)) {
+            commentService.delete(commentId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // User not authorized to delete
+        }
+    }
+
+    @PutMapping("/comment/update/{id}/{currentUser}")
+    public ResponseEntity<?> updateComment(@PathVariable Long id,
+                                           @RequestBody Comment updatedComment,
+                                           @PathVariable User currentUser) {
+        Comment comment = commentService.findById(id);
+        if (!comment.getUser().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only update your own comments.");
+        }
+        comment.setComment(updatedComment.getComment());
+        commentService.save(comment);
+        CommentDTO CommentDTO=new CommentDTO();
+        CommentDTO.setComment(comment.getComment());
+        CommentDTO.setNom((userRepository.getById(comment.getUser().getId())).getNom());
+        CommentDTO.setPrenom((userRepository.getById(comment.getUser().getId())).getPrenom());
+        CommentDTO.setDateCreated(comment.getDateCreated());
+        CommentDTO.setTopicId(comment.getTopic().getId());
+        CommentDTO.setUserId(comment.getUser().getId());
+        return ResponseEntity.ok(CommentDTO);
+    }
+
+
+
+
 }

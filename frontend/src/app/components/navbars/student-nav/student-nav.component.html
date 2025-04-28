@@ -1,221 +1,374 @@
 <!-- Navbar -->
-<nav class="sticky top-0 w-full flex items-center justify-between bg-white shadow-sm z-50 p-4">
+<nav
+  class="sticky top-0 w-full flex items-center justify-between bg-white shadow-sm z-50 p-4"
+>
   <!-- Mobile menu button (hidden on desktop) -->
   <div class="md:hidden flex items-center">
-    <button type="button" class="text-gray-500 hover:text-gray-600 focus:outline-none">
-      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    <button
+      type="button"
+      class="text-gray-500 hover:text-gray-600 focus:outline-none"
+    >
+      <svg
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
       </svg>
     </button>
   </div>
 
   <!-- Breadcrumb -->
   <div class="flex items-center pl-4">
-   
-      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-        <li class="inline-flex items-center">
-          <a [routerLink]="['/']" class="inline-flex items-center text-md font-medium text-gray-700 hover:text-blue-600">
-            <svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-              <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+    <ol
+      class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse"
+    >
+      <li class="inline-flex items-center">
+        <a
+          [routerLink]="['/']"
+          class="inline-flex items-center text-md font-medium text-gray-700 hover:text-blue-600"
+        >
+          <svg
+            class="w-4 h-4 me-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"
+            />
+          </svg>
+          Home
+        </a>
+      </li>
+      <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
+        <li>
+          <div class="flex items-center">
+            <svg
+              class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 9 4-4-4-4"
+              />
             </svg>
-            Home
-          </a>
+            <a
+              *ngIf="!last"
+              [routerLink]="[breadcrumb.url]"
+              class="ms-1 text-md font-medium text-gray-700 hover:text-blue-600 md:ms-2"
+            >
+              {{ breadcrumb.label }}
+            </a>
+            <span
+              *ngIf="last"
+              class="ms-1 text-md font-medium text-gray-500 md:ms-2"
+            >
+              {{ breadcrumb.label }}
+            </span>
+          </div>
         </li>
-        <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
-          <li>
-            <div class="flex items-center">
-              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <a *ngIf="!last" [routerLink]="[breadcrumb.url]" class="ms-1 text-md font-medium text-gray-700 hover:text-blue-600 md:ms-2">
-                {{ breadcrumb.label }}
-              </a>
-              <span *ngIf="last" class="ms-1 text-md font-medium text-gray-500 md:ms-2">
-                {{ breadcrumb.label }}
-              </span>
-            </div>
-          </li>
-        </ng-container>
-      </ol>
-    
+      </ng-container>
+    </ol>
   </div>
   <!-- Search and Profile - Hidden on mobile unless menu is open -->
   <div class="hidden md:flex items-center gap-4 pr-4">
     <!-- Search Bar -->
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        <svg
+          class="w-5 h-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
         </svg>
       </span>
-      <input type="text" placeholder="Search here..." class="border-0 px-4 py-3 placeholder-blueGray-300 text-blueGray-600  rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"/>
+      <input
+        type="text"
+        placeholder="Search here..."
+        class="border-0 px-4 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
+      />
     </div>
-    
+
     <!-- Profile Dropdown -->
-  
 
+    <!-- Message Icon with Dropdown -->
+    <div class="relative ml-4">
+      <!-- Message Icon Button -->
+      <button
+        (click)="toggleMessagesDropdown()"
+        class="p-1 text-gray-500 hover:text-gray-700 focus:outline-none relative"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
 
-<!-- Message Icon with Dropdown -->
-<div class="relative ml-4"><!-- Message Icon Button -->
-  <button 
-    (click)="toggleMessagesDropdown()"
-    class="p-1 text-gray-500 hover:text-gray-700 focus:outline-none relative"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-    </svg>
-  
-    <!-- Message Counter Badge -->
-    <!-- <span *ngIf="getUnseenTotal() > 0" 
+        <!-- Message Counter Badge -->
+        <!-- <span *ngIf="getUnseenTotal() > 0" 
           class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
       {{ getUnseenTotal() }}
     </span> -->
-  </button>
-  
-  <!-- Messages Dropdown -->
-  <div 
-    id="messagesDropdown"
-    [class.hidden]="!isMessagesDropdownOpen"
-    class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg overflow-hidden z-20 border border-gray-200 max-h-96">
-    
-    <ul class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
-      <li *ngFor="let user of users"
-          class="flex items-center gap-3 p-4 cursor-pointer hover:bg-blue-50 transition-all relative"
-          [class.bg-blue-100]="user === selectedUser"
-          (click)="openChat(user)">
-          
-        <!-- Avatar Container -->
-        <div class="relative">
-          <div class="w-12 h-12 bg-gray-300 rounded-full overflow-hidden shadow-md">
-            <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + user.prenom.charAt(0)"
-                 alt="User Avatar"
-                 class="w-full h-full object-cover">
-          </div>
-  
-          <!-- Red Notification Dot -->
-          <span *ngIf="unseenMessages[user.id]" 
-                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full animate-ping"></span>
-          <span *ngIf="unseenMessages[user.id]" 
-                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
-        </div>
-  
-        <!-- User Info -->
-        <div class="flex-1 min-w-0">
-          <h3 class="text-sm font-semibold text-gray-800 truncate">{{ user.nom }} {{ user.prenom }}</h3>
-          <p class="text-xs text-gray-500 truncate mt-0.5">
-            <ng-container *ngIf="lastMessages[user.id] as lastMsg; else noMsg">
-              <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
-              {{ (lastMsg.content | slice:0:25) + (lastMsg.content.length > 25 ? '...' : '') }}
-            </ng-container>
-            <ng-template #noMsg>No messages</ng-template>
-          </p>
-        </div>
-      </li>
-    </ul>
+      </button>
 
+      <!-- Messages Dropdown -->
+      <div
+        id="messagesDropdown"
+        [class.hidden]="!isMessagesDropdownOpen"
+        class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg overflow-hidden z-20 border border-gray-200 max-h-96"
+      >
+        <ul class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+          <li
+            *ngFor="let user of users"
+            class="flex items-center gap-3 p-4 cursor-pointer hover:bg-blue-50 transition-all relative"
+            [class.bg-blue-100]="user === selectedUser"
+            (click)="openChat(user)"
+          >
+            <!-- Avatar Container -->
+            <div class="relative">
+              <div
+                class="w-12 h-12 bg-gray-300 rounded-full overflow-hidden shadow-md"
+              >
+                <img
+                  [src]="
+                    'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' +
+                    user.prenom.charAt(0)
+                  "
+                  alt="User Avatar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
 
-    <div class="bg-gray-50 px-4 py-2 text-center">
-      <a href="/student/chat" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">View all messages</a>
+              <!-- Red Notification Dot -->
+              <span
+                *ngIf="unseenMessages[user.id]"
+                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full animate-ping"
+              ></span>
+              <span
+                *ngIf="unseenMessages[user.id]"
+                class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-red-500 border-2 border-white rounded-full"
+              ></span>
+            </div>
+
+            <!-- User Info -->
+            <div class="flex-1 min-w-0">
+              <h3 class="text-sm font-semibold text-gray-800 truncate">
+                {{ user.nom }} {{ user.prenom }}
+              </h3>
+              <p class="text-xs text-gray-500 truncate mt-0.5">
+                <ng-container
+                  *ngIf="lastMessages[user.id] as lastMsg; else noMsg"
+                >
+                  <strong *ngIf="lastMsg.senderId == currentUser">You: </strong>
+                  <span
+                    *ngIf="lastMsg.audioUrl"
+                    class="inline-flex items-center text-indigo-500"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3 w-3 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
+                    </svg>
+                  </span>
+                  {{
+                    (lastMsg.content | slice : 0 : 25) +
+                      (lastMsg.content.length > 25 ? "..." : "")
+                  }}
+                </ng-container>
+                <ng-template #noMsg>No messages</ng-template>
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="bg-gray-50 px-4 py-2 text-center">
+          <a
+            href="/student/chat"
+            class="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+            >View all messages</a
+          >
+        </div>
+      </div>
+
+      <!-- Only ONE chat popup instance, placed outside the loop -->
+      <app-chatpopup #popup [SelectedUserInput]="userToSend"></app-chatpopup>
     </div>
-  </div>
-
-  <!-- Only ONE chat popup instance, placed outside the loop -->
-  <app-chatpopup #popup [SelectedUserInput]="userToSend"></app-chatpopup>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <!-- Enhanced Notification Icon with Dropdown -->
-<div class="relative">
-  <button class="p-1 text-gray-500 hover:text-gray-700 focus:outline-none relative"  data-notification-trigger  (click)="toggleNotificationDropdown()">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-    </svg>
-    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">2</span>
-  </button>
-  
-  <!-- Notification Dropdown -->
-  <div id="notificationDropdown"  [class.hidden]="!isNotificationDropdownOpen"  class=" hidden absolute right-0 mt-4 w-72 bg-white rounded-md shadow-lg overflow-hidden z-20 border border-gray-200">
-    <div class="py-1">
-      <div class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Notifications (3)</div>
-      <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <img class="h-8 w-8 rounded-full" src="https://pagedone.io/asset/uploads/1705471668.png" alt="">
+    <div class="relative">
+      <button
+        class="p-1 text-gray-500 hover:text-gray-700 focus:outline-none relative"
+        data-notification-trigger
+        (click)="toggleNotificationDropdown()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
+        </svg>
+        <span
+          class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"
+          >2</span
+        >
+      </button>
+
+      <!-- Notification Dropdown -->
+      <div
+        id="notificationDropdown"
+        [class.hidden]="!isNotificationDropdownOpen"
+        class="hidden absolute right-0 mt-4 w-72 bg-white rounded-md shadow-lg overflow-hidden z-20 border border-gray-200"
+      >
+        <div class="py-1">
+          <div class="px-4 py-2 text-sm font-medium text-gray-700 border-b">
+            Notifications (3)
           </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">New Internship Interview</p>
-            <p class="text-xs text-gray-500">2 minutes ago</p>
-          </div>
+          <a
+            href="#"
+            class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b"
+          >
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <img
+                  class="h-8 w-8 rounded-full"
+                  src="https://pagedone.io/asset/uploads/1705471668.png"
+                  alt=""
+                />
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900">
+                  New Internship Interview
+                </p>
+                <p class="text-xs text-gray-500">2 minutes ago</p>
+              </div>
+            </div>
+          </a>
+          <a
+            href="#"
+            class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <img
+                  class="h-8 w-8 rounded-full"
+                  src="../../../../assets/google.png"
+                  alt=""
+                />
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900">
+                  Your application was approved
+                </p>
+                <p class="text-xs text-gray-500">1 hour ago</p>
+              </div>
+            </div>
+          </a>
         </div>
-      </a>
-      <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <img class="h-8 w-8 rounded-full" src="../../../../assets/google.png" alt="">
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-900">Your application was approved</p>
-            <p class="text-xs text-gray-500">1 hour ago</p>
-          </div>
+        <div class="bg-gray-50 px-4 py-2 text-center">
+          <a
+            href="#"
+            class="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+            >View all notifications</a
+          >
         </div>
-      </a>
+      </div>
     </div>
-    <div class="bg-gray-50 px-4 py-2 text-center">
-      <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">View all notifications</a>
+
+    <div class="relative">
+      <button class="flex items-center focus:outline-none">
+        <img
+          data-dropdown-trigger
+          (click)="toggleDropdown()"
+          id="dropdownDividerButton"
+          class="rounded-lg cursor-pointer"
+          alt="Ronald image"
+          src="https://pagedone.io/asset/uploads/1701235464.png"
+        />
+      </button>
+
+      <!-- Dropdown menu placed right under the image -->
+      <div
+        [class.hidden]="!isDropdownOpen"
+        id="dropdownDivider"
+        class="border border-slate-200 absolute hidden top-full mt-2 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-white dark:divide-gray-100"
+      >
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-700">
+          <li>
+            <a
+              [routerLink]="['/student/profile']"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100"
+              >Profile</a
+            >
+          </li>
+          <li>
+            <a
+              [routerLink]="['/student/settings']"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100"
+              >Settings</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100"
+              >Earnings</a
+            >
+          </li>
+        </ul>
+        <div class="py-2" (click)="toggleLogout()">
+          <a
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-100 dark:text-gray-700"
+            >Logout</a
+          >
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-
-
-<div class="relative">
-  <button class="flex items-center focus:outline-none">
-    <img data-dropdown-trigger (click)="toggleDropdown()" id="dropdownDividerButton" class="rounded-lg cursor-pointer " alt="Ronald image" src="https://pagedone.io/asset/uploads/1701235464.png" />
-  </button>
-
-
-  
- <!-- Dropdown menu placed right under the image -->
-<div [class.hidden]="!isDropdownOpen" id="dropdownDivider" class="border border-slate-200 absolute hidden top-full mt-2 right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-white dark:divide-gray-100">
-<ul class="py-2 text-sm text-gray-700 dark:text-gray-700">
-  <li>
-    <a   [routerLink]="['/student/profile']" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100  ">Profile</a>
-  </li>
-  <li>
-    <a [routerLink]="['/student/settings']" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100  ">Settings</a>
-  </li>
-  <li>
-    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100  ">Earnings</a>
-  </li>
-</ul>
-<div class="py-2" (click)="toggleLogout()">
-  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-100 dark:text-gray-700  ">Logout</a>
-</div>
-</div>
-
-
-</div>
-
-
-
-
-
-
-
   </div>
 </nav>

@@ -25,7 +25,6 @@ public class TaskAi {
     private InternshipAi internshipAi;
 
     @OneToOne(mappedBy = "taskAi", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private TaskAiRep taskRep;
 
     public Long getId() {

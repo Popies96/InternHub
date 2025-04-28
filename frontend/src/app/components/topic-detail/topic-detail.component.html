@@ -1,49 +1,161 @@
 <div class="forum-container">
   <header class="forum-header">
-    <h1>Topic Details</h1>
+    <div class="header-content">
+      <h1>Topic Discussion</h1>
+      <p class="header-subtitle">Dive deep into the conversation</p>
+    </div>
     <div class="back-btn-wrapper">
       <button class="back-btn" routerLink="/student/topic">
-        <i class="fas fa-arrow-left"></i> Back
+        <i class="fas fa-arrow-left"></i> Back to Topics
       </button>
     </div>
   </header>
 
   <div *ngIf="isLoading" class="loader">
-    <i class="fas fa-spinner fa-spin"></i> Loading topic...
+    <div class="loader-spinner">
+      <div class="spinner-circle"></div>
+      <div class="spinner-text">Loading Topic...</div>
+    </div>
   </div>
 
   <div *ngIf="error" class="error-message">
-    {{ error }}
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="error-content">
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+    </div>
   </div>
 
   <div *ngIf="topic && !isLoading" class="topic-detail-content">
-    <h1 class="topic-title">{{ topic.title }}</h1>
-    
-    <div class="topic-meta">
-      <span><i class="fas fa-user-circle"></i> Creator: {{ topic.prenom }}</span>
-      <span><i class="fas fa-calendar-day"></i> {{ topic.dateCreated | date:'mediumDate' }}</span>
-      <span><i class="fas fa-folder"></i> {{ topic.category }}</span>
+    <div class="topic-header">
+      <div class="topic-badge">{{ topic.category }}</div>
+      <h1 class="topic-title">{{ topic.title }}</h1>
+      <div class="topic-author">
+        <div class="author-avatar">
+          <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + topic.prenom.charAt(0)"
+          alt="Selected User Avatar"
+          class="w-10 h-10 rounded-full mr-4 shadow-sm">
+        </div>
+        <div class="author-info">
+          <span class="author-name">{{ topic.prenom }}</span>
+          <span class="post-date">{{ topic.dateCreated | date:'mediumDate' }}</span>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="topic.imagePath" class="topic-image">
       <img [src]="topic.imagePath" alt="Topic Image" class="responsive-img" />
+      <div class="image-overlay"></div>
     </div>
 
     <div class="topic-body">
       <div class="topic-text">
         <p>{{ topic.content }}</p>
       </div>
-    </div>
-
-    <div class="topic-tags" *ngIf="topic.tags && topic.tags.length > 0">
-      <i class="fas fa-tags"></i>
-      <span class="tag" *ngFor="let tag of topic.tags">{{ tag }}</span>
-    </div>
-
-    <div class="topic-stats">
-      <span><i class="fas fa-comments"></i> {{ commentCount }} Comments</span>
-      <span><i class="fas fa-eye"></i> {{ topic.views }} Views</span>
-    </div>
     
+    </div>
+
+    <div class="topic-footer">
+      <div class="topic-tags" *ngIf="topic.tags && topic.tags.length > 0">
+        <i class="fas fa-tags"></i>
+        <span class="tag" *ngFor="let tag of topic.tags">{{ tag }}</span>
+      </div>
+
+      <div class="topic-stats">
+        <div class="stat-item">
+          <i class="fas fa-comments"></i>
+          <span>{{ commentCount }} Comments</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-eye"></i>
+          <span>{{ topic.views }} Views</span>
+        </div>
+
+        <div class="topic-reactions">
+        <button 
+          class="reaction-btn like-btn" 
+          (click)="react('like')"
+          [class.active]="userReaction === 'like'"
+          [disabled]="userReaction === 'like'">
+          <i class="fas fa-thumbs-up"></i> Like ({{ likes }})
+        </button>
+        
+        <button 
+          class="reaction-btn dislike-btn" 
+          (click)="react('dislike')"
+          [class.active]="userReaction === 'dislike'"
+          [disabled]="userReaction === 'dislike'">
+          <i class="fas fa-thumbs-down"></i> Dislike ({{ dislikes }})
+        </button>
+      </div>
+    
+      </div>
+    </div>
+
+    <div class="comments-section">
+      <h3 class="section-title">
+        <span>Discussion</span>
+        <div class="title-line"></div>
+      </h3>
+      
+      <div *ngIf="comments.length > 0" class="comments-list">
+        <div *ngFor="let comment of comments" class="comment-card">
+          <div class="comment-author">
+            <div class="comment-avatar">
+              <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + comment.nom.charAt(0)"
+              alt="Selected User Avatar"
+              class="w-10 h-10 rounded-full mr-4 shadow-sm">
+            </div>
+            <div class="comment-meta">
+              <span class="commenter-name">{{comment.nom}} {{comment.prenom}}  </span>
+              <!-- <span class="comment-date">{{comment.dateCreated | date:'shortDate'}}</span> -->
+            </div>
+            <div *ngIf="comment.userId === Current?.id" class="comment-actions">
+              <button (click)="editComment(comment)" class="edit-btn"> ✏️ </button>
+              <button *ngIf="comment.id !== undefined" (click)="deleteComment(comment.id)" class="delete-btn">🗑️ </button>
+            </div>
+          </div>
+          <div class="comment-content">
+            <p>{{ comment.comment }}</p>
+            <span class="comment-date">{{ comment.dateCreated | date:'mediumDate' }}</span>
+
+          </div>
+         
+        </div>
+      </div>
+      
+      <div class="no-comments" *ngIf="comments.length === 0">
+        <i class="fas fa-comment-slash"></i>
+        <p>No comments yet. Be the first to share your thoughts!</p>
+      </div>
+      
+      <div class="add-comment">
+        <h4>Add Your Comment</h4>
+        <div class="comment-form">
+          <div class="user-avatar">
+            <img [src]="'https://placehold.co/200x/ffa8e4/ffffff.svg?text=' + Current.nom.charAt(0)"
+            alt="Selected User Avatar"
+            class="w-10 h-10 rounded-full mr-4 shadow-sm">
+          </div>
+          <div class="form-content">
+            <textarea [(ngModel)]="newCommentContent" placeholder="Write your thoughtful response..." rows="4"
+            (keydown.enter)="addComment()"></textarea>
+            <div class="form-actions">
+              <div class="formatting-tools">
+                <button class="format-btn"><i class="fas fa-bold"></i></button>
+                <button class="format-btn"><i class="fas fa-italic"></i></button>
+                <button class="format-btn"><i class="fas fa-link"></i></button>
+                <button class="format-btn"><i class="fas fa-image"></i></button>
+              </div>
+              <button class="submit-btn" (click)="addComment()">Post Comment</button>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
