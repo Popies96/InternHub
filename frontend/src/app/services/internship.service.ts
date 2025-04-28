@@ -11,7 +11,7 @@ export class InternshipService {
   getInternshipByEnterprise(): Observable<any> {
     const headers = this.createAuthorizedHeader();
     if (headers) {
-      return this.http.get(baseUrl + 'enterprise', { headers });
+      return this.http.get(baseUrl + 'enterpriset', { headers });
     } else {
       throw new Error('Authorization header creation failed');
     }

@@ -44,8 +44,6 @@ public class ForgotPasswordService {
 
             if ("email".equalsIgnoreCase(method)) {
                 emailService.sendVerificationCode(identifier, verificationCode);  // Delegate to EmailService
-            } else if ("sms".equalsIgnoreCase(method)) {
-
             }
 
             return true;
@@ -61,7 +59,7 @@ public class ForgotPasswordService {
     }
     public boolean validateVerificationCode(String identifier, String validationCode) {
         System.out.println(identifier);
-        Optional<VerificationCode> codeOptional = verificationCodeRepository.findByIdentifier(identifier);
+        Optional<VerificationCode> codeOptional = verificationCodeRepository.findTopByIdentifierOrderByIdDesc(identifier);
 
         if (codeOptional.isPresent()) {
             VerificationCode code = codeOptional.get();

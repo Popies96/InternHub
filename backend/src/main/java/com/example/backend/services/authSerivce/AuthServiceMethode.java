@@ -35,7 +35,7 @@ public class AuthServiceMethode implements AuthService{
 
     @Override
     public User createEtudiant(SignupRequest signupRequest) {
-        //Check if etudiant already exist
+
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return null;
         }
@@ -66,6 +66,8 @@ public class AuthServiceMethode implements AuthService{
         user.setPhone(signupRequest.getPhone());
         user.setNom(signupRequest.getNom());
         user.setPrenom(signupRequest.getPrenom());
+        user.setActive(true);
+        user.setVerified(false);
         if (signupRequest.getRole() != null) {
             user.setRole(UserRole.valueOf(signupRequest.getRole().toUpperCase()));
         }

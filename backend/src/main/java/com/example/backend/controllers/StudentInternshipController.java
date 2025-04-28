@@ -2,8 +2,10 @@ package com.example.backend.controllers;
 
 import com.example.backend.dto.EnterpriseDTO;
 import com.example.backend.dto.InternshipResponse;
+import com.example.backend.dto.InternshipResponseT;
 import com.example.backend.entity.Enterprise;
 import com.example.backend.entity.Internship;
+import com.example.backend.entity.InternshipStatus;
 import com.example.backend.entity.User;
 import com.example.backend.services.authSerivce.UserServiceImpl;
 import com.example.backend.services.internshipService.InternshipService;
@@ -15,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/internship")
@@ -86,6 +89,37 @@ public class StudentInternshipController {
 
         return ResponseEntity.ok(internshipService.getInternshipsByEnterprise(authenticatedEnterprise.getId()) );
     }
+
+
+    @GetMapping("/enterpriset")
+    @PreAuthorize("hasRole('ENTERPRISE')")
+    public ResponseEntity<List<InternshipResponseT>> getInternshipsByEnterpriseT() {
+
+        Enterprise enterprise = (Enterprise) userService.getAuthenticatedUser();
+        List<Internship> internships = internshipService.getInternshipsByEnterpriseT(enterprise.getId());
+        System.out.println(internships);
+        List<InternshipResponseT> responses = internships.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
+    }
+
+    private InternshipResponseT toResponse(Internship entity) {
+        InternshipResponseT response = new InternshipResponseT();
+        response.setId(entity.getId());
+        response.setTitle(entity.getTitle());
+        response.setDescription(entity.getDescription());
+        response.setLocation(entity.getLocation());
+        response.setDurationInMonths(entity.getDurationInMonths());
+        response.setStartDate(entity.getStartDate());
+        response.setEndDate(entity.getEndDate());
+        response.setStatus(InternshipStatus.valueOf(entity.getStatus().toString()));
+        response.setEnterpriseId(entity.getEnterprise() != null ? entity.getEnterprise().getId() : null);
+        response.setStudentId(entity.getStudent() != null ? entity.getStudent().getId() : null);
+        return response;
+    }
+
 
     // Update an internship
     @PutMapping("/enterprise/{id}")

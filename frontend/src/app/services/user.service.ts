@@ -64,8 +64,7 @@ export class UserService {
         () => new Error('Authorization header creation failed')
       );
     }
-    return this.http
-      .put<User>(`${baseUrl}user/update/`, user, { headers })
+    return this.http.put<User>(`${baseUrl}user/update/`, user, { headers });
   }
   private createAuthorizedHeader(): HttpHeaders | null {
     const token = localStorage.getItem('token');
@@ -75,5 +74,25 @@ export class UserService {
       console.log('No token found');
       return null;
     }
+  }
+
+  // Add this method to your existing UserService
+  getUserById(userId: number): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.get(`${baseUrl}user/${userId}`, {
+      headers,
+      responseType: 'json',
+    });
+  }
+
+  getAllStudents(): Observable<any[]> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.get<any[]>(`${baseUrl}students`, { headers });
   }
 }

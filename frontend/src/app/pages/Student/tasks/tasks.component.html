@@ -1,0 +1,300 @@
+<section class="py-8 px-4 max-w-7xl mx-auto">      
+  <!-- Header and Filter Section (unchanged) -->
+  <div class="w-full max-w-7xl mx-auto px-4 pb-10 md:px-6">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-0">
+      <div class="block">
+        <h2 class="font-manrope font-bold text-2xl leading-9 text-gray-900 mb-3">My Tasks</h2>
+        <p class="font-normal text-sm leading-6 text-gray-500">Tasks assigned by your internship supervisor</p>
+      </div>
+      
+      <!-- Generate New Internship Button -->
+      <button routerLink="/student/internshipAi/create" 
+              class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Generate New Internship
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter and Search Bar -->
+  <div class="max-w mx-auto mb-6">
+    <form (ngSubmit)="applyFilters()">
+      <div class="flex">
+        <!-- Task Type Dropdown -->
+        <div class="relative flex-1">
+          <button type="button" (click)="toggleType()" 
+                  class="rounded-s-lg w-full z-10 inline-flex items-center justify-between py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100">
+            {{ selectedTypeDisplay || 'Task Type' }}
+            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <!-- Dropdown Type -->
+          <div id="dropdownType" [class.hidden]="!isType" 
+               class="absolute left-0 mt-1 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full border border-slate-200">
+            <ul class="py-2 text-sm text-gray-700">
+              <li>
+                <button type="button" (click)="selectType('ALL', 'All Types')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  All Types
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectType('CODE', 'Code Task')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Code Task
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectType('PDF', 'PDF Task')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  PDF Task
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectType('TEXT', 'Text Task')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Text Task
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Task Status Dropdown -->
+        <div class="relative flex-1">
+          <button type="button" (click)="toggleStatus()" 
+                  class="w-full z-10 inline-flex items-center justify-between py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100">
+            {{ selectedStatusDisplay || 'Task Status' }}
+            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <!-- Dropdown Status -->
+          <div id="dropdownStatus" [class.hidden]="!isStatus" 
+               class="absolute left-0 mt-1 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full border border-slate-200">
+            <ul class="py-2 text-sm text-gray-700">
+              <li>
+                <button type="button" (click)="selectStatus('ALL', 'All Statuses')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  All Statuses
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectStatus('PENDING', 'Pending')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Pending
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectStatus('IN_PROGRESS', 'In Progress')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  In Progress
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectStatus('COMPLETED', 'Completed')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Completed
+                </button>
+              </li>
+              <li>
+                <button type="button" (click)="selectStatus('OVERDUE', 'Overdue')" 
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                  Overdue
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Search Input -->
+        <div class="relative flex-[2]">
+          <input type="search" id="search-dropdown" [(ngModel)]="searchQuery" name="searchQuery"
+                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
+                 placeholder="Search tasks..." />
+          <button type="submit" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+            <span class="sr-only">Search</span>
+          </button>
+        </div>
+        
+        <!-- Clear Filters Button -->
+        <div class="relative ml-2">
+          <button type="button" (click)="clearFilters()"
+                  class="h-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Clear
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading tasks...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    </svg>
+    <h3 class="mt-2 text-lg font-medium text-gray-900">{{ error }}</h3>
+    <button  class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+      Retry
+    </button>
+  </div>
+
+  <!-- Tasks Grid -->
+  <div *ngIf="!isLoading && !error" class="grid grid-cols-1 gap-6">
+    <!-- Empty State -->
+    <div *ngIf="filteredTasks.length === 0" class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <h3 class="mt-2 text-lg font-medium text-gray-900">No tasks found</h3>
+      <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria</p>
+    </div>
+
+    <!-- Task Cards -->
+    <div *ngFor="let task of filteredTasks" 
+         class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden transition-all duration-300"
+         [class.ring-2]="expandedTaskId === task.id"
+         [class.ring-blue-500]="expandedTaskId === task.id">
+      <!-- Task Header (clickable) -->
+      <div class="p-5 border-b border-gray-200 cursor-pointer" (click)="toggleTaskExpand(task.id)">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="flex items-center mb-2">
+              <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full mr-2 {{ task.typeClass }}">
+                {{ task.typeIcon }} {{ task.typeDisplay }}
+              </span>
+              <span class="text-sm text-gray-500">Due: {{ task.deadline | date }}</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ task.title }}</h3>
+          </div>
+          <span class="text-xs font-medium px-2.5 py-0.5 rounded-full {{ task.statusClass }}">
+            {{ task.statusDisplay || task.status }}
+          </span>
+        </div>
+      </div>
+      
+      <!-- Expanded Content (shown when task is expanded) -->
+      <div *ngIf="expandedTaskId === task.id" class="p-5 border-t border-gray-200">
+        <!-- Task Details -->
+        <div class="mb-8">
+          <div class="flex items-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-700">Description</h3>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <p class="text-gray-700 whitespace-pre-line">{{ task.description }}</p>
+          </div>
+        </div>
+        
+        <!-- Submission Form Area -->
+        <div class="mt-6 border-t pt-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-4">Your Submission:</h4>
+          
+          <!-- Code Task Submission -->
+          <div *ngIf="task.type === 'CODE'" class="space-y-4">
+            <div class="rounded-md bg-gray-50 p-4 border border-gray-200">
+              <textarea id="codeSubmission" [(ngModel)]="task.submissionContent" name="codeSubmission"
+                        class="w-full h-64 p-4 font-mono text-sm bg-gray-900 text-gray-100 focus:outline-none"
+                        placeholder="// Write your code here..."></textarea>
+              <div class="mt-2 flex justify-end">
+                <button (click)="submitTask(task)" 
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
+                  Submit Code
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- PDF Task Submission -->
+          <div *ngIf="task.type === 'PDF'" class="space-y-4">
+            <div class="rounded-md bg-gray-50 p-4 border border-gray-200">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Upload your PDF:</label>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
+     (click)="fileInput.click()"
+     (dragover)="onDragOver($event)"
+     (dragleave)="onDragLeave($event)"
+     (drop)="onDrop($event, task)">
+  <input #fileInput 
+         type="file" 
+         (change)="onFileSelected($event, task)" 
+         accept=".pdf" 
+         class="hidden">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" 
+       class="mx-auto h-12 w-12 text-gray-400" 
+       fill="none" 
+       viewBox="0 0 24 24" 
+       stroke="currentColor"
+       [class.text-blue-400]="isDragOver">
+    <path stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+  </svg>
+  
+  <div *ngIf="!task.submissionFile; else fileSelected">
+    <p class="mt-1 text-sm text-gray-600">Drag and drop files here, or click to select</p>
+    <p class="mt-1 text-xs text-gray-500">PDF up to 10MB</p>
+  </div>
+  
+  <ng-template #fileSelected>
+    <p class="mt-1 text-sm text-gray-600">{{ task.submissionFile.name }}</p>
+    <p class="mt-1 text-xs text-gray-500">Click to change file</p>
+  </ng-template>
+</div>
+              <div class="mt-4 flex justify-end" *ngIf="task.submissionFile">
+                <button (click)="submitTask(task)" 
+                        class="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors">
+                  Submit PDF
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Text Task Submission -->
+          <div *ngIf="task.type === 'TEXT'" class="space-y-4">
+            <div class="rounded-md bg-gray-50 p-4 border border-gray-200">
+              <label for="textSubmission" class="block text-sm font-medium text-gray-700 mb-2">Write your answer:</label>
+              <textarea id="textSubmission" [(ngModel)]="task.submissionContent" name="textSubmission"
+                        class="block w-full h-48 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                        placeholder="Write your detailed answer here..."></textarea>
+              <div class="mt-2 flex justify-end">
+                <button (click)="submitTask(task)" 
+                        class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors">
+                  Submit Answer
+                </button>
+              </div>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Floating Chat Button -->
+<button (click)="toggleChat()" 
+  class="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors z-50">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+  </svg>
+  <span class="sr-only">Open Chat</span>
+</button>
+
+<!-- Chat Container (positioned to the left of the button) -->
+<div class="fixed bottom-0 right-24 w-96 z-50 transition-all duration-300 ease-in-out"
+     [class.hidden]="!isChatOpen">
+  <app-task-chat></app-task-chat>
+</div>
+</section>

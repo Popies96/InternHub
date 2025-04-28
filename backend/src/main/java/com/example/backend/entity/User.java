@@ -24,6 +24,8 @@ public class User {
     private  String password;
     private  String email;
     private int phone;
+    private boolean active;
+    private boolean verified;
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @OneToMany(mappedBy = "user")
@@ -86,5 +88,27 @@ public class User {
         this.role = role;
     }
 
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<Topic> getTopic() {
+        return topic;
+    }
+
+    public void setTopic(List<Topic> topic) {
+        this.topic = topic;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
 }

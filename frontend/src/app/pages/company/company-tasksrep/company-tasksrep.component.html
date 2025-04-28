@@ -1,0 +1,250 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Task Submissions Review</h1>
+        <p class="mt-1 text-sm text-gray-500">Review intern submissions and approve/reject work</p>
+      </div>
+      <div class="flex space-x-3">
+        <button class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Export Data
+        </button>
+      </div>
+    </div>
+  
+    <!-- Filter and Search Bar -->
+    <div class="max-w mx-auto">
+      <form (ngSubmit)="applyFilters()">
+        <div class="flex">
+          <!-- Status Dropdown -->
+          <div class="relative flex-1">
+            <button type="button" 
+                    class="rounded-s-lg w-full z-10 inline-flex items-center justify-between py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100">
+              {{ selectedStatus || 'Submission Status' }}
+              <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+            <!-- Dropdown Status -->
+            <div id="dropdownStatus" 
+                 class="hidden absolute left-0 mt-1 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full border border-slate-200">
+              <ul class="py-2 text-sm text-gray-700">
+                <li *ngFor="let status of statuses">
+                  <button type="button"
+                          class="inline-flex w-full px-4 py-2 hover:bg-gray-100">
+                    {{status}}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Search Input -->
+          <div class="relative flex-[2]">
+            <input type="search" id="search-dropdown" [(ngModel)]="searchQuery" name="searchQuery"
+                   class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
+                   placeholder="Search students or tasks..." />
+            <button type="submit" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+              <span class="sr-only">Search</span>
+            </button>
+          </div>
+          
+          <!-- Clear Filters Button -->
+          <div class="relative ml-2">
+            <button type="button" (click)="clearFilters()"
+                    class="h-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Clear
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Task Submissions List -->
+    <div class="space-y-6 mt-10">
+      <!-- TaskRep Card -->
+      <div *ngFor="let taskRep of filteredTaskReps" class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
+        <div class="px-6 py-4 bg-gray-50">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full" 
+                     [src]="taskRep.task.student?.profileImage || 'https://randomuser.me/api/portraits/lego/1.jpg'"
+                     [alt]="taskRep.task.student?.firstName + ' ' + taskRep.task.student?.lastName">
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">
+                  {{ taskRep.task.student?.firstName || 'Unknown' }} {{ taskRep.task.student?.lastName || 'Student' }}
+                </h3>
+                <p class="text-sm text-gray-500">{{ taskRep.task.student?.email || '' }}</p>
+              </div>
+            </div>
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
+                  [ngClass]="{
+                    'bg-yellow-100 text-yellow-800': taskRep.status === 'PENDING',
+                    'bg-green-100 text-green-800': taskRep.status === 'APPROVED',
+                    'bg-red-100 text-red-800': taskRep.status === 'REJECTED'
+                  }">
+              {{ taskRep.status }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- Task Details -->
+        <div class="px-6 py-4 border-t border-gray-200">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Task</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ taskRep.task.title }}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Submitted</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ taskRep.submissionDate | date:'mediumDate' }}</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Content</h4>
+              <div class="mt-1">
+                <button (click)="viewSubmissionDetails(taskRep)" 
+                        class="text-sm text-indigo-600 hover:text-indigo-900">
+                  View Submission
+                </button>
+                <button *ngIf="taskRep.fileName?.endsWith('.pdf')" (click)="downloadPdf(taskRep.id)" 
+                        class="ml-2 text-sm text-indigo-600 hover:text-indigo-900">
+                  Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <div class="flex justify-end space-x-3">
+            <button *ngIf="taskRep.status === 'PENDING'"
+                    (click)="approveTaskRep(taskRep)"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+              Approve
+            </button>
+            <button *ngIf="taskRep.status === 'PENDING'"
+                    (click)="openRejectModal(taskRep)"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              Reject
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty State -->
+      <div *ngIf="filteredTaskReps.length === 0" class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No submissions found</h3>
+        <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria</p>
+      </div>
+    </div>
+  
+    <!-- Submission Detail Modal -->
+    <div *ngIf="selectedTaskRep" class="fixed z-50 inset-0 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              Submission Details
+            </h3>
+            <div class="mt-4">
+              <div class="grid grid-cols-1 gap-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Student</label>
+                    <p class="mt-1 text-sm text-gray-900">
+                      {{ selectedTaskRep.task.student?.firstName }} {{ selectedTaskRep.task.student?.lastName }}
+                    </p>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Submitted On</label>
+                    <p class="mt-1 text-sm text-gray-900">{{ selectedTaskRep.submissionDate | date:'medium' }}</p>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Task</label>
+                  <p class="mt-1 text-sm font-medium text-gray-900">{{ selectedTaskRep.task.title }}</p>
+                  <p class="mt-1 text-sm text-gray-500">{{ selectedTaskRep.task.description }}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Content</label>
+                  <div class="mt-1 p-3 bg-gray-50 rounded-md">
+                    <iframe 
+                      [src]="getSafePdfUrl(selectedTaskRep.content)" 
+                       class="w-full h-auto border border-gray-200"
+                        type="application/pdf">
+                        </iframe>
+                    <pre *ngIf="!selectedTaskRep.fileName?.endsWith('.pdf')" class="text-sm text-gray-900 whitespace-pre-wrap">{{ selectedTaskRep.content }}</pre>
+                    <div *ngIf="selectedTaskRep.fileName?.endsWith('.pdf')" class="text-center py-4">
+                      <p class="text-sm text-gray-500">PDF file submitted</p>
+                      <button (click)="downloadPdf(selectedTaskRep.id)" 
+                              class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Download PDF
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="selectedTaskRep.feedback">
+                  <label class="block text-sm font-medium text-gray-700">Feedback</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ selectedTaskRep.feedback }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button type="button" (click)="selectedTaskRep = null" 
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Reject Submission Modal -->
+    <div *ngIf="taskRepToReject" class="fixed z-50 inset-0 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              Reject Submission
+            </h3>
+            <div class="mt-4">
+              <p class="text-sm text-gray-500">
+                Provide feedback for {{ taskRepToReject.task.student?.firstName }}'s submission:
+              </p>
+              <textarea [(ngModel)]="rejectionFeedback" rows="4" 
+                        class="mt-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Explain what needs improvement..."></textarea>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button type="button" (click)="confirmReject()" 
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+              Confirm Rejection
+            </button>
+            <button type="button" (click)="taskRepToReject = null" 
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

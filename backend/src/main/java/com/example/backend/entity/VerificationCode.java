@@ -14,8 +14,7 @@ public class VerificationCode {
     private Long id;
     private String code;
     private LocalDateTime expirationDate;
-    private String identifier; // This could be email or phone
-
+    private String identifier;
     // Getters and Setters
 
     public String getCode() {

@@ -62,6 +62,23 @@ public class UserController {
         return ResponseEntity.ok(userRequests);
     }
 
+
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserRequest> getUser(@PathVariable long userId) {
+        User user = userRepository.getReferenceById(userId);
+        UserRequest student = new UserRequest();
+
+        student.setNom(user.getNom());
+        student.setId(user.getId());
+        student.setPrenom(user.getPrenom());
+        student.setEmail(user.getEmail());
+        student.setPassword(user.getPassword());
+        student.setCin(student.getCin());
+        student.setSchool(student.getSchool());
+        return ResponseEntity.ok().body(student);
+    }
+
     @GetMapping("/email")
     public ResponseEntity<UserRequest> getUserByEmail(@RequestParam String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);

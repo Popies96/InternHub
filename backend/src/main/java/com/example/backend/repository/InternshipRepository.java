@@ -14,7 +14,7 @@ public interface InternshipRepository extends JpaRepository<Internship,Long> {
 
 
 
-    List<Internship> findByEnterprise(Optional<Enterprise> enterprise);
+    List<Internship> findByEnterpriseId(Long enterpriseId);
     @Query("SELECT DISTINCT i FROM Internship i " +
             "JOIN i.tasks t " +
             "WHERE i.enterprise.id = :enterpriseId " +

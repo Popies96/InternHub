@@ -1,0 +1,131 @@
+<div class="flex flex-col w-full max-w-md h-[600px] bg-white rounded-xl shadow-lg overflow-hidden">
+    <!-- Chat header -->
+    <div class="bg-indigo-600 text-white p-4 flex items-center">
+        <div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="ml-3">
+            <h2 class="font-semibold">AI Assistant</h2>
+            <p class="text-xs opacity-80">Online</p>
+        </div>
+    </div>
+    
+    <!-- Chat messages -->
+    <div #messagesContainer class="flex-1 p-4 overflow-y-auto space-y-4">
+        <!-- Welcome message -->
+        <div class="flex items-start">
+            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-indigo-600">
+                    <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="max-w-[70%]">
+                <div class="bg-gray-200 rounded-lg p-3">
+                    <p class="whitespace-pre-wrap">Hello! I'm your AI assistant for internship tasks. How can I help you with your assignments today?</p>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">{{ getCurrentTime() }}</p>
+            </div>
+        </div>
+        
+        <!-- Dynamic messages -->
+        <div *ngFor="let msg of chatMessages" class="message-container">
+            <!-- User message -->
+            <div *ngIf="msg.isUser" class="flex items-start justify-end">
+                <div class="max-w-[70%] flex flex-col items-end">
+                    <div class="bg-indigo-600 text-white rounded-lg p-3">
+                        <!-- Show image if present -->
+                        <img *ngIf="msg.imageUrl" [src]="msg.imageUrl" alt="Uploaded File" class="max-w-full mb-2 rounded-lg max-h-60 object-contain">
+                        <!-- Show text if present -->
+                        <p *ngIf="msg.text" class="whitespace-pre-wrap">{{ msg.text }}</p>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">{{ msg.timestamp || getCurrentTime() }}</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center ml-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-indigo-600">
+                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Bot message -->
+            <div *ngIf="!msg.isUser" class="flex items-start">
+                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-indigo-600">
+                        <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="max-w-[70%]">
+                    <div class="bg-gray-200 rounded-lg p-3">
+                        <pre *ngIf="msg.text.startsWith('{') || msg.text.startsWith('[')" class="text-xs whitespace-pre-wrap">{{ msg.text }}</pre>
+                        <p *ngIf="!msg.text.startsWith('{') && !msg.text.startsWith('[')" class="whitespace-pre-wrap">{{ msg.text }}</p>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">{{ msg.timestamp || getCurrentTime() }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div *ngIf="isProcessing" class="flex items-start">
+            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-indigo-600">
+                    <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="max-w-[70%]">
+                <div class="bg-gray-200 rounded-lg p-3">
+                    <div class="flex space-x-2 justify-center">
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="selectedFile" class="p-4 border-b border-gray-200 bg-gray-50">
+  <div class="flex items-center mb-2">
+    <span class="text-sm font-medium mr-2">Image ready to send:</span>
+    <button (click)="selectedFile = null" class="text-red-500 hover:text-red-700">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    </button>
+  </div>
+  <img [src]="selectedFile " alt="Selected file" class="max-w-full mb-2 rounded-lg max-h-32 object-contain">
+  <input type="text" 
+         [(ngModel)]="imagePrompt" 
+         placeholder="Add a message about this image..."
+         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+</div>
+    <div class="p-4 border-t border-gray-200">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+          <input #fileInput type="file" accept="image/*" style="display: none" (change)="onFileSelected($event)">
+      
+          <button id="fileButton" 
+                  class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500"
+                  (click)="triggerFileInput()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a3.75 3.75 0 105.304 5.303l7.693-7.693a.75.75 0 011.06 1.06l-7.693 7.693a5.25 5.25 0 11-7.424-7.424l10.939-10.94a3.75 3.75 0 115.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 015.91 15.66l7.81-7.81a.75.75 0 011.061 1.06l-7.81 7.81a.75.75 0 001.054 1.068L18.97 6.84a2.25 2.25 0 000-3.182z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <input type="text" 
+                 [(ngModel)]="prompt" 
+                 (keyup.enter)="generate()"
+                 placeholder="{{selectedFile ? 'Press enter to send image and message' : 'Ask about your internship task...'}}" 
+                 class="flex-1 bg-transparent border-none outline-none px-2 py-1"
+                 [disabled]="isProcessing">
+          <button (click)="generate()" 
+                  [disabled]="(!prompt.trim() && !selectedFile) || isProcessing"
+                  [class.opacity-50]="(!prompt.trim() && !selectedFile) || isProcessing"
+                  [class.cursor-not-allowed]="(!prompt.trim() && !selectedFile) || isProcessing"
+                  class="w-8 h-8 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+              <path d="M3.478 2.404a.75.75 0 00-.926.941l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.404z" />
+            </svg>
+          </button>
+        </div>
+        <p *ngIf="errorMessage" class="text-red-500 text-xs mt-1 px-2">{{ errorMessage }}</p>
+      </div>
+</div>

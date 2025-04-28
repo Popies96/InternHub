@@ -14,6 +14,7 @@ public interface InternshipService {
 
     List<Internship> getInternshipsByStudent(Long studentId);
     List<InternshipResponse> getInternshipsByEnterprise(Long enterpriseId);
+    List<Internship> getInternshipsByEnterpriseT(Long enterpriseId);
 
     Internship applyForInternship(Long internshipId, Long studentId);
 }

@@ -40,6 +40,10 @@ import { ReviewFormComponent } from './pages/Student/reviews/review-form/review-
 import { EditReviewComponent } from './pages/Student/reviews/edit-review/edit-review.component';
 import { ReviewComponent } from './pages/Student/reviews/review/review.component';
 import { EnterpriseReviewComponent } from './pages/company/enterprise-review/enterprise-review.component';
+import { TasksComponent } from './pages/Student/tasks/tasks.component';
+import { CalendarComponent } from './pages/Student/calendar/calendar.component';
+import { CompanyTasksrepComponent } from './pages/company/company-tasksrep/company-tasksrep.component';
+import { CompanyTasksComponent } from './pages/company/company-tasks/company-tasks.component';
 
 const routes: Routes = [
   {
@@ -48,6 +52,16 @@ const routes: Routes = [
     data: { roles: ['ROLE_STUDENT'] },
     component: DashboardComponent,
     children: [
+      {
+        path: 'tasks',
+        component: TasksComponent,
+        data: { breadcrumb: 'Tasks' },
+      },
+      {
+        path: 'calendar',
+        component: CalendarComponent,
+        data: { breadcrumb: 'calendar' },
+      },
       {
         path: 'profile',
         component: ProfileComponent,
@@ -134,6 +148,16 @@ const routes: Routes = [
         path: 'schedule-interview/:applicationId',
         component: InterviewSchedulerComponent,
       },
+      {
+        path: 'taskrep',
+        component: CompanyTasksrepComponent,
+        data: { breadcrumb: 'task Rep' },
+      },
+      {
+        path: 'tasks',
+        component: CompanyTasksComponent,
+        data: { breadcrumb: 'Tasks Management' },
+      },
       { path: 'reviews', component: EnterpriseReviewComponent },
       {
         path: 'app',
@@ -164,6 +188,13 @@ const routes: Routes = [
       },
     ],
   },
+
+   {
+    path: 'admin',
+    canActivate: [AuthGuardService],
+    data: { roles: ['ROLE_ADMIN'] },
+    component: AdminDashboardComponent,
+    children: []},
 
   { path: '', component: LandingComponent },
   { path: 'test', component: InterviewTestComponent },

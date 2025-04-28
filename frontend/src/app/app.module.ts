@@ -58,6 +58,12 @@ import { EditReviewComponent } from './pages/Student/reviews/edit-review/edit-re
 import { ReviewFormComponent } from './pages/Student/reviews/review-form/review-form.component';
 import { ReviewComponent } from './pages/Student/reviews/review/review.component';
 import { EnterpriseReviewComponent } from './pages/company/enterprise-review/enterprise-review.component';
+import { CalendarComponent } from './pages/Student/calendar/calendar.component';
+import { TaskChatComponent } from './pages/Student/task-chat/task-chat.component';
+import { TasksComponent } from './pages/Student/tasks/tasks.component';
+import { CompanyTasksComponent } from './pages/company/company-tasks/company-tasks.component';
+import { CompanyTasksrepComponent } from './pages/company/company-tasksrep/company-tasksrep.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -113,6 +119,12 @@ import { EnterpriseReviewComponent } from './pages/company/enterprise-review/ent
     ReviewFormComponent,
     ReviewComponent,
     EnterpriseReviewComponent,
+    CalendarComponent,
+    TaskChatComponent,
+    TasksComponent,
+    CompanyTasksComponent,
+    CompanyTasksrepComponent,
+    VerifyEmailComponent,
     
   ],
   imports: [

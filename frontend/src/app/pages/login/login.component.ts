@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ForgotPasswordComponent } from 'src/app/components/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from 'src/app/components/verify-email/verify-email.component';
 import { JwtService } from 'src/app/services/jwt.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   @ViewChild(ForgotPasswordComponent)
   forgotPasswordComponent!: ForgotPasswordComponent;
+  @ViewChild('verifyEmailModal') verifyEmailModal!: VerifyEmailComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -53,15 +55,40 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['/student']);
             } else if (roles.includes('ROLE_ENTERPRISE')) {
               this.router.navigate(['/company']);
+            } else if (roles.includes('ROLE_ADMIN')) {
+              this.router.navigate(['/admin']);
             }
           }
         },
         (error) => {
           console.log(error);
+           if (error.status === 403 && error.error.resend === true) {
+          // User is not verified, open Verify Modal
+         this.openVerifyEmailModal()
+
+
+        
+          alert(error.error.message); 
+        } else if (error.status === 401) {
+          alert('Invalid email or password');
+        } else if (error.status === 404) {
+          alert('User not found');
+        } else {
+          alert('An unexpected error occurred');
+        }
+      
+    
         }
       );
     } else {
       console.log('Form is invalid');
+    }
+  }
+
+  openVerifyEmailModal() {
+    const email = this.loginForm.get('email')?.value;
+    if (email) {
+      this.verifyEmailModal.openModal(email); // Pass the email to the modal
     }
   }
 }

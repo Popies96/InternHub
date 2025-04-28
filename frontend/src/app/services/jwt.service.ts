@@ -76,6 +76,14 @@ export class JwtService {
     return this.http.post<any>(baseUrl + 'forgotPassword/validate', body);
   }
 
+  verifyEmail(identifier: string, validationCode: string): Observable<any> {
+    const body = {
+      identifier: identifier,
+      validationCode: validationCode,
+    };
+    return this.http.post<any>(baseUrl + 'verify-email', body);
+  }
+
   resetPassword(identifier: string, newPassword: string): Observable<string> {
     return this.http.post<string>(baseUrl + 'forgotPassword/reset', {
       identifier,
