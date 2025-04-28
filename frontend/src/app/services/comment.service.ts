@@ -26,22 +26,44 @@ export class CommentService {
     topicid: number,
     userId: number
   ): Observable<Comment> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
     return this.http.post<Comment>(
       `${this.baseUrl}/${topicid}/${userId}/addcomment`,
       comment,
-      { responseType: 'json' }
+      { headers,
+        responseType: 'json' }
     );
   }
 
   getCommentsByTopic(topicId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.baseUrl}/comments/${topicId}`);
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.get<Comment[]>(`${this.baseUrl}/comments/${topicId}`, {
+      headers,
+    });
   }
   CommentCount(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/comments/count/${id}`);
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.get<any>(`${this.baseUrl}/comments/count/${id}`, {
+      headers,
+    });
   }
 
   deleteComment(id: number, userId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/comment/delete/${id}/${userId}`);
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
+    return this.http.delete(`${this.baseUrl}/comment/delete/${id}/${userId}`, {
+      headers});
   }
 
   updateComment(
@@ -49,9 +71,17 @@ export class CommentService {
     newContent: string,
     userId: number
   ): Observable<any> {
+    const headers = this.createAuthorizedHeader();
+    if (!headers) {
+      throw new Error('No authorization token available');
+    }
     return this.http.put<any>(
       `${this.baseUrl}/comment/update/${id}/${userId}`,
-      { comment: newContent }
+      { comment: newContent},
+      {
+        headers,
+      
+       }
     );
   }
 

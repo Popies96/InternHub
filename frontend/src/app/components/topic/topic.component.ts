@@ -184,7 +184,7 @@ export class TopicComponent implements OnInit {
   }
 
   selectTopic(topicId: number): void {
-    this.router.navigate(['/student/topics', topicId]);
+    this.router.navigate(['/company/topics/', topicId]);
   }
 
   react(reactionType: 'like' | 'dislike', topicId: number): void {

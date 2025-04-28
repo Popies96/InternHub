@@ -1,8 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Review } from '../models/reviewModel';
+import { Review } from '../models/ReviewModel';
 
+
+
+export interface ReportDto {
+  id: number;
+  adminAction: string;
+  reason: string;
+  reviewId: number;
+  reportedById: number;
+  status: string;
+  
+}
 
 @Injectable({
   providedIn: 'root',
@@ -73,5 +84,12 @@ export class ReviewService {
       },
       { headers }
     );
+  }
+
+  getReportedReviewsByStatus(): Observable<ReportDto[]> {
+     const headers = this.createAuthorizedHeader();
+    return this.http.get<ReportDto[]>(`${this.baseUrl}/status`, {
+      headers
+    });
   }
 }

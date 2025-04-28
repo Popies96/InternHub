@@ -1,12 +1,11 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dto.ReportDto;
 import com.example.backend.dto.ReportReviewRequest;
 import com.example.backend.dto.ReviewDTO;
+import com.example.backend.dto.TaskAiDto;
 import com.example.backend.entity.*;
-import com.example.backend.repository.InternshipRepository;
-import com.example.backend.repository.RecommandationRepository;
-import com.example.backend.repository.ReportedReviewRepository;
-import com.example.backend.repository.ReviewRepository;
+import com.example.backend.repository.*;
 import com.example.backend.services.ReviewService.GeminiService;
 import com.example.backend.services.ReviewService.ReviewService;
 import com.example.backend.services.authSerivce.UserServiceImpl;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -35,6 +35,9 @@ public class ReviewController {
     private ReviewRepository reviewRepository;
     @Autowired
     private RecommandationRepository recommendationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private InternshipRepository internshipRepository;
@@ -142,22 +145,43 @@ public ResponseEntity<String> getRecommendation(
 }
 
 //report a review
+//report a review
 @PostMapping("/report")
 @PreAuthorize("hasRole('ENTERPRISE')")
 public ReportedReview reportReview(@RequestBody ReportReviewRequest request) {
-    // Get the currently authenticated user (reporter)
-    User reporter = (User) SecurityContextHolder.getContext()
-            .getAuthentication()
-            .getPrincipal();
+    // Get the current security user
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    // Call service with review ID, authenticated user, and reason
+    String email;
+    if (principal instanceof org.springframework.security.core.userdetails.User) {
+        email = ((org.springframework.security.core.userdetails.User) principal).getUsername();
+    } else {
+        email = principal.toString();
+    }
+
+    // Fetch your real User entity using the email
+    User reporter = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
     return reviewService.reportReview(
             request.getReviewId(), reporter, request.getReason()
     );
 }
-    @GetMapping("/status/{status}")
-    public List<ReportedReview> getReportedReviewsByStatus(@PathVariable ReportedReview.Status status) {
-        return reviewService.getAllReportedReviews(status);
+    @GetMapping("/status")
+    public List<ReportDto> getReportedReviewsByStatus() {
+        List<ReportedReview>  reportedReview = reviewService.getAllReportedReviews();
+
+        return reportedReview.stream().map(report -> {
+            ReportDto dto = new ReportDto();
+            ReviewDTO reviewDTO = new ReviewDTO();
+            dto.setId(report.getId());
+            dto.setAdminAction(report.getAdminAction());
+            dto.setReason(report.getReason());
+            dto.setReviewId(report.getReview().getId());
+            dto.setReportedById(report.getReportedBy().getId());
+            dto.setStatus(report.getStatus());
+            return dto;
+        }).toList();
     }
 
     @PutMapping("/action/{reportId}")

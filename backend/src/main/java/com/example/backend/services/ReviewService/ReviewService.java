@@ -153,8 +153,8 @@ public class ReviewService {
     }
 
     // Get all reported reviews by status (used by admin)
-    public List<ReportedReview> getAllReportedReviews(ReportedReview.Status status) {
-        return reportedReviewRepository.findAllByStatus(status); // Custom query to find by status
+    public List<ReportedReview> getAllReportedReviews() {
+        return reportedReviewRepository.findAll(); // Custom query to find by status
     }
 
     // Admin action on a reported review

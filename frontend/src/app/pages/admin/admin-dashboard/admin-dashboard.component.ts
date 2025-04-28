@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ReviewService } from 'src/app/services/review.service';
 import { User, UserService } from 'src/app/services/user.service';
 // Adjust this if your User model path is different
 
@@ -14,28 +15,33 @@ export class AdminDashboardComponent implements OnInit {
   showReportModal = false;
   selectedUser: any = null;
   reportMessage = '';
+  reportedReviews: any[] = [];
+  filteredReports: any[] = [];
+  reportStatusFilter = 'PENDING';
 
   students: User[] = [];
   companies: User[] = [];
   filteredStudents: User[] = [];
   filteredCompanies: User[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private reportService: ReviewService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadReportedReviews();
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
       next: (users) => {
         console.log(users);
-        
+
         // Assuming each user has a 'role' field ('student' or 'enterprise')
         this.students = users.filter((user) => user.role === 'STUDENT');
-        this.companies = users.filter(
-          (user) => user.role === 'ENTERPRISE'
-        );
+        this.companies = users.filter((user) => user.role === 'ENTERPRISE');
 
         this.filterUsers();
       },
@@ -48,9 +54,7 @@ export class AdminDashboardComponent implements OnInit {
   filterUsers(): void {
     this.filteredStudents = this.students.filter((student) => {
       const matchesSearch =
-        student.nom
-          ?.toLowerCase()
-          .includes(this.searchQuery.toLowerCase()) ||
+        student.nom?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         student.prenom
           ?.toLowerCase()
           .includes(this.searchQuery.toLowerCase()) ||
@@ -60,8 +64,6 @@ export class AdminDashboardComponent implements OnInit {
           .includes(this.searchQuery.toLowerCase()) ||
         student.cin?.toString().includes(this.searchQuery);
 
-      
-
       return matchesSearch;
     });
 
@@ -69,16 +71,13 @@ export class AdminDashboardComponent implements OnInit {
       const matchesSearch =
         company.companyName
           ?.toLowerCase()
-          .includes(this.searchQuery.toLowerCase())  ||
+          .includes(this.searchQuery.toLowerCase()) ||
         company.email?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         company.companyAddress
           ?.toLowerCase()
           .includes(this.searchQuery.toLowerCase());
 
-     
-   
-
-      return matchesSearch
+      return matchesSearch;
     });
   }
 
@@ -110,6 +109,20 @@ export class AdminDashboardComponent implements OnInit {
     this.showReportModal = true;
   }
 
+  loadReportedReviews(): void {
+    this.reportService.getReportedReviewsByStatus().subscribe({
+      next: (reports) => {
+        this.reportedReviews = reports;
+      },
+      error: (err) => console.error('Failed to load reports:', err),
+    });
+  }
+
+  onReportStatusChange(status: string): void {
+    this.reportStatusFilter = status;
+    this.loadReportedReviews();
+  }
+
   sendReport(): void {
     if (this.reportMessage.trim()) {
       console.log(
@@ -124,5 +137,11 @@ export class AdminDashboardComponent implements OnInit {
 
   viewDetails(userId: number): void {
     console.log('View details for user:', userId);
+  }
+
+  takeAction(reportId: number, action: string): void {
+    
+    console.log(`Taking ${action} on report ${reportId}`);
+   
   }
 }

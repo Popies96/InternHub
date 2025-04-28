@@ -154,7 +154,7 @@ export class TaskChatComponent implements AfterViewChecked {
 
       const result = await this.geminiService.generateTextTask(enhancedPrompt);
 
-      let responseText = '';
+      let responseText = result;
 
       try {
         const jsonData = JSON.parse(responseText);

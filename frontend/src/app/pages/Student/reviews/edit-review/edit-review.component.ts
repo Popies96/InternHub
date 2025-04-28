@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ReviewService } from 'src/app/services/review.service';
-import { Review, RatingCriteria } from 'src/app/models/reviewModel';
+import { Review, RatingCriteria } from 'src/app/models/ReviewModel';
+
 
 
 @Component({

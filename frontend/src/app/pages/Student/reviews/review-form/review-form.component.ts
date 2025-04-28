@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import { Router } from '@angular/router';
-import { RatingCriteria } from 'src/app/models/reviewModel';
+import { RatingCriteria } from 'src/app/models/ReviewModel';
 import { JwtService } from 'src/app/services/jwt.service';
 import { ReviewService } from 'src/app/services/review.service';
 

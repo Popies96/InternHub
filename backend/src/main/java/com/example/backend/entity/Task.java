@@ -154,7 +154,6 @@ public class Task {
     }
 
     @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private TaskRep taskRep;
 
     public TaskRep getTaskRep() {

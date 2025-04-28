@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { jsPDF } from 'jspdf';
 import { Chart } from 'chart.js';
-import { Review, RatingCriteria } from 'src/app/models/reviewModel';
+import { Review, RatingCriteria } from 'src/app/models/ReviewModel';
 import { ReviewService } from 'src/app/services/review.service';
 
 @Component({

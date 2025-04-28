@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 
 import { Router } from '@angular/router';
-import { Review } from 'src/app/models/reviewModel';
+import { Review } from 'src/app/models/ReviewModel';
+
 import { ReviewService } from 'src/app/services/review.service';
 
 @Component({
