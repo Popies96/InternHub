@@ -1,5 +1,6 @@
 package com.example.backend.services.internshipService;
 
+import com.example.backend.dto.InternshipDto;
 import com.example.backend.dto.InternshipResponse;
 import com.example.backend.entity.Internship;
 
@@ -14,7 +15,15 @@ public interface InternshipService {
 
     List<Internship> getInternshipsByStudent(Long studentId);
     List<InternshipResponse> getInternshipsByEnterprise(Long enterpriseId);
-    List<Internship> getInternshipsByEnterpriseT(Long enterpriseId);
 
     Internship applyForInternship(Long internshipId, Long studentId);
-}
+
+    Internship createInternship(InternshipDto internshipDto, String username);
+
+    List<Internship> getInternshipsByTitle(String title);
+
+    List<Internship> getInternshipsByCompanyName(String companyName);
+     List<Internship> getInternshipsByEnterpriseT(Long enterpriseId) ;
+
+
+    }

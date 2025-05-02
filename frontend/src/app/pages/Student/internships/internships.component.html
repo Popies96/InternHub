@@ -1,1 +1,58 @@
-<p>internships works!</p>
+<div class="flex mx-auto gap-6 max-w-7xl px-2">
+  <div class="w-full lg:w-[60%] py-6 bg-white rounded-lg shadow-sm">
+    
+    <!-- Loop over internships -->
+    <div class="space-y-8">
+      <div *ngFor="let internship of internships" class="relative group cursor-pointer">
+        <a [routerLink]="['/student/intern-info', internship.id]">
+          <div class="relative h-32 overflow-hidden rounded-t-lg flex items-center justify-center">
+            <img src="../../../assets/cover.jpg" alt="Internship Cover" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="text-white font-semibold text-lg">Internship Details</span>
+            </div>
+          </div>
+        </a>
+
+        <div class="border border-gray-300 px-4 py-4 rounded-b-lg">
+          <div class="flex justify-between items-start">
+            <div class="flex-1">
+              <h3 class="font-medium mb-1">{{ internship.title }}</h3>
+
+              <div class="flex items-center gap-2 mb-2">
+                <!-- Static stars for now -->
+                <div class="flex">
+                  <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="..."/></svg>
+                  <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="..."/></svg>
+                  <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="..."/></svg>
+                  <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="..."/></svg>
+                  <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="..."/></svg>
+                </div>
+                <span class="text-xs text-gray-500">4.2 (128 reviews)</span>
+              </div>
+
+              <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">{{ internship.type }}</span>
+
+              <p class="mt-2 text-sm text-gray-600">
+                {{ internship.description }}
+              </p>
+
+              <div class="mt-2 flex items-center text-sm text-gray-500">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ internship.location }}
+              </div>
+            </div>
+
+          
+          </div>
+        </div>
+
+      </div> <!-- end of one internship card -->
+
+    </div> <!-- end of internship list -->
+
+  </div> <!-- end of column -->
+
+</div> <!-- end of flex container -->

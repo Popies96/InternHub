@@ -1,1 +1,185 @@
-<p>application works!</p>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Apply for Internship</h2>
+
+  <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()" class="space-y-12">
+    <!-- Personal Information Section -->
+    <div class="border-b border-gray-900/10 pb-12">
+      <h2 class="text-base font-semibold text-gray-900">Personal Information</h2>
+      <p class="mt-1 text-sm text-gray-600">Use a permanent address where you can receive mail.</p>
+
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <!-- First Name -->
+        <div class="sm:col-span-3">
+          <label for="firstName" class="block text-sm font-medium text-gray-900">First name</label>
+          <div class="mt-2">
+            <input id="firstName" formControlName="firstName" type="text" autocomplete="given-name"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('firstName')?.invalid && (applicationForm.get('firstName')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              First Name is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="sm:col-span-3">
+          <label for="lastName" class="block text-sm font-medium text-gray-900">Last name</label>
+          <div class="mt-2">
+            <input id="lastName" formControlName="lastName" type="text" autocomplete="family-name"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('lastName')?.invalid && (applicationForm.get('lastName')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Last Name is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="sm:col-span-4">
+          <label for="email" class="block text-sm font-medium text-gray-900">Email address</label>
+          <div class="mt-2">
+            <input id="email" formControlName="email" type="email" autocomplete="email"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('email')?.invalid && (applicationForm.get('email')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Please enter a valid email.
+            </div>
+          </div>
+        </div>
+
+        <!-- Country -->
+        <div class="sm:col-span-3">
+          <label for="country" class="block text-sm font-medium text-gray-900">Country</label>
+          <div class="mt-2 grid grid-cols-1">
+            <select id="country" formControlName="country" autocomplete="country-name"
+              class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
+              <option value="">Select a country</option>
+              <option>United States</option>
+              <option>Canada</option>
+              <option>Mexico</option>
+            </select>
+            <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" 
+              viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+            </svg>
+            <div *ngIf="applicationForm.get('country')?.invalid && (applicationForm.get('country')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Country is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Street Address -->
+        <div class="col-span-full">
+          <label for="streetAddress" class="block text-sm font-medium text-gray-900">Street address</label>
+          <div class="mt-2">
+            <input id="streetAddress" formControlName="streetAddress" type="text" autocomplete="street-address"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('streetAddress')?.invalid && (applicationForm.get('streetAddress')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Street Address is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="sm:col-span-2 sm:col-start-1">
+          <label for="city" class="block text-sm font-medium text-gray-900">City</label>
+          <div class="mt-2">
+            <input id="city" formControlName="city" type="text" autocomplete="address-level2"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('city')?.invalid && (applicationForm.get('city')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              City is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Region -->
+        <div class="sm:col-span-2">
+          <label for="region" class="block text-sm font-medium text-gray-900">State / Province</label>
+          <div class="mt-2">
+            <input id="region" formControlName="region" type="text" autocomplete="address-level1"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('region')?.invalid && (applicationForm.get('region')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Region is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Postal Code -->
+        <div class="sm:col-span-2">
+          <label for="postalCode" class="block text-sm font-medium text-gray-900">ZIP / Postal code</label>
+          <div class="mt-2">
+            <input id="postalCode" formControlName="postalCode" type="text" autocomplete="postal-code"
+              class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none">
+            <div *ngIf="applicationForm.get('postalCode')?.invalid && (applicationForm.get('postalCode')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              Postal Code is required.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="border-b border-gray-900/10 pb-12">
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="col-span-full">
+          <label for="about" class="block text-sm font-medium text-gray-900">About</label>
+          <div class="mt-2">
+            <textarea id="about" formControlName="about" rows="5"
+              class="block w-full border border-gray-300 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"></textarea>
+            <div *ngIf="applicationForm.get('about')?.invalid && (applicationForm.get('about')?.touched || submitted)" 
+              class="mt-1 text-sm text-red-600">
+              About section is required.
+            </div>
+          </div>
+          <p class="mt-3 text-sm text-gray-600">Write a few sentences about yourself.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume Section -->
+    <div class="border-b border-gray-900/10 pb-12">
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="col-span-full">
+          <label class="block text-sm font-medium text-gray-900 pb-4">Resume</label>
+          
+          <!-- File Upload Button -->
+          <label class="flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Submit Resume
+            <input id="resume" type="file" formControlName="resume" (change)="onFileChange($event)" class="hidden" accept=".pdf,.doc,.docx">
+          </label>
+          
+          <div *ngIf="applicationForm.get('resume')?.invalid && (applicationForm.get('resume')?.touched || submitted)" 
+            class="mt-1 text-sm text-red-600">
+            Resume is required.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <button type="button" class="text-sm font-semibold text-gray-900">Cancel</button>
+      <button type="submit" 
+        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Submit Application
+      </button>
+    </div>
+  </form>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="errorMessage" class="mt-4 p-4 bg-red-50 text-red-700 rounded-md">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="successMessage" class="mt-4 p-4 bg-green-50 text-green-700 rounded-md">
+    {{ successMessage }}
+  </div>
+</div>

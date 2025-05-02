@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JwtService } from '../../services/jwt.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -11,7 +12,7 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   role: string = 'student'; // Default role
 
-  constructor(private fb: FormBuilder, private jwtService: JwtService) {
+  constructor(private fb: FormBuilder, private jwtService: JwtService, private router: Router) {
     this.signupForm = this.fb.group(
       {
         nom: ['', Validators.required],
@@ -70,6 +71,7 @@ export class SignupComponent implements OnInit {
       console.log('Form submitted:', this.signupForm.value);
       this.jwtService.register(this.signupForm.value).subscribe(
         (data) => {
+          this.router.navigate(['/login']);
           console.log(data);
         },
         (error) => {

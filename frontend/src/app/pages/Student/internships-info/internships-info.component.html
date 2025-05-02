@@ -1,0 +1,75 @@
+<section class="bg-white antialiased pb-8" *ngIf="!loading && internship">
+    <div class="block pb-10">
+      <h2 class="font-manrope font-bold text-2xl leading-9 text-gray-900 mb-3">Internship Details</h2>
+      <p class="font-normal text-sm leading-6 text-gray-500">
+        Remember to verify all information with the employer before applying
+      </p>
+    </div>
+  
+    <div class="max-w-screen px-4 mx-auto 2xl:px-0">
+      <img class="w-full h-[25vh] object-cover rounded-xl mb-8" src="../../../assets/cover.jpg" alt="Company Logo">
+  
+      <div class="lg:gap-8 xl:gap-16">
+        <div class="mt-6 sm:mt-8 lg:mt-0">
+          <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">
+            {{ internship.title }}
+          </h1>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+              {{ internship.enterpriseName }}
+            </span>
+            <span class="text-sm text-gray-500">{{ internship.location }}</span>
+          </div>
+  
+          <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
+            <p class="text-2xl font-extrabold text-gray-900">
+              {{ internship.duration }}
+            </p>
+            <!-- You can add ratings if available -->
+          </div>
+  
+          <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
+            <button class="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100">
+              Save Internship
+            </button>
+  
+            <button  [routerLink]="['/student/apply', internship.id]" class="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg ml-4">
+              Apply Now
+            </button>
+          </div>
+  
+          <hr class="my-6 md:my-8 border-gray-200" />
+  
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Internship Highlights</h3>
+              <p class="text-gray-500">{{ internship.highlights }}</p>
+            </div>
+  
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Requirements</h3>
+              <p class="text-gray-500">{{ internship.requirements }}</p>
+            </div>
+          </div>
+  
+          <hr class="my-6 md:my-8 border-gray-200" />
+  
+          <h3 class="font-semibold text-gray-900 mb-3">Internship Description</h3>
+          <p class="mb-4 text-gray-500">
+            {{ internship.description }}
+          </p>
+  
+          <div class="mt-8">
+            <h3 class="font-semibold text-gray-900 mb-3">Application Deadline</h3>
+            <div class="flex items-center gap-2 text-gray-500">
+              <span>{{ internship.deadline }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div *ngIf="loading" class="text-center py-8">Loading internship details...</div>
+  <div *ngIf="error" class="text-center text-red-500 py-8">{{ error }}</div>
+  

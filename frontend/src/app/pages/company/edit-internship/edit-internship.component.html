@@ -1,0 +1,198 @@
+<div class="mx-auto px-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">Edit Internship</h2>
+    
+    <form [formGroup]="internshipForm" (ngSubmit)="onSubmit()" class="space-y-8 mx-auto">
+      <!-- Basic Information Section -->
+      <div class="bg-white px-6 rounded-lg shadow-sm border border-gray-200 py-8">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label for="title" class="block text-sm font-medium text-gray-700">Internship Title*</label>
+            <input formControlName="title" type="text" id="title" name="title" required
+                   class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('title')?.invalid && internshipForm.get('title')?.touched" class="text-red-500 text-sm">
+              Internship title is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="position-title" class="block text-sm font-medium text-gray-700">Position Title*</label>
+            <input formControlName="positionTitle" type="text" id="positionTitle" name="positionTitle" required
+                   class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('positionTitle')?.invalid && internshipForm.get('positionTitle')?.touched" class="text-red-500 text-sm">
+              Position title is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="department" class="block text-sm font-medium text-gray-700">Department*</label>
+            <input formControlName="department" type="text" id="department" name="department" required
+                   class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500"
+                   placeholder="Enter Department">
+            <div *ngIf="internshipForm.get('department')?.invalid && internshipForm.get('department')?.touched" class="text-red-500 text-sm">
+              Department is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="duration" class="block text-sm font-medium text-gray-700">Duration (months)*</label>
+            <input type="number" formControlName="durationInMonths" id="duration" name="durationInMonths" min="1" max="12" required
+            class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('durationInMonths')?.invalid && internshipForm.get('durationInMonths')?.touched" class="text-red-500 text-sm">
+              Duration is required (1-12 months)
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="position-summary" class="block text-sm font-medium text-gray-700">Position Summary*</label>
+          <textarea id="position-summary" formControlName="positionSummary" name="position-summary" rows="3" required
+          class="block w-full h-24 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="Briefly describe the internship position"></textarea>
+          <div *ngIf="internshipForm.get('positionSummary')?.invalid && internshipForm.get('positionSummary')?.touched" class="text-red-500 text-sm">
+            Position summary is required
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="description" class="block text-sm font-medium text-gray-700">Description*</label>
+          <textarea id="description" formControlName="description" name="description" rows="4" required
+                    class="block w-full px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="Detailed description of the internship"></textarea>
+          <div *ngIf="internshipForm.get('description')?.invalid && internshipForm.get('description')?.touched" class="text-red-500 text-sm">
+            Description is required
+          </div>
+        </div>
+      </div>
+      
+      <!-- Logistics Section -->
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Logistics</h3>
+        
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label for="location" class="block text-sm font-medium text-gray-700">Location*</label>
+            <input type="text" formControlName="location" id="location" name="location" required
+            class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('location')?.invalid && internshipForm.get('location')?.touched" class="text-red-500 text-sm">
+              Location is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="stipend" class="block text-sm font-medium text-gray-700">Stipend/Salary</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input type="number" formControlName="stipend" id="stipend" name="stipend" min="0"
+              class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500"
+                     placeholder="0.00">
+              <div class="absolute inset-y-0 right-0 flex items-center">
+                <select formControlName="stipendFrequency" class="h-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500">
+                  <option value="per month">per month</option>
+                  <option value="per week">per week</option>
+                  <option value="per hour">per hour</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date*</label>
+            <input formControlName="startDate" type="date" id="start-date" name="start-date" required
+            class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('startDate')?.invalid && internshipForm.get('startDate')?.touched" class="text-red-500 text-sm">
+              Start date is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="end-date" class="block text-sm font-medium text-gray-700">End Date*</label>
+            <input formControlName="endDate" type="date" id="end-date" name="end-date" required
+            class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('endDate')?.invalid && internshipForm.get('endDate')?.touched" class="text-red-500 text-sm">
+              End date is required
+            </div>
+          </div>
+          
+          <div>
+            <label for="application-deadline" class="block text-sm font-medium text-gray-700">Application Deadline*</label>
+            <input formControlName="applicationDeadline" type="date" id="application-deadline" name="application-deadline" required
+            class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+            <div *ngIf="internshipForm.get('applicationDeadline')?.invalid && internshipForm.get('applicationDeadline')?.touched" class="text-red-500 text-sm">
+              Application deadline is required
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="positions-available" class="block text-sm font-medium text-gray-700">Number of Positions Available*</label>
+          <input formControlName="positionsAvailable" type="number" id="positions-available" name="positions-available" min="1" required
+          class="block w-full h-11 px-5 py-2.5 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+          <div *ngIf="internshipForm.get('positionsAvailable')?.invalid && internshipForm.get('positionsAvailable')?.touched" class="text-red-500 text-sm">
+            Number of positions is required
+          </div>
+        </div>
+      </div>
+      
+      <!-- Additional Information Section -->
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+        
+        <div class="mt-6">
+          <label class="block text-sm font-medium text-gray-700">Required Application Materials</label>
+          <div class="mt-2 space-y-2">
+            <div class="flex items-center">
+              <input formControlName="resumeRequired" id="resume-required" name="resume-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="resume-required" class="ml-2 block text-sm text-gray-700">Resume</label>
+            </div>
+            <div class="flex items-center">
+              <input formControlName="coverLetterRequired" id="cover-letter-required" name="cover-letter-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="cover-letter-required" class="ml-2 block text-sm text-gray-700">Cover Letter</label>
+            </div>
+            <div class="flex items-center">
+              <input formControlName="portfolioRequired" id="portfolio-required" name="portfolio-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="portfolio-required" class="ml-2 block text-sm text-gray-700">Portfolio</label>
+            </div>
+            <div class="flex items-center">
+              <input formControlName="transcriptRequired" id="transcript-required" name="transcript-required" type="checkbox"
+                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <label for="transcript-required" class="ml-2 block text-sm text-gray-700">Transcript</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <label for="required-materials" class="block text-sm font-medium text-gray-700">Other Required Materials</label>
+          <textarea id="required-materials" formControlName="requiredMaterials" name="required-materials" rows="2"
+                    class="block w-full border border-gray-300 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    placeholder="Any other required materials not listed above"></textarea>
+        </div>
+        
+        <div class="mt-6">
+          <label for="additional-notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
+          <textarea id="additional-notes" formControlName="additionalNotes" name="additional-notes" rows="3"
+                    class="block w-full border border-gray-300 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    placeholder="Any other important information for applicants"></textarea>
+        </div>
+      </div>
+      
+      <!-- Form Actions -->
+      <div class="flex justify-end space-x-4 pt-6">
+        <button type="button" 
+          (click)="router.navigate(['/company/intern'])" 
+          class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+    Cancel
+  </button>
+        <button type="submit" [disabled]="loading || internshipForm.invalid" 
+                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50">
+          <span *ngIf="!loading">Update Internship</span>
+          <span *ngIf="loading">Updating...</span>
+        </button>
+      </div>
+    </form>
+</div>

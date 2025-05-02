@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Internship {
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id", nullable = false)
+    @JsonBackReference
     private Enterprise enterprise; // The enterprise that created the internship
 
     @ManyToOne
@@ -40,92 +42,90 @@ public class Internship {
     @OneToMany(mappedBy = "internship", cascade = CascadeType.ALL)
     private List<Task> tasks; // Tasks assigned to this internship
 
-    public Long getId() {
-        return id;
+    // New fields based on the form
+    private String positionTitle; // Position title
+    private String department; // Department
+    private String positionSummary; // Position Summary
+    private Double stipend; // Stipend (nullable)
+    private String stipendFrequency; // Stipend Frequency (per month, per week, per hour)
+    private Integer positionsAvailable; // Number of positions available
+    private LocalDate applicationDeadline; // Application deadline
+    @ElementCollection
+    @CollectionTable(name = "required_materials", joinColumns = @JoinColumn(name = "internship_id"))
+    @Column(name = "material")
+    private List<String> requiredMaterials; // List of required materials (e.g. resume, cover letter, etc.)
+    private String additionalNotes; // Additional Notes
+
+    // Getters and Setters for new fields
+    public String getPositionTitle() {
+        return positionTitle;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPositionTitle(String positionTitle) {
+        this.positionTitle = positionTitle;
     }
 
-    public String getTitle() {
-        return title;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPositionSummary() {
+        return positionSummary;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPositionSummary(String positionSummary) {
+        this.positionSummary = positionSummary;
     }
 
-    public String getLocation() {
-        return location;
+    public Double getStipend() {
+        return stipend;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setStipend(Double stipend) {
+        this.stipend = stipend;
     }
 
-    public int getDurationInMonths() {
-        return durationInMonths;
+    public String getStipendFrequency() {
+        return stipendFrequency;
     }
 
-    public void setDurationInMonths(int durationInMonths) {
-        this.durationInMonths = durationInMonths;
+    public void setStipendFrequency(String stipendFrequency) {
+        this.stipendFrequency = stipendFrequency;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public Integer getPositionsAvailable() {
+        return positionsAvailable;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setPositionsAvailable(Integer positionsAvailable) {
+        this.positionsAvailable = positionsAvailable;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public LocalDate getApplicationDeadline() {
+        return applicationDeadline;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setApplicationDeadline(LocalDate applicationDeadline) {
+        this.applicationDeadline = applicationDeadline;
     }
 
-    public InternshipStatus getStatus() {
-        return status;
+    public List<String> getRequiredMaterials() {
+        return requiredMaterials;
     }
 
-    public void setStatus(InternshipStatus status) {
-        this.status = status;
+    public void setRequiredMaterials(List<String> requiredMaterials) {
+        this.requiredMaterials = requiredMaterials;
     }
 
-    public User getEnterprise() {
-        return enterprise;
+    public String getAdditionalNotes() {
+        return additionalNotes;
     }
 
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
-    }
-
-    public User getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setAdditionalNotes(String additionalNotes) {
+        this.additionalNotes = additionalNotes;
     }
 }
-

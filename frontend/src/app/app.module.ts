@@ -64,6 +64,10 @@ import { TasksComponent } from './pages/Student/tasks/tasks.component';
 import { CompanyTasksComponent } from './pages/company/company-tasks/company-tasks.component';
 import { CompanyTasksrepComponent } from './pages/company/company-tasksrep/company-tasksrep.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { InternshipsInfoComponent } from './pages/Student/internships-info/internships-info.component';
+import { AddInternshipComponent } from './pages/company/add-internship/add-internship.component';
+import { CompanyInternshipsComponent } from './pages/company/company-internships/company-internships.component';
+import { EditInternshipComponent } from './pages/company/edit-internship/edit-internship.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +129,10 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     CompanyTasksComponent,
     CompanyTasksrepComponent,
     VerifyEmailComponent,
+    InternshipsInfoComponent,
+    AddInternshipComponent,
+    CompanyInternshipsComponent,
+    EditInternshipComponent,
     
   ],
   imports: [

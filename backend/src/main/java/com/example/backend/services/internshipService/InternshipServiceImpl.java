@@ -1,13 +1,13 @@
 package com.example.backend.services.internshipService;
 
 import com.example.backend.dto.EnterpriseDTO;
+import com.example.backend.dto.InternshipDto;
 import com.example.backend.dto.InternshipResponse;
-import com.example.backend.entity.Enterprise;
-import com.example.backend.entity.Internship;
-import com.example.backend.entity.Student;
+import com.example.backend.entity.*;
 import com.example.backend.repository.EnterpriseRepository;
 import com.example.backend.repository.InternshipRepository;
 import com.example.backend.repository.StudentRepository;
+import com.example.backend.services.authSerivce.UserServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,14 @@ public class InternshipServiceImpl implements InternshipService{
     private final InternshipRepository internshipRepository;
     private final StudentRepository studentRepository;
     private final EnterpriseRepository enterpriseRepository;
+    private final UserServiceImpl userService;
 
     @Autowired
-    public InternshipServiceImpl(InternshipRepository internshipRepository, StudentRepository studentRepository, EnterpriseRepository enterpriseRepository) {
+    public InternshipServiceImpl(InternshipRepository internshipRepository, StudentRepository studentRepository, EnterpriseRepository enterpriseRepository, UserServiceImpl userService) {
         this.internshipRepository = internshipRepository;
         this.studentRepository = studentRepository;
         this.enterpriseRepository = enterpriseRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -40,7 +42,6 @@ public class InternshipServiceImpl implements InternshipService{
     public Internship updateInternship(Internship internship) {
         Optional<Internship> existingInternship = internshipRepository.findById(internship.getId());
         if (existingInternship.isPresent()) {
-
             return internshipRepository.save(internship);
         }
         return null;
@@ -85,11 +86,6 @@ public class InternshipServiceImpl implements InternshipService{
     }
 
     @Override
-    public List<Internship> getInternshipsByEnterpriseT(Long enterpriseId) {
-        return internshipRepository.findByEnterpriseId(enterpriseId);
-    }
-
-    @Override
     public Internship applyForInternship(Long internshipId, Long studentId) {
         Optional<Internship> internshipOpt = internshipRepository.findById(internshipId);
         Optional<Student> studentOpt = studentRepository.findById(studentId);
@@ -104,5 +100,55 @@ public class InternshipServiceImpl implements InternshipService{
         }
     }
 
+    @Override
+    public Internship createInternship(InternshipDto internshipDto, String username) {
+        Enterprise enterprise = (Enterprise) userService.getAuthenticatedUser();
+
+        // Create a new Internship
+        Internship internship = new Internship();
+        internship.setTitle(internshipDto.getTitle());
+        internship.setDescription(internshipDto.getDescription());
+        internship.setLocation(internshipDto.getLocation());
+        internship.setDurationInMonths(internshipDto.getDurationInMonths());
+        internship.setStartDate(internshipDto.getStartDate());
+        internship.setEndDate(internshipDto.getEndDate());
+
+        // New fields added
+        internship.setPositionTitle(internshipDto.getPositionTitle());
+        internship.setDepartment(internshipDto.getDepartment());
+        internship.setPositionSummary(internshipDto.getPositionSummary());
+        internship.setStipend(internshipDto.getStipend());
+        internship.setStipendFrequency(internshipDto.getStipendFrequency());
+        internship.setPositionsAvailable(internshipDto.getPositionsAvailable());
+        internship.setApplicationDeadline(internshipDto.getApplicationDeadline());
+        internship.setAdditionalNotes(internshipDto.getAdditionalNotes());
+
+        // Set the internship status and link to the enterprise
+        internship.setStatus(InternshipStatus.OPEN); // Default status is OPEN
+        internship.setEnterprise(enterprise);
+
+        return internshipRepository.save(internship);
+    }
+
+
+
+    @Override
+    public List<Internship> getInternshipsByTitle(String title) {
+        return internshipRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Internship> searchByTitle(String title) {
+        // Perform case-insensitive partial match for internships with a title containing the given string
+        return internshipRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
+    public List<Internship> getInternshipsByCompanyName(String companyName) {
+        return internshipRepository.findByEnterpriseCompanyName(companyName);
+    }
+    @Override
+    public List<Internship> getInternshipsByEnterpriseT(Long enterpriseId) {
+        return internshipRepository.findByEnterpriseId(enterpriseId);
+    }
 
 }

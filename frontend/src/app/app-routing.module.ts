@@ -44,6 +44,10 @@ import { TasksComponent } from './pages/Student/tasks/tasks.component';
 import { CalendarComponent } from './pages/Student/calendar/calendar.component';
 import { CompanyTasksrepComponent } from './pages/company/company-tasksrep/company-tasksrep.component';
 import { CompanyTasksComponent } from './pages/company/company-tasks/company-tasks.component';
+import { InternshipsInfoComponent } from './pages/Student/internships-info/internships-info.component';
+import { EditInternshipComponent } from './pages/company/edit-internship/edit-internship.component';
+import { AddInternshipComponent } from './pages/company/add-internship/add-internship.component';
+import { CompanyInternshipsComponent } from './pages/company/company-internships/company-internships.component';
 
 const routes: Routes = [
   {
@@ -66,6 +70,11 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         data: { breadcrumb: 'Profile' },
+      },
+      {
+        path: 'apply/:id',
+        component: ApplicationComponent,
+        data: { breadcrumb: 'Application' },
       },
       { path: '', component: IndexComponent },
       {
@@ -116,7 +125,7 @@ const routes: Routes = [
         component: TopicComponent,
         data: { breadcrumb: 'forum' },
       },
-      { path: 'topics/:id', component: TopicDetailComponent },
+
       {
         path: 'certifStudent',
         component: StudentCertificatesComponent,
@@ -127,6 +136,12 @@ const routes: Routes = [
         path: 'certifStudent/details/:id',
         component: StudentDetailsCertifComponent,
         data: { breadcrumb: 'certificate details' },
+      },
+
+      {
+        path: 'intern-info/:id',
+        component: InternshipsInfoComponent,
+        data: { breadcrumb: 'Internship Information' },
       },
     ],
   },
@@ -179,7 +194,7 @@ const routes: Routes = [
         component: TopicComponent,
         data: { breadcrumb: 'forum' },
       },
-      { path: 'topics/:id', component: TopicDetailComponent },
+     
       { path: 'certificates', component: CertificatesComponent },
       { path: 'certificates/add', component: AddCertificatesComponent },
       { path: 'certificates/edit/:id', component: EditCertificatesComponent },
@@ -191,6 +206,20 @@ const routes: Routes = [
         path: 'settings',
         component: SettingsComponent,
         data: { breadcrumb: 'Settings' },
+      },
+      {
+        path: 'edit-internship/:id',
+        component: EditInternshipComponent,
+      },
+      {
+        path: 'add_intern',
+        component: AddInternshipComponent,
+        data: { breadcrumb: 'Add Internship' },
+      },
+      {
+        path: 'intern',
+        component: CompanyInternshipsComponent,
+        data: { breadcrumb: 'Internships' },
       },
     ],
   },
@@ -226,6 +255,7 @@ const routes: Routes = [
       },
     ],
   },
+  { path: 'topics/:id', component: TopicDetailComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
 ];
 

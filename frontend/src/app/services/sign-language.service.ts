@@ -20,7 +20,7 @@ export class SignLanguageService {
   private readonly signDictionary: { [key: string]: string } = {
     // Basic ASL letters
     hand_closed: 'A',
-    index_point: 'zebiiiiii',
+    index_point: 'one',
     peace_sign: 'peace',
     thumb_up: 'okey',
     hand_open: 'hi',

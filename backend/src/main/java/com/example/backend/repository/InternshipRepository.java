@@ -11,10 +11,11 @@ import java.util.Optional;
 
 public interface InternshipRepository extends JpaRepository<Internship,Long> {
     List<Internship> findByStudentId(Long studentId);
-
-
-
     List<Internship> findByEnterpriseId(Long enterpriseId);
+
+
+
+    List<Internship> findByEnterprise(Optional<Enterprise> enterprise);
     @Query("SELECT DISTINCT i FROM Internship i " +
             "JOIN i.tasks t " +
             "WHERE i.enterprise.id = :enterpriseId " +
@@ -28,4 +29,14 @@ public interface InternshipRepository extends JpaRepository<Internship,Long> {
 
     @Query("SELECT DISTINCT i FROM Internship i LEFT JOIN FETCH i.student")
     List<Internship> findAllWithStudents();
+
+
+        // Search internships by title with case-insensitive partial match
+        List<Internship> findByTitleContainingIgnoreCase(String title);
+
+
+
+    @Query("SELECT i FROM Internship i WHERE LOWER(i.enterprise.companyName) LIKE LOWER(CONCAT('%', :companyName, '%'))")
+    List<Internship> findByEnterpriseCompanyName(@Param("companyName") String companyName);
+
 }
